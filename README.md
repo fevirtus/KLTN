@@ -5,7 +5,9 @@ Tất cả các lưu ý chung như nguồn tài liệu sẽ được lưu ở đ
 
 Đọc và làm theo file Document/Setup trước.
 
-Mô hình dự án được triển khai theo V-Model.
+Mô hình dự án được triển khai theo V-Model. Tìm hiểu thêm để hiểu cách thức hoạt động.
+
+
 
 
 
