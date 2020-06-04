@@ -1,0 +1,6 @@
+- Các bước để setup enviroment cho react-native
+https://reactnative.dev/docs/environment-setup
+
+ + Chọn React Native CLI Quickstart -> Windows -> Android sau đó làm theo doc để cài đặt môi trường, android studio và 
+	máy ảo.
+ + Trong này thì nó sẽ chỉ mình từng bước để setting và chạy project trên máy ảo 
