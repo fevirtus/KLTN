@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { YellowBox } from 'react-native';
+// import { YellowBox } from 'react-native';
 
 import data from '../../data';
 
@@ -18,7 +18,7 @@ const colors = {
 
 const Card = ({card}) => (
     <View style={styles.card}>
-      <Image source={{uri : card.image}} style={styles.cardImage}/>
+      <Image source={{uri: card.image}} style={styles.cardImage}/>
     </View>
 )
 
@@ -29,7 +29,7 @@ const CardDetails = ({ index }) => (
     </View>
 )
 
-export default function Home() {
+export default function Home({ navigation }) {
     const [index, setIndex] = useState(0)
     const swiperRef = useRef(null)
     const onSwiped = () => {
@@ -40,74 +40,74 @@ export default function Home() {
         <View style={styles.container}>
             <View style={styles.swiperContainer}>
                 <Swiper
-                cards={data}
-                cardIndex={index}
-                ref={swiperRef}
-                renderCard={card => <Card card={card} />}
-                onSwiped={onSwiped}
-                stackSize={2} 
-                disableBottomSwipe
-                animateOverlayLabelsOpacity	
-                infinite
-                backgroundColor={'transparent'}
-                overlayLabels={{
-                    left: {
-                    title: 'NOPE',
-                    style: {
-                        label: {
-                            backgroundColor: 'transparent',
-                            color: colors.red,
-                            fontSize: 24,
-                            borderColor: colors.red,
-                            borderWidth: 3
+                    cards={data}
+                    cardIndex={index}
+                    renderCard={card => <Card card={card} />}
+                    ref={swiperRef}
+                    onSwiped={onSwiped}
+                    stackSize={2} 
+                    disableBottomSwipe
+                    animateOverlayLabelsOpacity	
+                    infinite
+                    backgroundColor={'transparent'}
+                    overlayLabels={{
+                        left: {
+                            title: 'NOPE',
+                            style: {
+                                label: {
+                                    backgroundColor: 'transparent',
+                                    color: colors.red,
+                                    fontSize: 24,
+                                    borderColor: colors.red,
+                                    borderWidth: 3
+                                },
+                                wrapper: {
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'flex-start',
+                                    marginTop: -35,
+                                    marginLeft: -20
+                                }
+                            }
                         },
-                        wrapper: {
-                        flexDirection: 'column',
-                        alignItems: 'flex-end',
-                        justifyContent: 'flex-start',
-                        marginTop: -35,
-                        marginLeft: -20
-                        }
-                    }
-                    },
-                    right: {
-                    title: 'LIKE',
-                    style: {
-                        label: {
-                            backgroundColor: 'transparent',
-                            color: colors.green,
-                            fontSize: 24,
-                            borderColor: colors.green,
-                            borderWidth: 3
+                        right: {
+                            title: 'LIKE',
+                            style: {
+                                label: {
+                                    backgroundColor: 'transparent',
+                                    color: colors.green,
+                                    fontSize: 24,
+                                    borderColor: colors.green,
+                                    borderWidth: 3
+                                },
+                                wrapper: {
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'flex-start',
+                                    marginTop: -35,
+                                    marginLeft: 20
+                                }
+                            }
                         },
-                        wrapper: {
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                        justifyContent: 'flex-start',
-                        marginTop: -35,
-                        marginLeft: 20
+                        top: {
+                            title: 'SUPER LIKE',
+                            style: {
+                                label: {
+                                    backgroundColor: 'transparent',
+                                    color: colors.blue,
+                                    fontSize: 24,
+                                    borderColor: colors.blue,
+                                    borderWidth: 3
+                                },
+                                wrapper: {
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginTop: -60
+                                }
+                            }
                         }
-                    }
-                    },
-                    top: {
-                    title: 'SUPER LIKE',
-                    style: {
-                        label: {
-                            backgroundColor: 'transparent',
-                            color: colors.blue,
-                            fontSize: 24,
-                            borderColor: colors.blue,
-                            borderWidth: 3
-                        },
-                        wrapper: {
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginTop: -60
-                        }
-                    }
-                    }
-                }}
+                    }}
                 />
             </View>
             <View style={styles.bottomContainer}>
@@ -163,8 +163,8 @@ export default function Home() {
     )
 }
 
-YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`', 
-                        'Animated.event now requires a second argument for options']);
+// YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`', 
+//                         'Animated.event now requires a second argument for options']);
 
 const styles = StyleSheet.create({
     container: {
