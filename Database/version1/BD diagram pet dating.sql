@@ -30,7 +30,7 @@ CREATE TABLE `Conversation` (
   `con_id` int PRIMARY KEY AUTO_INCREMENT,
   `user_one` int,
   `user_two` int,
-  `create_at` Datetime,
+  `create_at` Datetime default time_stamp(),
   `last_update` Datetime
 );
 

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-// import { YellowBox } from 'react-native';
+import { YellowBox } from 'react-native';
 
 import data from '../../data';
 
@@ -163,8 +163,8 @@ export default function Home({ navigation }) {
     )
 }
 
-// YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`', 
-//                         'Animated.event now requires a second argument for options']);
+YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`', 
+                        'Animated.event now requires a second argument for options']);
 
 const styles = StyleSheet.create({
     container: {
