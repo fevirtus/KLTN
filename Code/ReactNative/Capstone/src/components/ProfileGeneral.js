@@ -30,7 +30,6 @@ export default class Profile extends Component {
     }
 
     render() {
-
         return (
             <View style={styles.container}>
                 <View style={styles.profilePicWrap}>
@@ -47,11 +46,11 @@ export default class Profile extends Component {
                         <TextInput style={[{ paddingRight: 100 },styles.textInput]}/>
                     </View>
                     <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 34 }}>DOB</Text>
+                        <Text style={{ fontSize: 20, paddingRight: 38 }}>DOB</Text>
                         <TextInput style={styles.textInput}/>
                     </View>
                     <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 20 }}>Phone</Text>
+                        <Text style={{ fontSize: 20, paddingRight: 21 }}>Phone</Text>
                         <TextInput style={styles.textInput}/>
                     </View>
                     <View style={styles.textInputWrapper}>
@@ -59,7 +58,7 @@ export default class Profile extends Component {
                         <TextInput style={styles.textInput}/>
                     </View>
                     <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 35 }}>Birth</Text>
+                        <Text style={{ fontSize: 20, paddingRight: 37 }}>Birth</Text>
                         <TextInput style={styles.textInput}/>
                     </View>
                 </View>
@@ -69,7 +68,7 @@ export default class Profile extends Component {
                 <View style={styles.listPet}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 8 }}> 
                         <Text style={{ fontSize: 20 }}>List pet</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={this.selectImage}>
                             <Ionicons name="ios-add-circle-outline" size={28} color="gray" />
                         </TouchableOpacity>
                     </View>   
@@ -102,7 +101,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'gray',
         width: 100,
         height: 100,
-        borderRadius: 50
+        borderRadius: 50,
+        zIndex: 0
     },
     profilePic: {
         width: 100,
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 65,
         left: 65,  
+        zIndex: 1
     },
     textInputWrapper: {
         paddingBottom: 14, 
