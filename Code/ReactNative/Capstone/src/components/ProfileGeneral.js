@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ScrollView } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export default class Profile extends Component {
-    // const [avatarSource, setAvatarSource] = useState(null)
     state = {
         avatarSource: null,
+        avatarPet: null
     }
 
     selectImage = async () => {
@@ -21,9 +21,9 @@ export default class Profile extends Component {
             } else if (response.customButton) {
               console.log('User tapped custom button: ', response.customButton);
             } else {
-            //   setAvatarSource({ avatarSource: response.uri })
                 this.setState({
-                    avatarSource: response.uri
+                    avatarSource: response.uri,
+                    avatarPet: response.uri
                 })
             }
         });
@@ -32,58 +32,65 @@ export default class Profile extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.profilePicWrap}>
-                    {
-                        this.state.avatarSource && <Image source={{ uri: this.state.avatarSource }} style={styles.profilePic} />
-                    }
-                    <TouchableOpacity onPress={this.selectImage} style={styles.buttonCamera}>
-                        <MaterialIcons name="add-a-photo" size={25} color="gray" />
+                <ScrollView>
+                    <View style={styles.profilePicWrap}>
+                        {
+                            this.state.avatarSource && <Image source={{ uri: this.state.avatarSource }} style={styles.profilePic} />
+                        }
+                        <TouchableOpacity onPress={this.selectImage} style={styles.buttonCamera}>
+                            <MaterialIcons name="add-a-photo" size={25} color="gray" />
+                        </TouchableOpacity>
+                    </View> 
+                    <View style={{ paddingTop: 25 }}>
+                        <View style={styles.textInputWrapper}>
+                            <Text style={{ fontSize: 20, paddingRight: 24 }}>Name</Text>
+                            <TextInput style={[{ paddingRight: 100 },styles.textInput]}/>
+                        </View>
+                        <View style={styles.textInputWrapper}>
+                            <Text style={{ fontSize: 20, paddingRight: 38 }}>DOB</Text>
+                            <TextInput style={styles.textInput}/>
+                        </View>
+                        <View style={styles.textInputWrapper}>
+                            <Text style={{ fontSize: 20, paddingRight: 21 }}>Phone</Text>
+                            <TextInput style={styles.textInput}/>
+                        </View>
+                        <View style={styles.textInputWrapper}>
+                            <Text style={{ fontSize: 20, paddingRight: 4 }}>Address</Text>
+                            <TextInput style={styles.textInput}/>
+                        </View>
+                        <View style={styles.textInputWrapper}>
+                            <Text style={{ fontSize: 20, paddingRight: 37 }}>Birth</Text>
+                            <TextInput style={styles.textInput}/>
+                        </View>
+                    </View>
+                    <TouchableOpacity style={styles.saveButton}>
+                        <Text style={{ fontSize: 20, padding: 5 }}>Save</Text>
                     </TouchableOpacity>
-                </View> 
-                <View style={{ flex: 0.4 }}>
-                    <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 24 }}>Name</Text>
-                        <TextInput style={[{ paddingRight: 100 },styles.textInput]}/>
+                    <View style={{ height: 166, width: '100%' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 8 }}> 
+                            <Text style={{ fontSize: 20 }}>List pet</Text>
+                            <TouchableOpacity onPress={this.selectImage}>
+                                <Ionicons name="ios-add-circle-outline" size={28} color="gray" />
+                            </TouchableOpacity>
+                        </View>  
+                        <FlatList
+                            style={{ backgroundColor: 'grey' }}
+                            horizontal={true}
+                            data={this.state.avatarPet}
+                            keyExtractor={item => item.fileName}
+                            renderItem={(data, index) => {
+                                return (
+                                    <View style={{ margin: 10 }} key={index}>
+                                        <Image source={{ uri: this.state.avatarPet }} style={styles.profilePic} />
+                                    </View>
+                                )
+                            }}
+                        />
                     </View>
-                    <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 38 }}>DOB</Text>
-                        <TextInput style={styles.textInput}/>
+                    <View style={styles.imageGallery}>
+
                     </View>
-                    <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 21 }}>Phone</Text>
-                        <TextInput style={styles.textInput}/>
-                    </View>
-                    <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 4 }}>Address</Text>
-                        <TextInput style={styles.textInput}/>
-                    </View>
-                    <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 37 }}>Birth</Text>
-                        <TextInput style={styles.textInput}/>
-                    </View>
-                </View>
-                <TouchableOpacity style={styles.saveButton}>
-                    <Text style={{ fontSize: 20, padding: 5 }}>Save</Text>
-                </TouchableOpacity>
-                <View style={styles.listPet}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 8 }}> 
-                        <Text style={{ fontSize: 20 }}>List pet</Text>
-                        <TouchableOpacity onPress={this.selectImage}>
-                            <Ionicons name="ios-add-circle-outline" size={28} color="gray" />
-                        </TouchableOpacity>
-                    </View>   
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                        <TouchableOpacity style={{ marginBottom: 20 }}>
-                            <Image source={require('../../images/users/1.jpg')} style={styles.iconPet}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Image source={require('../../images/users/2.jpg')} style={styles.iconPet}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Image source={require('../../images/users/3.jpg')} style={styles.iconPet}/>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                </ScrollView>
             </View>
         )
     }
@@ -91,18 +98,14 @@ export default class Profile extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     },  
     profilePicWrap: {
-        position: 'absolute',
-        top: 20,
         backgroundColor: 'gray',
         width: 100,
         height: 100,
-        borderRadius: 50,
-        zIndex: 0
+        borderRadius: 50
     },
     profilePic: {
         width: 100,
@@ -119,8 +122,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         position: 'absolute',
         top: 65,
-        left: 65,  
-        zIndex: 1
+        left: 65
     },
     textInputWrapper: {
         paddingBottom: 14, 
@@ -140,19 +142,5 @@ const styles = StyleSheet.create({
         width: 300,
         justifyContent: 'center',
         alignItems: 'center'
-    },
-    listPet: {
-        borderTopColor: 'gray',
-        borderBottomColor: 'gray',
-        width: 350,
-        height: 120,
-        borderWidth: 1,
-        position: 'absolute',
-        top: 470
-    },
-    iconPet: {
-        width: 75,
-        height: 75,
-        borderRadius: 50
     }
 })
