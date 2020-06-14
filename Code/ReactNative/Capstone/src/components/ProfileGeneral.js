@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ScrollView } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Image, FlatList, ScrollView, Dimensions } from 'react-native'
+import { TextInput} from 'react-native-paper';
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -7,6 +8,21 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 export default function Profile() {
     const [avatarBoss, setAvatarBoss] = useState(null)
     const [avatarPet, setAvatarPet] = useState([])
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [address, setAddress] = useState('')
+
+    const handleChangeName = text => {
+        setName(text)
+    }
+
+    const handleChangeEmail = text => {
+        setEmail(text)
+    }
+
+    const handleChangeAddress = text => {
+        setAddress(text)
+    }
 
     const selectImage = () => {
         ImagePicker.showImagePicker({noData:true, mediaType:'photo'}, (response) => {
@@ -52,39 +68,26 @@ export default function Profile() {
                     </TouchableOpacity>
                 </View> 
 
-                <View style={{ paddingTop: 25 }}>
-                    {/* <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 24 }}>Name</Text>
-                        <TextInput style={[{ paddingRight: 100 },styles.textInput]}/>
-                    </View>
-                    <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 38 }}>DOB</Text>
-                        <TextInput style={styles.textInput}/>
-                    </View>
-                    <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 21 }}>Phone</Text>
-                        <TextInput style={styles.textInput}/>
-                    </View>
-                    <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 4 }}>Address</Text>
-                        <TextInput style={styles.textInput}/>
-                    </View>
-                    <View style={styles.textInputWrapper}>
-                        <Text style={{ fontSize: 20, paddingRight: 37 }}>Birth</Text>
-                        <TextInput style={styles.textInput}/>
-                    </View> */}
+                <View style={{ paddingTop: 25, paddingBottom: 20 }}>
                     <TextInput 
                         mode="outlined"
-                        label="name"
-                        // onChangeText={handleChangeName}
-                        autoCompleteType="name"
-                        returnKeyType="next"
+                        label="Name"
+                        onChangeText={handleChangeName}
+                    />
+                    <TextInput 
+                        mode="outlined"
+                        label="Email"
+                        onChangeText={handleChangeEmail}
+                    />
+                    <TextInput 
+                        mode="outlined"
+                        label="Address"
+                        onChangeText={handleChangeAddress}
                     />
                 </View>
                 <TouchableOpacity style={styles.saveButton}>
                     <Text style={{ fontSize: 20, padding: 5 }}>Save</Text>
                 </TouchableOpacity>
-                
                 <View style={{ height: 146, paddingTop: 16 }}>
                     <View style={styles.menuListPet}> 
                         <Text style={{ fontSize: 20 }}>List pet</Text>
@@ -104,7 +107,7 @@ export default function Profile() {
                     />
                 </View>
                 <View style={styles.imageGallery}>
-
+                    <Image source={{uri : item.uri}} />
                 </View>
             </ScrollView>
         </View>
@@ -113,6 +116,7 @@ export default function Profile() {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     },  
@@ -120,7 +124,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'gray',
         width: 100,
         height: 100,
-        borderRadius: 50
+        borderRadius: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     profilePic: {
         width: 100,
@@ -169,5 +175,9 @@ const styles = StyleSheet.create({
         height: 80,
         width: 80,
         borderRadius: 50
+    },
+    imageGallery: {
+        width: Dimensions.get('window').width / 2,
+        height: 150
     }
 })
