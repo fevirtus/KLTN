@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, FlatList, ScrollView, Dimensions } from 'react-native'
-import { TextInput} from 'react-native-paper';
+import { TextInput, Subheading } from 'react-native-paper';
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-export default function Profile() {
+export default function Profile({ navigation }) {
     const [avatarBoss, setAvatarBoss] = useState(null)
     const [avatarPet, setAvatarPet] = useState([])
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [address, setAddress] = useState('')
+    const [phone, setPhone] = useState('')
+    const [location, setLocation] = useState('')
 
     const handleChangeName = text => {
         setName(text)
@@ -20,8 +21,12 @@ export default function Profile() {
         setEmail(text)
     }
 
-    const handleChangeAddress = text => {
-        setAddress(text)
+    const handleChangeLocation = text => {
+        setLocation(text)
+    }
+
+    const handleChangePhone = text => {
+        setPhone(text)
     }
 
     const selectImage = () => {
@@ -81,8 +86,13 @@ export default function Profile() {
                     />
                     <TextInput 
                         mode="outlined"
-                        label="Address"
-                        onChangeText={handleChangeAddress}
+                        label="Phone"
+                        onChangeText={handleChangePhone}
+                    />
+                    <TextInput 
+                        mode="outlined"
+                        label="Location"
+                        onChangeText={handleChangeLocation}
                     />
                 </View>
                 <TouchableOpacity style={styles.saveButton}>
@@ -90,7 +100,7 @@ export default function Profile() {
                 </TouchableOpacity>
                 <View style={{ height: 146, paddingTop: 16 }}>
                     <View style={styles.menuListPet}> 
-                        <Text style={{ fontSize: 20 }}>List pet</Text>
+                        <Subheading style={styles.text}>List pet</Subheading>
                         <TouchableOpacity onPress={selectImagePet}>
                             <Ionicons name="ios-add-circle-outline" size={28} color="gray" />
                         </TouchableOpacity>
@@ -101,13 +111,24 @@ export default function Profile() {
                         data={avatarPet}
                         renderItem={({item}) => (
                             <View style={{ margin: 10 }}>
-                                <Image source={{uri : item.uri}} style={styles.petImage} />
+                                <TouchableOpacity onPress={() => navigation.navigate('PetProfile')}>
+                                    <Image source={{uri : item.uri}} style={styles.petImage} />
+                                </TouchableOpacity>       
                             </View> 
                         )}
                     />
                 </View>
-                <View style={styles.imageGallery}>
-                    <Image source={{uri : item.uri}} />
+                <View>
+                    <Subheading style={styles.text}>All photos:</Subheading>
+                    <FlatList
+                        numColumns={2}
+                        data={avatarPet}
+                        renderItem={({item}) => (
+                            <View style={styles.imageGallery}>
+                                <Image source={{uri: item.uri}} style={styles.imgGallery} />
+                            </View>
+                        )}
+                    />
                 </View>
             </ScrollView>
         </View>
@@ -168,6 +189,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'space-between'
     },
+    text: {
+        fontSize: 18
+    },
     flatListPet: {
         backgroundColor: 'grey'
     },
@@ -178,6 +202,11 @@ const styles = StyleSheet.create({
     },
     imageGallery: {
         width: Dimensions.get('window').width / 2,
-        height: 150
+        height: 200
+    },
+    imgGallery: {
+        width: '100%',
+        height: 200,
+        resizeMode: 'cover'
     }
 })
