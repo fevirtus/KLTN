@@ -5,9 +5,7 @@ import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-const blankAvatar = { uri: '../../images/avatar.jpg' }
-
-export default function Profile({ navigation }) {
+const Profile = ({ navigation }) => {
     const [avatarBoss, setAvatarBoss] = useState(null)
     const [avatarPet, setAvatarPet] = useState([])
     const [name, setName] = useState('')
@@ -67,7 +65,7 @@ export default function Profile({ navigation }) {
         <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <ImageBackground 
-                    source={require('../../images/avatar.jpg')} 
+                    source={require('../../../images/avatar.jpg')} 
                     style={styles.profilePicWrap} 
                     imageStyle={{ borderRadius: 100 }}
                 >
@@ -140,6 +138,8 @@ export default function Profile({ navigation }) {
         </View>
     )
 }
+
+export default Profile;
 
 const styles = StyleSheet.create({
     container: {

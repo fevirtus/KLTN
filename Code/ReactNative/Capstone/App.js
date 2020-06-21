@@ -1,3 +1,6 @@
-import { Routes } from './Routes';
+import React from 'react';
+import Nav from './src/navigation'
 
-export default Routes;
+const App = () => < Nav /> ;
+
+export default App
