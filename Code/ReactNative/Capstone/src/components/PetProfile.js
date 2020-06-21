@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     img: {
         width: 110,
         height: 110,
-        borderRadius: 50,
+        borderRadius: 100,
         borderWidth: 4,
         borderColor: colors.white,
         position: 'absolute',

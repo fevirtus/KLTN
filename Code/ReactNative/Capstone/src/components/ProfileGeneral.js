@@ -63,17 +63,17 @@ export default function Profile({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.profilePicWrap}>
                     {avatarBoss && (
-                        <Image source={{uri: avatarBoss.uri }} style={styles.profilePic} />
+                        <Image source={{uri: avatarBoss.uri }} style={styles.profileImage} />
                     )}
-                    <TouchableOpacity onPress={selectImage} style={styles.buttonCamera}>
-                        <MaterialIcons name="add-a-photo" size={25} color="gray" />
+                    <TouchableOpacity onPress={selectImage} style={styles.camera}>
+                        <MaterialIcons name="add-a-photo" size={25} color="#DFD8C8" />
                     </TouchableOpacity>
                 </View> 
 
-                <View style={{ paddingTop: 25, paddingBottom: 20 }}>
+                <View style={styles.inputInformation}>
                     <TextInput 
                         mode="outlined"
                         label="Name"
@@ -96,9 +96,9 @@ export default function Profile({ navigation }) {
                     />
                 </View>
                 <TouchableOpacity style={styles.saveButton}>
-                    <Text style={{ fontSize: 20, padding: 5 }}>Save</Text>
+                    <Text style={styles.save}>Save</Text>
                 </TouchableOpacity>
-                <View style={{ height: 146, paddingTop: 16 }}>
+                <View style={styles.listPetWrapper}>
                     <View style={styles.menuListPet}> 
                         <Subheading style={styles.text}>List pet</Subheading>
                         <TouchableOpacity onPress={selectImagePet}>
@@ -110,7 +110,7 @@ export default function Profile({ navigation }) {
                         horizontal={true}
                         data={avatarPet}
                         renderItem={({item}) => (
-                            <View style={{ margin: 10 }}>
+                            <View style={styles.petImageWrapper}>
                                 <TouchableOpacity onPress={() => navigation.navigate('PetProfile')}>
                                     <Image source={{uri : item.uri}} style={styles.petImage} />
                                 </TouchableOpacity>       
@@ -143,28 +143,31 @@ const styles = StyleSheet.create({
     },  
     profilePicWrap: {
         backgroundColor: 'gray',
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        alignItems: 'center',
-        justifyContent: 'center',
+        width: 130,
+        height: 130,
+        borderRadius: 100,
+        alignSelf: 'center',
+        marginTop: 40
     },
-    profilePic: {
-        width: 100,
-        height: 100,
-        borderRadius: 50
+    profileImage: {
+        width: 130,
+        height: 130,
+        borderRadius: 100
     },
-    buttonCamera: {
+    camera: {
         width: 35,
         height: 35,
-        borderWidth: 1,
-        borderColor: 'gray',
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        top: 65,
-        left: 65
+        top: 98,
+        left: 90,
+        backgroundColor: '#41444B'
+    },
+    inputInformation: {
+        paddingTop: 25, 
+        paddingBottom: 20
     },
     textInputWrapper: {
         paddingBottom: 14, 
@@ -185,6 +188,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    save: {
+        paddingTop: 10, 
+        paddingBottom: 10
+    },
+    listPetWrapper: {
+        height: 146,
+        paddingTop: 16
+    },
     menuListPet: {
         flexDirection: 'row', 
         justifyContent: 'space-between'
@@ -194,6 +205,12 @@ const styles = StyleSheet.create({
     },
     flatListPet: {
         backgroundColor: 'grey'
+    },
+    petImageWrapper: {
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 10,
+        marginRight: 10
     },
     petImage: {
         height: 80,
@@ -207,6 +224,7 @@ const styles = StyleSheet.create({
     imgGallery: {
         width: '100%',
         height: 200,
-        resizeMode: 'cover'
+        resizeMode: 'cover',
+        borderRadius: 10
     }
 })
