@@ -10,5 +10,6 @@ export const RED = "#ec2379";
 
 export const TRANSPARENT = "transparent";
 
-export const PINK = "#FF82A9";
-export const ORANGE = "#ff7315";
+export const PINK = "#EE66AA";
+export const ORANGE = "#EEAA66";
+export const GRAY_BUTTON = "#848484";

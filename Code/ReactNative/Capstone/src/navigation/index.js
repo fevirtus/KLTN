@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import { Login, Home, Profile, PetProfile, Test } from '../container';
+import { Login, Home, Profile, PetProfile, Chat, Test } from '../container';
 import { color } from '../utility';
 
 const Stack = createStackNavigator();
@@ -10,7 +10,7 @@ function NavContainer() {
     return (
         <NavigationContainer>
             <Stack.Navigator 
-                initialRouteName="PetProfile"
+                initialRouteName="Login"
                 screenOptions={{
                     headerShown: true,
                     headerTitleAlign: 'center',
@@ -23,6 +23,7 @@ function NavContainer() {
             >
                 <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
                 <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="Chat" component={Chat} />
                 <Stack.Screen name="Profile" component={Profile} options={{ title: 'Trang cá nhân' }} />
                 <Stack.Screen name="PetProfile" component={PetProfile} options={{ title: 'Trang cá nhân pet' }} />
 

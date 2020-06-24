@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import Entypo from 'react-native-vector-icons/Entypo'
 import { YellowBox } from 'react-native';
 import { color } from '../../utility';
 
@@ -139,16 +140,19 @@ const Home = ({ navigation }) => {
             </View>
             <View style={styles.dataContainer}>
                 <TouchableOpacity style={styles.contentBox}>
-                    <FontAwesome5 name="hands-helping" size={52} color="black" />
+                    <FontAwesome5 name="hands-helping" size={38} color={color.GRAY_BUTTON} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.contentBox} onPress={() => navigation.navigate('Chat')}>
+                    <Entypo name="chat" size={40} color={color.GRAY_BUTTON} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.contentBox}>
-                    <AntDesign name="filter" size={60} color="black" />
+                    <AntDesign name="filter" size={40} color={color.GRAY_BUTTON} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.contentBox}>
-                    <AntDesign name="barschart" size={70} color="black" />
+                    <AntDesign name="barschart" size={45} color={color.GRAY_BUTTON} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.contentBox} onPress={() => navigation.navigate('Profile')}>
-                    <AntDesign name="profile" size={55} color="black" />
+                    <AntDesign name="profile" size={42} color={color.GRAY_BUTTON} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -215,13 +219,14 @@ const styles = StyleSheet.create({
     dataContainer: {
         flexDirection: 'row',
         flex: 0.2,
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
+        paddingTop: 10
     },
     contentBox: {
-        width: 90,
-        height: 90,
+        width: 70,
+        height: 70,
         borderWidth: 1,
-        borderColor: color.BLACK,
+        borderColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center'
     }

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { GoogleLogin } from '../../components'
 import { color } from '../../utility';
 
 const Login = ({ navigation }) => {
@@ -24,19 +24,16 @@ const Login = ({ navigation }) => {
                 <Text style={styles.term}>
                     By clicking Login, you agree to our Terms. Learn how we process your data in our Privacy Policy and Cookie Policy.
                 </Text>
-                <TouchableOpacity style={styles.formLogin} onPress={() => navigation.navigate('Home')}>
-                    <FontAwesome5 name="google" size={18} color="white" style={styles.google}/>
-                    <Text style={{ fontSize: 18, color:'white', fontWeight: "bold" }}>
-                        LOG IN WITH GOOGLE
-                    </Text>
-                </TouchableOpacity>
+                {/* Login with google */}
+                <GoogleLogin />
+                {/* Login with facebook */}
                 <TouchableOpacity style={styles.formLoginFb} onPress={() => navigation.navigate('Home')}>
                     <Entypo name="facebook" size={18} color="blue" style={styles.facebook}/>
                     <Text style={{ fontSize: 18, color:'white', fontWeight: "bold" }}>
                         LOG IN WITH FACEBOOK
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.formLoginMess} onPress={() => navigation.navigate('Home')}>
+                <TouchableOpacity style={styles.formLoginMess} onPress={() => setShowModal(true)}>
                     <AntDesign name="message1" size={18} color="black" style={styles.phone}/>
                     <Text style={{ fontSize: 18, color:'white', fontWeight: "bold" }}>
                         LOG IN WITH PHONE NUMBER
@@ -47,12 +44,11 @@ const Login = ({ navigation }) => {
     )
 }
 
-export default Login;
-
 const styles = StyleSheet.create({
     container: {
         flex : 1
     },
+    //Content
     logoContainer: {
         alignItems: 'center',
         flexGrow: 1,
@@ -148,3 +144,5 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 })
+
+export default Login
