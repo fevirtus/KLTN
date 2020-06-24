@@ -194,7 +194,7 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
-    implementation(project(":react-native-google-signin"))
+    // implementation(project(":react-native-google-signin"))
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     
     
