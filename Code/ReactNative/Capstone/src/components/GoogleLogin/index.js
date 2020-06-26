@@ -134,7 +134,7 @@ export default class GoogleLogin extends React.Component {
                     <View>
                         <TouchableOpacity style={styles.formLogin} onPress={this._signIn}>
                             <FontAwesome5 name="google" size={18} color="white" style={styles.google}/>
-                            <Text style={{ fontSize: 18, color:'white', fontWeight: "bold" }}>
+                            <Text style={styles.text}>
                                 LOG IN WITH GOOGLE
                             </Text>
                         </TouchableOpacity>
@@ -178,4 +178,9 @@ const styles = StyleSheet.create({
         marginRight: 42, 
         marginTop: 1
     },
+    text: {
+        fontSize: 18, 
+        color:'white', 
+        fontWeight: "bold"
+    }
 });

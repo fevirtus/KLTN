@@ -10,7 +10,7 @@ function NavContainer() {
     return (
         <NavigationContainer>
             <Stack.Navigator 
-                initialRouteName="Login"
+                initialRouteName="Profile"
                 screenOptions={{
                     headerShown: true,
                     headerTitleAlign: 'center',

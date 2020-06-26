@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native'
+import { View, StyleSheet, Image, TouchableOpacity, Modal, Keyboard } from 'react-native'
 import { Title, Subheading, Text, TextInput } from 'react-native-paper'
 import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { color } from '../../utility';
 
 const PetProfile = () => {
@@ -46,65 +47,67 @@ const PetProfile = () => {
                 animationType='slide'
                 transparent={true}
             >
-                <View style={styles.modalContent}>
-                    <View style={styles.form}>
-                        <AntDesign 
-                            style={styles.close}
-                            name="closecircleo"
-                            size={32}
-                            onPress={() => setShowModal(false)}
-                        />
-                        <View style={styles.content}>
-                            <Subheading style={styles.subheadingModal}>Edit Profile</Subheading>
-                            <TextInput 
-                                style={styles.textInput}
-                                mode="outlined"
-                                label="Name"
-                                value={name}
-                                onChangeText={handleChangeName}
+                <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.form}>
+                            <AntDesign 
+                                style={styles.close}
+                                name="closecircleo"
+                                size={32}
+                                onPress={() => setShowModal(false)}
                             />
-                            <TextInput 
-                                style={styles.textInput}
-                                mode="outlined"
-                                label="Breed"
-                                value={breed}
-                                onChangeText={handleChangeBreed}
-                            />
-                            <TextInput 
-                                style={styles.textInput}
-                                mode="outlined"
-                                label="Gender"
-                                value={gender}
-                                onChangeText={handleChangeGender}
-                            />
-                            <TextInput 
-                                style={styles.textInput}
-                                mode="outlined"
-                                label="Weight"
-                                value={weight}
-                                onChangeText={handleChangeWeight}
-                            />
-                            <TextInput 
-                                style={styles.textInput}
-                                mode="outlined"
-                                label="Age"
-                                value={age}
-                                onChangeText={handleChangeAge}
-                            />
-                            <TextInput 
-                                style={styles.textInput}
-                                mode="outlined"
-                                label="City"
-                                value={city}
-                                onChangeText={handleChangeCity}
-                            />
-                            <TouchableOpacity style={styles.saveButton} onPress={() => setShowModal(false)}>
-                                <Text style={styles.textButton}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>  
-                </View>
-            </Modal>
+                            <View style={styles.content}>
+                                <Subheading style={styles.subheadingModal}>Edit Profile</Subheading>
+                                <TextInput 
+                                    style={styles.textInput}
+                                    mode="outlined"
+                                    label="Name"
+                                    value={name}
+                                    onChangeText={handleChangeName}
+                                />
+                                <TextInput 
+                                    style={styles.textInput}
+                                    mode="outlined"
+                                    label="Breed"
+                                    value={breed}
+                                    onChangeText={handleChangeBreed}
+                                />
+                                <TextInput 
+                                    style={styles.textInput}
+                                    mode="outlined"
+                                    label="Gender"
+                                    value={gender}
+                                    onChangeText={handleChangeGender}
+                                />
+                                <TextInput 
+                                    style={styles.textInput}
+                                    mode="outlined"
+                                    label="Weight"
+                                    value={weight}
+                                    onChangeText={handleChangeWeight}
+                                />
+                                <TextInput 
+                                    style={styles.textInput}
+                                    mode="outlined"
+                                    label="Age"
+                                    value={age}
+                                    onChangeText={handleChangeAge}
+                                />
+                                <TextInput 
+                                    style={styles.textInput}
+                                    mode="outlined"
+                                    label="City"
+                                    value={city}
+                                    onChangeText={handleChangeCity}
+                                />
+                                <TouchableOpacity style={styles.saveButton} onPress={() => setShowModal(false)}>
+                                    <Text style={styles.textButton}>Save</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>  
+                    </View>
+                </KeyboardAwareScrollView>
+            </Modal>   
 
             <View style={styles.header}>
                 <Text style={styles.title}>MY PETPROFILE</Text>
