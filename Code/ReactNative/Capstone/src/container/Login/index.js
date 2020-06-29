@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { GoogleLogin, FacebookLogin } from '../../components'
+import { GoogleLogin, FacebookLogin, TestComponent } from '../../components'
 import { color } from '../../utility';
 
 const Login = ({ navigation }) => {
@@ -24,7 +24,8 @@ const Login = ({ navigation }) => {
                 </Text>
                 <View style={styles.formLogin}>
                     {/* Login with google */}
-                    <GoogleLogin />
+                    {/* <GoogleLogin /> */}
+                    <TestComponent/>
                     {/* Login with facebook */}
                     <FacebookLogin />
                 </View>

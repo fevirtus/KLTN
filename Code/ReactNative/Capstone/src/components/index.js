@@ -3,4 +3,6 @@ import GoogleLogin from './GoogleLogin'
 import FacebookLogin from './FacebookLogin'
 import DismissKeyboard from './DismissKeyboard'
 
-export { ContinueButton, GoogleLogin, FacebookLogin, DismissKeyboard }
+import TestComponent from './TestComp'
+
+export { ContinueButton, GoogleLogin, FacebookLogin, DismissKeyboard, TestComponent }

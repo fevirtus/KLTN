@@ -40,9 +40,8 @@ export default class GoogleLogin extends React.Component {
         if (isSignedIn) {
             alert('User is already signed in');
             //Get the User details as user is already signed in
-        this._getCurrentUserInfo();
+            this._getCurrentUserInfo();
         } else {
-            //alert("Please Login");
             console.log('Please Login');
         }
         this.setState({ gettingLoginStatus: false });
@@ -99,6 +98,44 @@ export default class GoogleLogin extends React.Component {
             console.error(error);
         }
     };
+
+    // onLoginOrRegister = () => {
+    //     GoogleSignin.signIn()
+    //       .then((data) => {
+    //         const credential = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken);
+    //         return firebase.auth().signInWithCredential(credential);
+    //       })
+    //       .then((user) => {
+      
+    //         // ** Now that the user is signed in, you can get the ID Token. **
+      
+    //         user.getIdToken(/* forceRefresh */ true).then(function(idToken) 
+      
+    //       })
+    //       .catch((error) => {
+    //         const { code, message } = error;
+    //       });
+    //   }
+    //   firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken)
+
+    // loginGoogle = () => {
+    //     GoogleSignin.signIn()
+    //         .then((user) => {
+    //             console.log(user)
+    //             let credential = {token: user.idToken, secret: user.serverAuthCode, provider: 'google', providerId: 'google'}
+    //             firebase.auth().signInWithCredential(credential)
+    //                 .then((u) => {
+    //                     console.log('LOGGED!', u)
+    //                 })
+    //                 .catch((e) => {
+    //                     console.log('err', e)
+    //                 })
+    //         })
+    //         .catch((err) => {
+    //             console.log('WRONG SIGNIN', err)
+    //         })
+    //         .done()
+    // }
 
     render() {
         //returning Loader untill we check for the already signed in user

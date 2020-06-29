@@ -37,7 +37,7 @@ export default class FacebookLogin extends Component {
         LoginManager.logInWithPermissions(['public_profile']).then(
         login => {
             if (login.isCancelled) {
-            console.log('login canceled')
+                console.log('login canceled')
             }
             else {
             AccessToken.getCurrentAccessToken().then(data => {
