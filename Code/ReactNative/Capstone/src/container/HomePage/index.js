@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { YellowBox } from 'react-native';
 import { color } from '../../utility';
@@ -140,19 +141,19 @@ const Home = ({ navigation }) => {
             </View>
             <View style={styles.dataContainer}>
                 <TouchableOpacity style={styles.contentBox}>
-                    <FontAwesome5 name="hands-helping" size={38} color={color.GRAY_BUTTON} />
+                    <FontAwesome5 name="hands-helping" size={38} color={color.WHITE} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.contentBox} onPress={() => navigation.navigate('Chat')}>
-                    <Entypo name="chat" size={40} color={color.GRAY_BUTTON} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.contentBox}>
-                    <AntDesign name="filter" size={40} color={color.GRAY_BUTTON} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.contentBox}>
-                    <AntDesign name="barschart" size={45} color={color.GRAY_BUTTON} />
+                    <Entypo name="chat" size={40} color={color.WHITE} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.contentBox} onPress={() => navigation.navigate('Profile')}>
-                    <AntDesign name="profile" size={42} color={color.GRAY_BUTTON} />
+                    <FontAwesome name="user" size={42} color={color.WHITE} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.contentBox}>
+                    <AntDesign name="barschart" size={45} color={color.WHITE} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.contentBox}>
+                    <AntDesign name="setting" size={40} color={color.WHITE} onPress={() => navigation.navigate('Setting')}/>
                 </TouchableOpacity>
             </View>
         </View>
@@ -225,9 +226,8 @@ const styles = StyleSheet.create({
     contentBox: {
         width: 70,
         height: 70,
-        borderWidth: 1,
-        borderColor: color.PINK,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: color.PINK
     }
 });
