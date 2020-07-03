@@ -7,6 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { YellowBox } from 'react-native';
 import { color } from '../../utility';
+import { useSelector, useDispatch } from 'react-redux';
 
 import data from '../../../data';
 
@@ -25,120 +26,129 @@ const CardDetails = ({ index }) => (
 
 const Home = ({ navigation }) => {
     const [index, setIndex] = useState(0)
+    const hide = useSelector(state => state.home.isHideSwiper)
     const swiperRef = useRef(null)
     const onSwiped = () => {
         setIndex((index + 1) % data.length)
     }
-
+    
     return (
         <View style={styles.container}>
-            <View style={styles.swiperContainer}>
-                <Swiper
-                    cards={data}
-                    cardIndex={index}
-                    renderCard={card => <Card card={card} />}
-                    ref={swiperRef}
-                    onSwiped={onSwiped}
-                    stackSize={2} 
-                    disableBottomSwipe
-                    animateOverlayLabelsOpacity	
-                    infinite
-                    backgroundColor={'transparent'}
-                    overlayLabels={{
-                        left: {
-                            title: 'NOPE',
-                            style: {
-                                label: {
-                                    backgroundColor: 'transparent',
-                                    color: color.RED,
-                                    fontSize: 24,
-                                    borderColor: color.RED,
-                                    borderWidth: 3
+            { hide ? 
+                (<View style={styles.container}>
+                    <Text>Nothing to see here!</Text>
+                </View>) : 
+                (<View style={styles.container}>
+                    <View style={styles.swiperContainer}>
+                        <Swiper
+                            cards={data}
+                            cardIndex={index}
+                            renderCard={card => <Card card={card} />}
+                            ref={swiperRef}
+                            onSwiped={onSwiped}
+                            stackSize={2} 
+                            disableBottomSwipe
+                            animateOverlayLabelsOpacity	
+                            infinite
+                            backgroundColor={'transparent'}
+                            overlayLabels={{
+                                left: {
+                                    title: 'NOPE',
+                                    style: {
+                                        label: {
+                                            backgroundColor: 'transparent',
+                                            color: color.RED,
+                                            fontSize: 24,
+                                            borderColor: color.RED,
+                                            borderWidth: 3
+                                        },
+                                        wrapper: {
+                                            flexDirection: 'column',
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'flex-start',
+                                            marginTop: -35,
+                                            marginLeft: -20
+                                        }
+                                    }
                                 },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-end',
-                                    justifyContent: 'flex-start',
-                                    marginTop: -35,
-                                    marginLeft: -20
-                                }
-                            }
-                        },
-                        right: {
-                            title: 'LIKE',
-                            style: {
-                                label: {
-                                    backgroundColor: 'transparent',
-                                    color: color.GREEN,
-                                    fontSize: 24,
-                                    borderColor: color.GREEN,
-                                    borderWidth: 3
+                                right: {
+                                    title: 'LIKE',
+                                    style: {
+                                        label: {
+                                            backgroundColor: 'transparent',
+                                            color: color.GREEN,
+                                            fontSize: 24,
+                                            borderColor: color.GREEN,
+                                            borderWidth: 3
+                                        },
+                                        wrapper: {
+                                            flexDirection: 'column',
+                                            alignItems: 'flex-start',
+                                            justifyContent: 'flex-start',
+                                            marginTop: -35,
+                                            marginLeft: 20
+                                        }
+                                    }
                                 },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-start',
-                                    justifyContent: 'flex-start',
-                                    marginTop: -35,
-                                    marginLeft: 20
+                                top: {
+                                    title: 'SUPER LIKE',
+                                    style: {
+                                        label: {
+                                            backgroundColor: 'transparent',
+                                            color: color.BLUE,
+                                            fontSize: 24,
+                                            borderColor: color.BLUE,
+                                            borderWidth: 3
+                                        },
+                                        wrapper: {
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            marginTop: -60
+                                        }
+                                    }
                                 }
-                            }
-                        },
-                        top: {
-                            title: 'SUPER LIKE',
-                            style: {
-                                label: {
-                                    backgroundColor: 'transparent',
-                                    color: color.BLUE,
-                                    fontSize: 24,
-                                    borderColor: color.BLUE,
-                                    borderWidth: 3
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    marginTop: -60
-                                }
-                            }
-                        }
-                    }}
-                />
-            </View>
-            <View style={styles.bottomContainer}>
-                <CardDetails index={index} />
-                <View style={styles.bottomButtonsContainer}>
-                    <AntDesign.Button 
-                        style={styles.iconContainer}
-                        name="close"
-                        size={50}
-                        backgroundColor={'transparent'}
-                        underlayColor={'transparent'}
-                        activeOpacity={0.3}
-                        color={color.RED}
-                        onPress={() => swiperRef.current.swipeLeft()}
-                    />
-                    <AntDesign.Button 
-                        style={styles.iconContainer}
-                        name="star"
-                        size={45}
-                        backgroundColor={'transparent'}
-                        underlayColor={'transparent'}
-                        activeOpacity={0.3}
-                        color={color.BLUE}
-                        onPress={() => swiperRef.current.swipeTop()}
-                    />
-                    <AntDesign.Button 
-                        style={styles.iconContainer}
-                        name="heart"
-                        size={40}
-                        backgroundColor={'transparent'}
-                        underlayColor={'transparent'}
-                        activeOpacity={0.3}
-                        color={color.GREEN}
-                        onPress={() => swiperRef.current.swipeRight()}
-                    />
-                </View>
-            </View>
+                            }}
+                        />
+                    </View>
+                    <View style={styles.bottomContainer}>
+                        <CardDetails index={index} />
+                        <View style={styles.bottomButtonsContainer}>
+                            <AntDesign.Button 
+                                style={styles.iconContainer}
+                                name="close"
+                                size={50}
+                                backgroundColor={'transparent'}
+                                underlayColor={'transparent'}
+                                activeOpacity={0.3}
+                                color={color.RED}
+                                onPress={() => swiperRef.current.swipeLeft()}
+                            />
+                            <AntDesign.Button 
+                                style={styles.iconContainer}
+                                name="star"
+                                size={45}
+                                backgroundColor={'transparent'}
+                                underlayColor={'transparent'}
+                                activeOpacity={0.3}
+                                color={color.BLUE}
+                                onPress={() => swiperRef.current.swipeTop()}
+                            />
+                            <AntDesign.Button 
+                                style={styles.iconContainer}
+                                name="heart"
+                                size={40}
+                                backgroundColor={'transparent'}
+                                underlayColor={'transparent'}
+                                activeOpacity={0.3}
+                                color={color.GREEN}
+                                onPress={() => swiperRef.current.swipeRight()}
+                            />
+                        </View>
+                    </View>
+                </View>)             
+            }   
+              
             <View style={styles.dataContainer}>
                 <TouchableOpacity style={styles.contentBox}>
                     <FontAwesome5 name="hands-helping" size={38} color={color.WHITE} />
@@ -149,11 +159,16 @@ const Home = ({ navigation }) => {
                 <TouchableOpacity style={styles.contentBox} onPress={() => navigation.navigate('Profile')}>
                     <FontAwesome name="user" size={42} color={color.WHITE} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.contentBox}>
+                <TouchableOpacity style={styles.contentBox} onPress={() => navigation.navigate('Filter')}>
                     <AntDesign name="barschart" size={45} color={color.WHITE} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.contentBox}>
-                    <AntDesign name="setting" size={40} color={color.WHITE} onPress={() => navigation.navigate('Setting')}/>
+                    <AntDesign 
+                        name="setting" 
+                        size={40} 
+                        color={color.WHITE} 
+                        onPress={() => navigation.navigate('Setting')} 
+                    />
                 </TouchableOpacity>
             </View>
         </View>

@@ -4,7 +4,7 @@ import { Title, Subheading, Text, TextInput } from 'react-native-paper'
 import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { color } from '../../utility';
+import { color } from '../../../../utility';
 
 const PetProfile = () => {
     const [name, setName] = useState('Charley')
@@ -111,7 +111,7 @@ const PetProfile = () => {
 
             <View style={styles.header}>
                 <Text style={styles.title}>MY PETPROFILE</Text>
-                <Image source={require('../../../images/users/2.jpg')} style={styles.img}/>
+                <Image source={require('../../../../../images/users/2.jpg')} style={styles.img}/>
                 <TouchableOpacity 
                     style={styles.buttonEdit} 
                     onPress={() => setShowModal(true)}

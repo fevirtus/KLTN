@@ -13,3 +13,4 @@ export const TRANSPARENT = "transparent";
 export const PINK = "#EE66AA";
 export const ORANGE = "#EEAA66";
 export const GRAY_BUTTON = "#848484";
+export const LIGHT_GRAY = '#dedcee'

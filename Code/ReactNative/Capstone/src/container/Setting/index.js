@@ -4,31 +4,28 @@ import { color } from '../../utility'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
+import { useRoute } from '@react-navigation/native'
 
 const Setting = ({ navigation }) => {
+    const route = useRoute()
+    console.log(route)
     return (
         <View style={styles.container}>
             <ImageBackground 
                 source={require('../../../images/login-pets.jpg')} 
                 style={styles.image}
             >
-                <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Privacy')}>
+                <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Privacy', !route.params)}>
                     <View style={styles.iconWrapper}>
                         <FontAwesome name="lock" size={28} color={color.WHITE} />
                     </View>            
                     <Text style={styles.text}>Privacy</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.item}>
+                <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Feedback')}>
                     <View style={styles.iconWrapper}>
                         <FontAwesome name="lightbulb-o" size={28} color={color.WHITE} />
                     </View>            
                     <Text style={styles.text}>Feedback</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.item}>
-                    <View style={styles.iconWrapper}>
-                        <FontAwesome name="search" size={23} color={color.WHITE} />
-                    </View>            
-                    <Text style={styles.text}>Search Settings</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item}>
                     <View style={styles.iconWrapper}>

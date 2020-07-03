@@ -4,7 +4,7 @@ import { TextInput, Subheading } from 'react-native-paper';
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { DismissKeyboard } from '../../components'
+import { DismissKeyboard } from '../../../components'
 
 const Profile = ({ navigation }) => {
     const [avatarBoss, setAvatarBoss] = useState(null)
@@ -67,7 +67,7 @@ const Profile = ({ navigation }) => {
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <ImageBackground 
-                        source={require('../../../images/avatar.jpg')} 
+                        source={require('../../../../images/avatar.jpg')} 
                         style={styles.profilePicWrap} 
                         imageStyle={{ borderRadius: 100 }}
                     >

@@ -1,0 +1,1 @@
+export const HIDE_SWIPER = "HIDE_SWIPER"
