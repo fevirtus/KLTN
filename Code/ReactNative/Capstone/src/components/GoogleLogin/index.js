@@ -13,7 +13,7 @@ const GoogleLogin = () => {
     const [userInfo, setUserInfo] = useState(null)  
 
     useEffect(() => {  
-    getCurrentUserInfo();  
+        getCurrentUserInfo();  
     }, []);  
 
     const getCurrentUserInfo = async () => {  
@@ -37,6 +37,7 @@ const GoogleLogin = () => {
             const userInfo = await GoogleSignin.signIn();  
             console.log('User Info --> ', userInfo);  
             console.log('idToken', userInfo.idToken)
+            console.log('email', userInfo.email)
             setIsLoggedIn(true);  
             setUserInfo(userInfo);  
         } catch (error) {  
