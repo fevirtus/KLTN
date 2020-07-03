@@ -40,10 +40,10 @@ export default class FacebookLogin extends Component {
                 console.log('login canceled')
             }
             else {
-            AccessToken.getCurrentAccessToken().then(data => {
-                const accessToken = data.accessToken.toString()
-                this.getInfoFromToken(accessToken)
-            })
+                AccessToken.getCurrentAccessToken().then(data => {
+                    const accessToken = data.accessToken.toString()
+                    this.getInfoFromToken(accessToken)
+                })
             }
         },
         error => {

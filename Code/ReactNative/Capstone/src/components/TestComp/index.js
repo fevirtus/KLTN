@@ -1,47 +1,89 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { GoogleSignin } from '@react-native-community/google-signin'
+import { GoogleSignin, statusCodes } from '@react-native-community/google-signin'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
 
-export class TestComponent extends Component {
-    componentDidMount(){
-        GoogleSignin.configure({
-            webClientId: '57907873541-r853h7dljsh3lbjf94atj7tuntu4qpm4.apps.googleusercontent.com'
-        })
-    }
+const TestComponent = () => {
+    GoogleSignin.configure({
+        webClientId: '57907873541-r853h7dljsh3lbjf94atj7tuntu4qpm4.apps.googleusercontent.com'
+    })
 
-    loginGoogle = () => {
-        GoogleSignin.signIn()
-            .then((user) => {
-                console.log(user)
-                let credential = {token: user.idToken, secret: user.serverAuthCode, provider: 'google', providerId: 'google'}
-                firebase.auth().signInWithCredential(credential)
-                    .then((u) => {
-                        console.log('LOGGED!', u)
-                    })
-                    .catch((e) => {
-                        console.log('err', e)
-                    })
-            })
-            .catch((err) => {
-                console.log('WRONG SIGNIN', err)
-            })
-            .done()
-    }
+    const [isLoggedIn, setIsLoggedIn] = useState(false)  
+    const [userInfo, setUserInfo] = useState(null)  
 
-    render() {
-        return (
-            <View>
-                <TouchableOpacity style={styles.formLogin} onPress={this.loginGoogle}>
+    useEffect(() => {  
+    getCurrentUserInfo();  
+    }, []);  
+
+    const getCurrentUserInfo = async () => {  
+        try {  
+            const userInfo = await GoogleSignin.signInSilently();  
+            console.log(userInfo);  
+            setIsLoggedIn(true);  
+            setUserInfo(userInfo);  
+        } catch (error) {  
+            if (error.code === statusCodes.SIGN_IN_REQUIRED) {  
+            // user has not signed in yet  
+            } else {  
+            // some other error  
+            }  
+        }  
+    };  
+    
+    const _signIn = async () => {  
+        try {  
+            await GoogleSignin.hasPlayServices();  
+            const userInfo = await GoogleSignin.signIn();  
+            console.log('User Info --> ', userInfo);  
+            console.log('idToken', userInfo.idToken)
+            setIsLoggedIn(true);  
+            setUserInfo(userInfo);  
+        } catch (error) {  
+            console.log(error);  
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {  
+            // user cancelled the login flow  
+            } else if (error.code === statusCodes.IN_PROGRESS) {  
+            // operation (e.g. sign in) is in progress already  
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {  
+            // play services not available or outdated  
+            } else {  
+            // some other error happened  
+            }  
+        }  
+    };  
+  
+    const _signOut = async () => {  
+        try {  
+            await GoogleSignin.revokeAccess();  
+            await GoogleSignin.signOut();  
+            setIsLoggedIn(false);  
+        } catch (error) {  
+            console.error(error);  
+        }  
+    }  
+
+    return (
+        <View>
+            {
+                !isLoggedIn ?
+                <TouchableOpacity style={styles.formLogin} onPress={_signIn}>
                     <FontAwesome5 name="google" size={18} color="white" style={styles.google}/>
                     <Text style={styles.text}>
                         LOG IN WITH GOOGLE
                     </Text>
-                </TouchableOpacity>
-            </View>
-        )
-    }
+                </TouchableOpacity> :
+                <>  
+                    <Text>Email: {userInfo ? userInfo.user.email : ""}</Text>  
+                    <Text>Name: {userInfo ? userInfo.user.name : ""}</Text>  
+                    <TouchableOpacity style={styles.signOutBtn} onPress={_signOut}>  
+                    <Text style={styles.signOutBtnText}>Signout</Text>  
+                    </TouchableOpacity>  
+                </>
+            }
+            
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -69,24 +111,3 @@ const styles = StyleSheet.create({
 export default TestComponent
 
 
-
-
-
-    // onLoginOrRegister = () => {
-        //     GoogleSignin.signIn()
-        //       .then((data) => {
-        //         const credential = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken);
-        //         return firebase.auth().signInWithCredential(credential);
-        //       })
-        //       .then((user) => {
-          
-        //         // ** Now that the user is signed in, you can get the ID Token. **
-          
-        //         user.getIdToken(/* forceRefresh */ true).then(function(idToken) 
-          
-        //       })
-        //       .catch((error) => {
-        //         const { code, message } = error;
-        //       });
-        //   }
-        //   firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken)
