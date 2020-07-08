@@ -35,7 +35,10 @@ const Home = ({ navigation }) => {
         <View style={styles.container}>
             { hide ? 
                 (<View style={styles.container}>
-                    <Text>Nothing to see here!</Text>
+                    <View style={styles.hideMode}>
+                        <FontAwesome5 name="umbrella-beach" size={150} color={color.GRAY}/>
+                        <Text style={styles.textHide}>Nothing to see here!</Text>
+                    </View>
                 </View>) : 
                 (<View style={styles.container}>
                     <View style={styles.swiperContainer}>
@@ -115,9 +118,6 @@ const Home = ({ navigation }) => {
                             <AntDesign 
                                 name="close"
                                 size={45}
-                                backgroundColor={'transparent'}
-                                underlayColor={'transparent'}
-                                activeOpacity={0.3}
                                 color={color.RED}
                                 onPress={() => swiperRef.current.swipeLeft()}
                             />
@@ -126,21 +126,14 @@ const Home = ({ navigation }) => {
                             <AntDesign
                                 name="star"
                                 size={43}
-                                backgroundColor={'transparent'}
-                                underlayColor={'transparent'}
-                                activeOpacity={0.3}
                                 color={color.BLUE}
                                 onPress={() => swiperRef.current.swipeTop()}
                             />
                         </TouchableOpacity>
-                        
                         <TouchableOpacity style={styles.iconContainer}>
                             <AntDesign
                                 name="heart"
                                 size={40}
-                                backgroundColor={'transparent'}
-                                underlayColor={'transparent'}
-                                activeOpacity={0.3}
                                 color={color.GREEN}
                                 onPress={() => swiperRef.current.swipeRight()}
                             />
@@ -236,6 +229,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: color.PINK
+    },
+    hideMode: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: color.LIGHT_GRAY,
+        marginTop: 20,
+        marginBottom: 20,
+        marginLeft: 20,
+        marginRight: 20,
+        borderRadius: 8,
+        elevation: 4
+    },
+    textHide: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: color.GRAY,
+        paddingTop: 22
     }
 });
 
