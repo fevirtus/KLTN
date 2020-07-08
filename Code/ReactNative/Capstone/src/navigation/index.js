@@ -24,7 +24,6 @@ const Stack = createStackNavigator();
 const LoginStack = () => {
     return (
         <Stack.Navigator screenOptions={{
-            headerShown: true,
             headerTitleAlign: 'center',
             headerTitleStyle: {
                 fontWeight: 'bold',

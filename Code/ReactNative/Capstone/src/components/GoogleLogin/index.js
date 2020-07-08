@@ -68,11 +68,10 @@ const styles = StyleSheet.create({
     formLogin: {
         height: 45,
         width: 340,
-        borderColor: color.WHITE,
-        borderWidth: 2,
         borderRadius: 20,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: color.RED
     },
     google: {
         marginLeft: 10, 
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18, 
-        color:'white', 
+        color: color.WHITE,  
         fontWeight: "bold"
     }
 })

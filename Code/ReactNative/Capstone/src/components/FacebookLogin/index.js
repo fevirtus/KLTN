@@ -61,7 +61,7 @@ export default class FacebookLogin extends Component {
         return (
             <View>
                 <TouchableOpacity style={styles.formLogin} onPress={onPressButton}>
-                    <Entypo name="facebook" size={18} color="blue" style={styles.facebook}/>
+                    <Entypo name="facebook" size={18} color='white' style={styles.facebook}/>
                     <Text style={styles.text}>
                         LOG IN WITH FACEBOOK
                     </Text>
@@ -80,8 +80,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         height: 45,
         width: 340,
-        borderColor: color.WHITE,
-        borderWidth: 2,
+        backgroundColor: color.BLUE,
         borderRadius: 20,
         flexDirection: 'row',
         alignItems: 'center'
@@ -93,7 +92,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18, 
-        color:'white', 
+        color: color.WHITE, 
         fontWeight: "bold"
     }
 });

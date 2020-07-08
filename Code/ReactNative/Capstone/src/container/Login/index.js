@@ -1,34 +1,64 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Text, ImageBackground } from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { GoogleLogin, FacebookLogin, TestComponent } from '../../components'
 import { color } from '../../utility';
+import * as Animatable from 'react-native-animatable';
 
 const Login = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <View style={styles.logoContainer}>
-                <View style={styles.icon}>
-                    <MaterialIcons name="pets" size={40} color="white" />
-                    <Text style={styles.name}>
-                        PetDating
-                    </Text>
+            <ImageBackground 
+                source={require('../../../images/login-pets.jpg')} 
+                style={styles.image}
+            >
+                <View style={styles.header}>
+                    <View style={styles.icon}>
+                        <MaterialIcons name="pets" size={40} color="white" />
+                        <Text style={styles.name}>
+                            PetDating
+                        </Text>
+                    </View>
+                    <Animatable.Text 
+                        animation="shake" 
+                        style={styles.title}
+                    >   
+                        Match . Chat . Date
+                    </Animatable.Text>
                 </View>
-                <Image 
-                    style={styles.logo}
-                    source={require('../../../images/login-pets.jpg')} 
-                />
-                <Text style={styles.title}>Match . Chat . Date</Text>
-                <Text style={styles.term}>
-                    By clicking Login, you agree to our Terms. Learn how we process your data in our Privacy Policy and Cookie Policy.
-                </Text>
-                <View style={styles.formLogin}>
-                    {/* Login with google */}
-                    <GoogleLogin navigation={navigation} />
-                    {/* Login with facebook */}
-                    <FacebookLogin />
-                </View>
-            </View>
+                <Animatable.View 
+                    style={styles.footer}
+                    animation="fadeInUpBig"
+                >
+                    <View style={styles.textPrivate}>
+                        <Text style={styles.color_textPrivate}>
+                            By clicking login you agree to our
+                        </Text>
+                        <Text style={[styles.color_textPrivate, {
+                            fontWeight: 'bold'
+                        }]}>
+                            {" "}
+                            Terms of Service
+                        </Text>
+                        <Text style={styles.color_textPrivate}>
+                            {" "}
+                            and
+                        </Text>
+                        <Text style={[styles.color_textPrivate, {
+                            fontWeight: 'bold'
+                        }]}>
+                            {" "}
+                            Privacy Policy
+                        </Text>
+                    </View>
+                    <View style={styles.formLogin}>
+                        {/* Login with google */}
+                        <GoogleLogin navigation={navigation} />
+                        {/* Login with facebook */}
+                        <FacebookLogin />
+                    </View>
+                </Animatable.View>  
+            </ImageBackground>
         </View>
     )
 }
@@ -37,13 +67,20 @@ const styles = StyleSheet.create({
     container: {
         flex : 1
     },
-    //Content
-    logoContainer: {
-        alignItems: 'center',
-        flexGrow: 1,
-        justifyContent: 'center',
-        flex : 1,
-        flexDirection: 'column'
+    image: {
+        flex: 1,
+        resizeMode: "cover",
+    },
+    header: {
+        flex: 1.35
+    },
+    footer: {
+        flex: 0.65,
+        backgroundColor: color.WHITE,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingVertical: 35,
+        paddingHorizontal: 30
     },
     icon: {
         zIndex: 1,
@@ -56,35 +93,27 @@ const styles = StyleSheet.create({
         color: color.WHITE, 
         fontSize: 30 
     }, 
-    logo: { 
-        position: 'absolute',
-        height: 680,
-        resizeMode: 'cover'
-    },
     title: {
-        position: 'absolute',
-        top: 160,
         fontWeight: '700',
         fontSize: 40,
         color: color.WHITE,
         letterSpacing: 1,
-        opacity: 0.9
-    }, 
-    term: {
-        paddingTop: 30,
-        paddingBottom: 30,
-        paddingLeft: 30,
-        paddingRight: 30,
-        color: color.WHITE, 
-        textAlign: 'center', 
-        fontSize: 15, 
-        letterSpacing: 0.5, 
-        marginBottom: 20
+        opacity: 0.9,
+        alignSelf: 'center',
+        paddingVertical: 160
+    },
+    textPrivate: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: 8
+    },
+    color_textPrivate: {
+        color: color.GRAY
     },
     formLogin: {
-        position: 'absolute',
-        top: 420
-    },
+        paddingHorizontal: 7,
+        paddingVertical: 34
+    }
 })
 
 export default Login
