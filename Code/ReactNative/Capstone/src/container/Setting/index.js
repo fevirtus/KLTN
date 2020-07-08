@@ -4,30 +4,34 @@ import { color } from '../../utility'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
-import { useRoute } from '@react-navigation/native'
+import AsyncStorage from '@react-native-community/async-storage';
 
-const Setting = ({ navigation }) => {
-    const route = useRoute()
-    console.log(route)
+const Setting = (props) => {
+    const logout = (props) => {
+        AsyncStorage.removeItem("token").then(()=>{
+          props.navigation.navigate("Login")
+        })
+    }
+
     return (
         <View style={styles.container}>
             <ImageBackground 
                 source={require('../../../images/login-pets.jpg')} 
                 style={styles.image}
             >
-                <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Privacy', !route.params)}>
+                <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Privacy')}>
                     <View style={styles.iconWrapper}>
                         <FontAwesome name="lock" size={28} color={color.WHITE} />
                     </View>            
                     <Text style={styles.text}>Privacy</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Feedback')}>
+                <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Feedback')}>
                     <View style={styles.iconWrapper}>
                         <FontAwesome name="lightbulb-o" size={28} color={color.WHITE} />
                     </View>            
                     <Text style={styles.text}>Feedback</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.item}>
+                <TouchableOpacity style={styles.item} onPress={() => logout(props)}>
                     <View style={styles.iconWrapper}>
                         <MaterialCommunityIcons name="logout" size={26} color={color.WHITE} />
                     </View>            
