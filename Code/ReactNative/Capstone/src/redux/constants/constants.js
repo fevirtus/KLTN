@@ -1,1 +1,3 @@
 export const HIDE_SWIPER = "HIDE_SWIPER"
+export const SAVE_USERINFO = "SAVE_USERINFO"
+export const CLEAR_USERINFO = "CLEAR_USERINFO"

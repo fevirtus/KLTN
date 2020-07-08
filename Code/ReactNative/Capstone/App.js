@@ -1,15 +1,31 @@
 import React from 'react';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 import rootReducer from './src/redux/reducers';
 import Nav from './src/navigation'
+import { persistStore, persistReducer } from 'redux-persist'
+import { createLogger } from 'redux-logger'
+import { PersistGate } from 'redux-persist/es/integration/react'
 
-const store = createStore(rootReducer)
+const persistConfig = {
+    key: 'root',
+    storage: AsyncStorage,
+    whitelist: ['home', 'auth']
+}
+
+const persitedReducer = persistReducer(persistConfig, rootReducer)
+
+const store = createStore(persitedReducer, applyMiddleware(createLogger()))
+
+const persitedStore = persistStore(store)
 
 const App = () => {
     return (
         <Provider store={store}>
-            <Nav /> 
+            <PersistGate persistor={persitedStore} loading={null}>
+                <Nav /> 
+            </PersistGate>
         </Provider>
     )
 };

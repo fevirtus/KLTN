@@ -24,7 +24,7 @@ const Login = ({ navigation }) => {
                 </Text>
                 <View style={styles.formLogin}>
                     {/* Login with google */}
-                    <GoogleLogin />
+                    <GoogleLogin navigation={navigation} />
                     {/* Login with facebook */}
                     <FacebookLogin />
                 </View>
