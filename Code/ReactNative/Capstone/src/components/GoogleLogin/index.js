@@ -4,11 +4,10 @@ import { GoogleSignin, statusCodes } from '@react-native-community/google-signin
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
 import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
 
-const GoogleLogin = ({ navigation }) => {
+const GoogleLogin = () => {
     GoogleSignin.configure({
         webClientId: '57907873541-r853h7dljsh3lbjf94atj7tuntu4qpm4.apps.googleusercontent.com'
     })
