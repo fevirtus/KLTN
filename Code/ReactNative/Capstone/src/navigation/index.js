@@ -1,7 +1,19 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import { Login, Home, Filter, Profile, PetProfile, Chat, Setting, Privacy, Feedback, Test } from '../container';
+import { 
+    Login, 
+    Home, 
+    Filter, 
+    Profile, 
+    PetProfile, 
+    Chat, 
+    Setting, 
+    Privacy, 
+    Feedback, 
+    Test 
+} from '../container';
 import { color } from '../utility';
 
 const Stack = createStackNavigator();
@@ -10,7 +22,7 @@ function NavContainer() {
     return (
         <NavigationContainer>
             <Stack.Navigator 
-                initialRouteName="Login"
+                initialRouteName="Home"
                 screenOptions={{
                     headerShown: true,
                     headerTitleAlign: 'center',

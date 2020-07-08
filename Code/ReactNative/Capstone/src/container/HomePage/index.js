@@ -7,20 +7,19 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { YellowBox } from 'react-native';
 import { color } from '../../utility';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import data from '../../../data';
 
-const Card = ({card}) => (
+const Card = ({card, index}) => (
     <View style={styles.card}>
-      <Image source={{uri: card.image}} style={styles.cardImage}/>
-    </View>
-)
-
-const CardDetails = ({ index }) => (
-    <View style={styles.cardDetails}>
-      <Text style={styles.title}>{data[index].name}</Text>
-      <Text style={styles.price}>{data[index].price}</Text>
+        <View>
+            <Image source={{uri: card.image}} style={styles.cardImage}/>
+        </View>
+        <View style={styles.cardDetails}>
+            <Text style={styles.title}>{data[index].name}</Text>
+            <Text style={styles.description}>{data[index].description}</Text>
+        </View>
     </View>
 )
 
@@ -43,7 +42,7 @@ const Home = ({ navigation }) => {
                         <Swiper
                             cards={data}
                             cardIndex={index}
-                            renderCard={card => <Card card={card} />}
+                            renderCard={(card, index) => <Card card={card} index={index}/>}
                             ref={swiperRef}
                             onSwiped={onSwiped}
                             stackSize={2} 
@@ -111,40 +110,37 @@ const Home = ({ navigation }) => {
                             }}
                         />
                     </View>
-                    <View style={styles.bottomContainer}>
-                        <CardDetails index={index} />
-                        <View style={styles.bottomButtonsContainer}>
-                            <AntDesign.Button 
-                                style={styles.iconContainer}
-                                name="close"
-                                size={50}
-                                backgroundColor={'transparent'}
-                                underlayColor={'transparent'}
-                                activeOpacity={0.3}
-                                color={color.RED}
-                                onPress={() => swiperRef.current.swipeLeft()}
-                            />
-                            <AntDesign.Button 
-                                style={styles.iconContainer}
-                                name="star"
-                                size={45}
-                                backgroundColor={'transparent'}
-                                underlayColor={'transparent'}
-                                activeOpacity={0.3}
-                                color={color.BLUE}
-                                onPress={() => swiperRef.current.swipeTop()}
-                            />
-                            <AntDesign.Button 
-                                style={styles.iconContainer}
-                                name="heart"
-                                size={40}
-                                backgroundColor={'transparent'}
-                                underlayColor={'transparent'}
-                                activeOpacity={0.3}
-                                color={color.GREEN}
-                                onPress={() => swiperRef.current.swipeRight()}
-                            />
-                        </View>
+                    <View style={styles.bottomButtonsContainer}>
+                        <AntDesign.Button 
+                            style={styles.iconContainer}
+                            name="close"
+                            size={50}
+                            backgroundColor={'transparent'}
+                            underlayColor={'transparent'}
+                            activeOpacity={0.3}
+                            color={color.RED}
+                            onPress={() => swiperRef.current.swipeLeft()}
+                        />
+                        <AntDesign.Button 
+                            style={styles.iconContainer}
+                            name="star"
+                            size={45}
+                            backgroundColor={'transparent'}
+                            underlayColor={'transparent'}
+                            activeOpacity={0.3}
+                            color={color.BLUE}
+                            onPress={() => swiperRef.current.swipeTop()}
+                        />
+                        <AntDesign.Button 
+                            style={styles.iconContainer}
+                            name="heart"
+                            size={40}
+                            backgroundColor={'transparent'}
+                            underlayColor={'transparent'}
+                            activeOpacity={0.3}
+                            color={color.GREEN}
+                            onPress={() => swiperRef.current.swipeRight()}
+                        />
                     </View>
                 </View>)             
             }   
@@ -175,8 +171,6 @@ const Home = ({ navigation }) => {
     )
 }
 
-export default Home;
-
 YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`', 
                         'Animated.event now requires a second argument for options']);
 
@@ -187,39 +181,35 @@ const styles = StyleSheet.create({
     },
     card: {
         marginTop: -50,
-        flex: 0.5,
-        borderRadius: 8,
-        shadowRadius: 25,
-        shadowColor: color.BLACK,
-        shadowOpacity: 0.08,
-        shadowOffset: { width: 0, height: 0 },
+        borderRadius: 5,
+        flex: 0.65,
+        elevation: 5,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: color.WHITE
     },
     cardImage:{
-        width: 200,
-        flex: 1,
+        width: 300,
+        flex: 0.7,
         resizeMode: 'contain'
     },
     swiperContainer: {
-        flex: 0.7
+        flex: 1
     },
     bottomContainer: {
-        flex: 0.3
+        
     },
     cardDetails: {
         alignItems: 'center'
     },
     title: {
-        fontSize: 24, 
+        fontSize: 26, 
         marginBottom: 10, 
-        color: color.GRAY
+        color: color.BLACK
     },
-    price: {
-        color: color.BLUE,
-        fontSize: 32,
-        fontWeight: '500'
+    description: {
+        color: color.GRAY_BUTTON,
+        fontSize: 22
     },
     bottomButtonsContainer: {
         flexDirection: 'row',
@@ -227,9 +217,7 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         borderRadius: 50,
-        shadowOpacity: 0.08,
-        shadowOffset: { width: 0, height: 0 },
-        shadowRadius: 25,
+        elevation: 2,
         shadowColor: color.BLACK,
     },
     dataContainer: {
@@ -246,3 +234,5 @@ const styles = StyleSheet.create({
         backgroundColor: color.PINK
     }
 });
+
+export default Home;
