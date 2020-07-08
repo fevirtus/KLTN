@@ -111,36 +111,40 @@ const Home = ({ navigation }) => {
                         />
                     </View>
                     <View style={styles.bottomButtonsContainer}>
-                        <AntDesign.Button 
-                            style={styles.iconContainer}
-                            name="close"
-                            size={50}
-                            backgroundColor={'transparent'}
-                            underlayColor={'transparent'}
-                            activeOpacity={0.3}
-                            color={color.RED}
-                            onPress={() => swiperRef.current.swipeLeft()}
-                        />
-                        <AntDesign.Button 
-                            style={styles.iconContainer}
-                            name="star"
-                            size={45}
-                            backgroundColor={'transparent'}
-                            underlayColor={'transparent'}
-                            activeOpacity={0.3}
-                            color={color.BLUE}
-                            onPress={() => swiperRef.current.swipeTop()}
-                        />
-                        <AntDesign.Button 
-                            style={styles.iconContainer}
-                            name="heart"
-                            size={40}
-                            backgroundColor={'transparent'}
-                            underlayColor={'transparent'}
-                            activeOpacity={0.3}
-                            color={color.GREEN}
-                            onPress={() => swiperRef.current.swipeRight()}
-                        />
+                        <TouchableOpacity style={styles.iconContainer}>
+                            <AntDesign 
+                                name="close"
+                                size={45}
+                                backgroundColor={'transparent'}
+                                underlayColor={'transparent'}
+                                activeOpacity={0.3}
+                                color={color.RED}
+                                onPress={() => swiperRef.current.swipeLeft()}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.iconContainer}>
+                            <AntDesign
+                                name="star"
+                                size={43}
+                                backgroundColor={'transparent'}
+                                underlayColor={'transparent'}
+                                activeOpacity={0.3}
+                                color={color.BLUE}
+                                onPress={() => swiperRef.current.swipeTop()}
+                            />
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity style={styles.iconContainer}>
+                            <AntDesign
+                                name="heart"
+                                size={40}
+                                backgroundColor={'transparent'}
+                                underlayColor={'transparent'}
+                                activeOpacity={0.3}
+                                color={color.GREEN}
+                                onPress={() => swiperRef.current.swipeRight()}
+                            />
+                        </TouchableOpacity>  
                     </View>
                 </View>)             
             }   
@@ -196,9 +200,6 @@ const styles = StyleSheet.create({
     swiperContainer: {
         flex: 1
     },
-    bottomContainer: {
-        
-    },
     cardDetails: {
         alignItems: 'center'
     },
@@ -217,8 +218,11 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         borderRadius: 50,
-        elevation: 2,
-        shadowColor: color.BLACK,
+        elevation: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 65,
+        height: 65  
     },
     dataContainer: {
         flexDirection: 'row',
