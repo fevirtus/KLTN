@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native'
 import { color } from '../../utility'
-import AsyncStorage from '@react-native-community/async-storage';
 import { useSelector } from 'react-redux'
 
 const Loading = (props) => {

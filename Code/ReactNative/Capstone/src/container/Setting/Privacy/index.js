@@ -30,7 +30,7 @@ const Privacy = ({ navigation }) => {
 const styles = StyleSheet.create({
     checkboxContainer: {
         height: 52,
-        borderBottomColor: color.GRAY_BUTTON,
+        borderBottomColor: color.GRAY,
         borderBottomWidth: 0.8,
         borderBottomEndRadius: 20,
         borderBottomStartRadius: 20,
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     text2: {
         textAlign: 'center',
         fontSize: 15,
-        color: color.GRAY_BUTTON,
+        color: color.GRAY,
         paddingTop: 12
     }
 })

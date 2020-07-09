@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash'
 import { 
     Login, 
+    AccountSetting,
     Home, 
     Filter, 
     Profile, 
@@ -23,7 +24,8 @@ const Stack = createStackNavigator();
 
 const LoginStack = () => {
     return (
-        <Stack.Navigator screenOptions={{
+        <Stack.Navigator 
+            screenOptions={{
             headerTitleAlign: 'center',
             headerTitleStyle: {
                 fontWeight: 'bold',
@@ -32,6 +34,7 @@ const LoginStack = () => {
             headerTintColor: color.PINK      
         }}>
             <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
+            <Stack.Screen name="AccountSetting" component={AccountSetting} />
         </Stack.Navigator>
     )
 }
@@ -39,6 +42,7 @@ const LoginStack = () => {
 const HomeStack = () => {
     return (
         <Stack.Navigator 
+            initialRouteName=""
             screenOptions={{
             headerShown: true,
             headerTitleAlign: 'center',
@@ -47,10 +51,10 @@ const HomeStack = () => {
                 fontSize: 22
             },
             headerTintColor: color.PINK      
-        }}>
-            <Stack.Screen name="Home" component={Home} />
+        }}>   
+            <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
             <Stack.Screen name="Chat" component={Chat} />
-            <Stack.Screen name="Loading" component={Loading} />
+            {/* <Stack.Screen name="Loading" component={Loading} /> */}
             <Stack.Screen name="Filter" component={Filter} options={{ title: 'Search' }} />
             <Stack.Screen name="Profile" component={Profile} options={{ title: 'Trang cá nhân' }} />
             <Stack.Screen name="PetProfile" component={PetProfile} options={{ title: 'Trang cá nhân pet' }} />

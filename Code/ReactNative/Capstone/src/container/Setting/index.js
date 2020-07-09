@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     item: {
         height: 75,
         borderBottomWidth: 1,
-        borderBottomColor: color.GRAY_BUTTON,
+        borderBottomColor: color.GRAY,
         flexDirection: 'row',
         backgroundColor: color.WHITE
     },

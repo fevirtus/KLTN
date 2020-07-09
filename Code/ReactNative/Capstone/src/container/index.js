@@ -1,4 +1,5 @@
 import Login from './Login'
+import AccountSetting from './AccountSetting'
 import Home from './HomePage'
 import Profile from './HomePage/Profile'
 import Chat from './HomePage/Chat'
@@ -11,4 +12,4 @@ import Loading from './Loading'
 
 import Test from './Test'
 
-export { Login, Home, Profile, Filter, PetProfile, Chat, Setting, Privacy, Feedback, Loading, Test }
+export { Login, AccountSetting, Home, Profile, Filter, PetProfile, Chat, Setting, Privacy, Feedback, Loading, Test }
