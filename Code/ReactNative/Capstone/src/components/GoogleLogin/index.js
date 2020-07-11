@@ -6,8 +6,10 @@ import { color } from '../../utility';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
+import { RequestApiAsyncPost } from '../../api/config'
+import _ from 'lodash'
 
-const GoogleLogin = () => {
+const GoogleLogin = ({ navigation }) => {
     const dispatch = useDispatch()
 
     GoogleSignin.configure({
@@ -18,20 +20,22 @@ const GoogleLogin = () => {
         await GoogleSignin.hasPlayServices();  
         const userInfo = await GoogleSignin.signIn(); 
         const new_user = {
-            token: userInfo.idToken,
             email: userInfo.user.email
         }
-        axios.post('https://pet-dating-server.herokuapp.com/users/insert_new_user', new_user)
-            .then(() => {
-                dispatch(saveUserInfo(new_user))
-                console.log("Save user successful")
+        RequestApiAsyncPost('login', 'POST', {}, new_user)
+            .then((user) => {
+                if (_.isEmpty(user)) {
+                    dispatch(saveUserInfo(new_user))
+                    console.log("Save user successful")
+                } else {
+                    navigation.navigate('AccountSetting')
+                }
             }).catch((error) => {
                 console.log("Api call error")
                 alert(error.message)
-            })
+            }) 
     }   
     
-
     return (
         <View>
             <TouchableOpacity style={styles.formLogin} onPress={_signIn}>
@@ -66,3 +70,4 @@ const styles = StyleSheet.create({
 })
 
 export default GoogleLogin
+

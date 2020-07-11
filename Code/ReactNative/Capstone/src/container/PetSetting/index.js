@@ -13,18 +13,19 @@ import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { color } from '../../utility'
 import axios from 'axios'
-import { useSelector, useDispatch } from 'react-redux';
-import { saveUserInfo, acceptLogin } from '../../redux/actions/authActions';
+import { useDispatch } from 'react-redux';
+import { saveAccountSettings } from '../../redux/actions/authActions';
 
-const AccountSetting = ({ navigation }) => {
-    const [avatarBoss, setAvatarBoss] = useState(null)
+const PetSetting = ({ navigation }) => {
+    const [image, setAvatarBoss] = useState(null)
     const [nameSetting, setName] = useState('')
     const [phoneSetting, setPhone] = useState('')
     const dispatch = useDispatch()
-    
+
     const handleChangeName = text => {
         setName(text)
     }
@@ -54,17 +55,16 @@ const AccountSetting = ({ navigation }) => {
             name: nameSetting,
             phone: phoneSetting
         }
-        console.log(account_settings)
-        // dispatch(acceptLogin())
-        
-        // axios.patch('https://pet-dating-server.herokuapp.com/users/insert_new_user', account_settings)
-        //     .then(() => {
-        //         dispatch(saveUserInfo(account_settings))
-        //         console.log("Save user successful")
-        //     }).catch((e) => {
-        //         console.log("Api call error")
-        //         alert(e.message)
-        //     })
+        console.log(new_user)
+
+        axios.post('https://pet-dating-server.herokuapp.com/users/insert_new_user', account_settings)
+            .then(() => {
+                dispatch(saveAccountSettings(account_settings))
+                console.log("Save user successful")
+            }).catch((e) => {
+                console.log("Api call error")
+                alert(e.message)
+            })
     }
 
     return (
@@ -76,8 +76,8 @@ const AccountSetting = ({ navigation }) => {
                         style={styles.profilePicWrap} 
                         imageStyle={{ borderRadius: 100 }}
                     >
-                        {avatarBoss && (
-                            <Image source={{uri: avatarBoss.uri }} style={styles.profileImage} />
+                        {image && (
+                            <Image source={{uri: image.uri }} style={styles.profileImage} />
                         )}
                         <TouchableOpacity onPress={selectImage} style={styles.camera}>
                             <MaterialIcons name="add-a-photo" size={25} color="#DFD8C8" />
@@ -94,9 +94,49 @@ const AccountSetting = ({ navigation }) => {
                         />
                     </View>
                     <View style={styles.action}>
+                        <Fontisto name="email" color={color.GRAY} size={20} />
+                        <TextInput 
+                            placeholder="Breed"
+                            // value={nameSetting}
+                            placeholderTextColor={color.GRAY}
+                            // onChangeText={handleChangeName}
+                            style={styles.textInput}
+                        />
+                    </View>
+                    <View style={styles.action}>
                         <Feather name="phone" color={color.GRAY} size={20} />
                         <TextInput 
-                            placeholder="Phone"
+                            placeholder="Gender"
+                            value={phoneSetting}
+                            placeholderTextColor={color.GRAY}
+                            onChangeText={handleChangePhone}
+                            style={styles.textInput}
+                        />
+                    </View>
+                    <View style={styles.action}>
+                        <Feather name="phone" color={color.GRAY} size={20} />
+                        <TextInput 
+                            placeholder="Weight"
+                            value={phoneSetting}
+                            placeholderTextColor={color.GRAY}
+                            onChangeText={handleChangePhone}
+                            style={styles.textInput}
+                        />
+                    </View>
+                    <View style={styles.action}>
+                        <Feather name="phone" color={color.GRAY} size={20} />
+                        <TextInput 
+                            placeholder="Age"
+                            value={phoneSetting}
+                            placeholderTextColor={color.GRAY}
+                            onChangeText={handleChangePhone}
+                            style={styles.textInput}
+                        />
+                    </View>
+                    <View style={styles.action}>
+                        <Feather name="phone" color={color.GRAY} size={20} />
+                        <TextInput 
+                            placeholder="City"
                             value={phoneSetting}
                             placeholderTextColor={color.GRAY}
                             onChangeText={handleChangePhone}
@@ -169,5 +209,5 @@ const styles = StyleSheet.create({
     },
 })
 
-export default AccountSetting
+export default PetSetting
 

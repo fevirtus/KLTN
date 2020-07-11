@@ -1,22 +1,23 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import _ from 'lodash'
-import { 
-    Login, 
+import {
+    Login,
     AccountSetting,
-    Home, 
-    Filter, 
-    Profile, 
-    PetProfile, 
-    Chat, 
-    Setting, 
-    Privacy, 
-    Feedback, 
+    PetSetting,
+    Home,
+    Filter,
+    Profile,
+    PetProfile,
+    Chat,
+    Setting,
+    Privacy,
+    Feedback,
     Loading,
-    Test 
+    Test
 } from '../container';
 import { color } from '../utility';
 
@@ -33,28 +34,28 @@ const LoginStack = () => {
             },
             headerTintColor: color.PINK      
         }}>
-            <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-            <Stack.Screen name="AccountSetting" component={AccountSetting} />
+            <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>  
+            <Stack.Screen name="AccountSetting" component={AccountSetting} />       
         </Stack.Navigator>
     )
 }
 
 const HomeStack = () => {
     return (
-        <Stack.Navigator 
-            initialRouteName=""
+        <Stack.Navigator
             screenOptions={{
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-                fontWeight: 'bold',
-                fontSize: 22
-            },
-            headerTintColor: color.PINK      
-        }}>   
-            <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
+                headerShown: true,
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 22
+                },
+                headerTintColor: color.PINK
+            }}>
+            <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
             <Stack.Screen name="Chat" component={Chat} />
-            {/* <Stack.Screen name="Loading" component={Loading} /> */}
+            <Stack.Screen name="AccountSetting" component={AccountSetting} />   
+            <Stack.Screen name="PetSetting" component={PetSetting} />
             <Stack.Screen name="Filter" component={Filter} options={{ title: 'Search' }} />
             <Stack.Screen name="Profile" component={Profile} options={{ title: 'Trang cá nhân' }} />
             <Stack.Screen name="PetProfile" component={PetProfile} options={{ title: 'Trang cá nhân pet' }} />
@@ -72,7 +73,7 @@ function NavContainer() {
 
     return (
         <NavigationContainer>
-            { 
+            {
                 _.isEmpty(userInfo) ? <LoginStack /> : <HomeStack />
             }
         </NavigationContainer>

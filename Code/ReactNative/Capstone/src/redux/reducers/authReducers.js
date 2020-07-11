@@ -1,9 +1,13 @@
 import {
-    SAVE_USERINFO, CLEAR_USERINFO
+    SAVE_USERINFO, 
+    CLEAR_USERINFO,
+    ACCEPT_LOGIN
 } from '../constants/constants'
 
 const initialState = {
-    userInfo: {}
+    userInfo: {},
+    isAcceptedLogin: false,
+    petInfo: []
 }
 
 const authReducer = (state = initialState, action) => {
@@ -18,6 +22,12 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 userInfo: {}
+            }
+        }
+        case ACCEPT_LOGIN: {
+            return {
+                ...state,
+                isAcceptedLogin: !state.isAcceptedLogin
             }
         }
         default:
