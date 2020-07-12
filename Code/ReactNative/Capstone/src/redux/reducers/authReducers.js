@@ -1,13 +1,14 @@
 import {
     SAVE_USERINFO, 
     CLEAR_USERINFO,
-    ACCEPT_LOGIN
+    SET_CURRENT_USER
 } from '../constants/constants'
+import _ from 'lodash'
 
 const initialState = {
     userInfo: {},
-    isAcceptedLogin: false,
-    petInfo: []
+    petInfo: [],
+    isAuthenticated: false
 }
 
 const authReducer = (state = initialState, action) => {
@@ -18,16 +19,17 @@ const authReducer = (state = initialState, action) => {
                 userInfo: action.userInfo
             }
         }
+        // case SET_CURRENT_USER: {
+        //     return {
+        //         ...state,
+        //         isisAuthenticated: !_.isEmpty(action.payload),
+        //         userInfo: action.payload
+        //     }
+        // }
         case CLEAR_USERINFO: {
             return {
                 ...state,
                 userInfo: {}
-            }
-        }
-        case ACCEPT_LOGIN: {
-            return {
-                ...state,
-                isAcceptedLogin: !state.isAcceptedLogin
             }
         }
         default:

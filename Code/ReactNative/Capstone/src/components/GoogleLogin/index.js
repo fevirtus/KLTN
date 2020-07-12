@@ -3,11 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { GoogleSignin } from '@react-native-community/google-signin'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
-import { RequestApiAsyncPost } from '../../api/config'
+import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
 import _ from 'lodash'
+import AsyncStorage from '@react-native-community/async-storage';
+import jwt_decode from 'jwt-decode'
 
 const GoogleLogin = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -23,19 +24,22 @@ const GoogleLogin = ({ navigation }) => {
             email: userInfo.user.email
         }
         RequestApiAsyncPost('login', 'POST', {}, new_user)
-            .then((user) => {
-                if (_.isEmpty(user)) {
-                    dispatch(saveUserInfo(new_user))
-                    console.log("Save user successful")
-                } else {
-                    navigation.navigate('AccountSetting')
-                }
+            .then((res) => {
+                // Save to AsyncStorage
+                // Set token to AsyncStorage
+                const { pd_token, data } = res.data
+                AsyncStorage.setItem('jwtToken', pd_token);
+                // Set token to Auth headers
+                setAuthToken(pd_token)
+                dispatch(saveUserInfo(data))
+                console.log("Save user successful")
+                
             }).catch((error) => {
                 console.log("Api call error")
                 alert(error.message)
             }) 
     }   
-    
+
     return (
         <View>
             <TouchableOpacity style={styles.formLogin} onPress={_signIn}>

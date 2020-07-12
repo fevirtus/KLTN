@@ -16,8 +16,9 @@ import Feather from 'react-native-vector-icons/Feather';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { color } from '../../utility'
 import axios from 'axios'
-import { useSelector, useDispatch } from 'react-redux';
-import { saveUserInfo, acceptLogin } from '../../redux/actions/authActions';
+import { useDispatch } from 'react-redux';
+import { saveUserInfo } from '../../redux/actions/authActions';
+import { RequestApiAsyncPost } from '../../api/config'
 
 const AccountSetting = ({ navigation }) => {
     const [avatarBoss, setAvatarBoss] = useState(null)
@@ -35,6 +36,7 @@ const AccountSetting = ({ navigation }) => {
 
     const selectImage = () => {
         ImagePicker.showImagePicker({noData:true, mediaType:'photo'}, (response) => {
+            console.log(response)
             if (response.didCancel) {
                 return
             } 
@@ -52,19 +54,17 @@ const AccountSetting = ({ navigation }) => {
     const _postData = () => {
         const account_settings = {
             name: nameSetting,
-            phone: phoneSetting
+            phone: phoneSetting,
+            avatar: avatarBoss.uri
         }
         console.log(account_settings)
-        // dispatch(acceptLogin())
-        
-        // axios.patch('https://pet-dating-server.herokuapp.com/users/insert_new_user', account_settings)
-        //     .then(() => {
-        //         dispatch(saveUserInfo(account_settings))
-        //         console.log("Save user successful")
-        //     }).catch((e) => {
-        //         console.log("Api call error")
-        //         alert(e.message)
-        //     })
+        RequestApiAsyncPost('users', 'PUT', {}, account_settings)
+            .then((res) => {
+                dispatch(saveUserInfo(res.data.data))
+            }).catch((e) => {
+                console.log("Api call error")
+                alert(e.message)
+            })
     }
 
     return (

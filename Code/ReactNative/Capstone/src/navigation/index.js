@@ -16,7 +16,6 @@ import {
     Setting,
     Privacy,
     Feedback,
-    Loading,
     Test
 } from '../container';
 import { color } from '../utility';
@@ -34,15 +33,15 @@ const LoginStack = () => {
             },
             headerTintColor: color.PINK      
         }}>
-            <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>  
-            <Stack.Screen name="AccountSetting" component={AccountSetting} />       
+            <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>        
         </Stack.Navigator>
     )
 }
 
-const HomeStack = () => {
+const HomeStack = ({ userInfo }) => {
     return (
         <Stack.Navigator
+            initialRouteName={userInfo.name === null ? 'AccountSetting' : 'Home'}
             screenOptions={{
                 headerShown: true,
                 headerTitleAlign: 'center',
@@ -62,8 +61,7 @@ const HomeStack = () => {
             <Stack.Screen name="Setting" component={Setting} options={{ title: 'Settings' }} />
             <Stack.Screen name="Privacy" component={Privacy} />
             <Stack.Screen name="Feedback" component={Feedback} />
-
-            <Stack.Screen name="Test" component={Test} />
+            {/* <Stack.Screen name="Test" component={Test} /> */}
         </Stack.Navigator>
     )
 }
@@ -74,7 +72,7 @@ function NavContainer() {
     return (
         <NavigationContainer>
             {
-                _.isEmpty(userInfo) ? <LoginStack /> : <HomeStack />
+                _.isEmpty(userInfo) ? <LoginStack /> : <HomeStack userInfo={userInfo} />
             }
         </NavigationContainer>
 

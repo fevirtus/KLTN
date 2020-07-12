@@ -2,6 +2,16 @@ import axios from "axios";
 
 const URL_BASE = "https://pet-dating-server.herokuapp.com/";
 
+export const setAuthToken = token => {
+    if (token) {
+        // Apply authorization token to every request if logged in
+        axios.defaults.headers.common["Authorization"] = token
+    } else {
+        // Delete auth header
+        delete axios.defaults.headers.common["Authorization"]
+    }
+}
+
 export const RequestApiAsyncPost = (endpoint, method, headers = {}, body) => {
     const endPointUrl = URL_BASE.concat(endpoint);
     console.log(endPointUrl);
