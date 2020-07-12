@@ -11,7 +11,7 @@ import { PersistGate } from 'redux-persist/es/integration/react'
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['home', 'auth']
+    whitelist: ['auth', 'home']
 }
 
 const persitedReducer = persistReducer(persistConfig, rootReducer)

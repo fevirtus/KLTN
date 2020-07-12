@@ -1,37 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, FlatList, ScrollView, Dimensions, ImageBackground } from 'react-native'
 import { TextInput, Subheading } from 'react-native-paper';
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { DismissKeyboard } from '../../../components'
+import { RequestApiAsyncGet } from '../../../api/config'
 
 const Profile = ({ navigation }) => {
     const [avatarBoss, setAvatarBoss] = useState(null)
     const [avatarPet, setAvatarPet] = useState([])
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [phone, setPhone] = useState('')
-    const [location, setLocation] = useState('')
+    // const [name, setName] = useState('')
+    // const [email, setEmail] = useState('')
+    // const [phone, setPhone] = useState('')
+    // const [location, setLocation] = useState('')
 
-    const handleChangeName = text => {
-        setName(text)
+    // const handleChangeName = text => {
+    //     setName(text)
+    // }
+
+    // const handleChangeEmail = text => {
+    //     setEmail(text)
+    // }
+
+    // const handleChangeLocation = text => {
+    //     setLocation(text)
+    // }
+
+    // const handleChangePhone = text => {
+    //     setPhone(text)
+    // }
+
+    useEffect(() => {
+        
+        //call api get user
+    }, [])
+
+    const handleChangeInfo = (type, value) => {
+        setInfo({...info, [type]: value})
     }
 
-    const handleChangeEmail = text => {
-        setEmail(text)
-    }
+    const [info, setInfo] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        image: ''
+    })
 
-    const handleChangeLocation = text => {
-        setLocation(text)
-    }
-
-    const handleChangePhone = text => {
-        setPhone(text)
-    }
+    const { name, email, phone } = info
 
     const selectImage = () => {
-        ImagePicker.showImagePicker({noData:true, mediaType:'photo'}, (response) => {
+        ImagePicker.showImagePicker({mediaType:'photo'}, (response) => {
+            console.log(response)
             if (response.didCancel) {
                 return
             } 
@@ -83,22 +103,20 @@ const Profile = ({ navigation }) => {
                         <TextInput 
                             mode="outlined"
                             label="Name"
-                            onChangeText={handleChangeName}
+                            value={name}
+                            onChangeText={(name) => handleChangeInfo('name', name)}
                         />
                         <TextInput 
                             mode="outlined"
                             label="Email"
-                            onChangeText={handleChangeEmail}
+                            value={email}
+                            onChangeText={(email) => handleChangeInfo('email', email)}
                         />
                         <TextInput 
                             mode="outlined"
                             label="Phone"
-                            onChangeText={handleChangePhone}
-                        />
-                        <TextInput 
-                            mode="outlined"
-                            label="Location"
-                            onChangeText={handleChangeLocation}
+                            value={phone}
+                            onChangeText={(phone) => handleChangeInfo('phone', phone)}
                         />
                     </View>
                     <TouchableOpacity style={styles.saveButton}>

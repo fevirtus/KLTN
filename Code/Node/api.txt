@@ -1,0 +1,46 @@
+----/login
+	+ POST: {
+		email: required,
+		name:
+		...
+	}
+	=> insert new user and return a token
+
+----/users
+	+ GET: => return all users
+	+ PUT: {
+		headers:{Authorization: token},
+		data:{
+			update fields ...
+		}
+	}
+	=>update an user
+	
+----/users/:id
+	+ GET: {headers:{Authorization: token}}
+	=> get an user by user_id
+	
+----/pets
+	+ GET: {headers:{Authorization: token}}
+	=> get all pets of the logined user
+	+ POST:{
+		headers:{Authorization: token},
+		data:{
+			fields ...
+		}
+	}=> create a new pet of the login user
+	+ PUT:{
+		headers:{Authorization: token},
+		data:{
+			pet_id: required
+			...
+		}
+	}=> update a new pet of the login user
+
+----/pets/:id
+	+ GET: {headers:{Authorization: token}}
+	=> get pet of user by pet_id
+
+----/pets/petBreeds
+	+ GET: {headers:{Authorization: token}}
+	=> get all pet breeds 

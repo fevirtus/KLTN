@@ -3,11 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { GoogleSignin } from '@react-native-community/google-signin'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
+import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
+import _ from 'lodash'
+import AsyncStorage from '@react-native-community/async-storage';
+import jwt_decode from 'jwt-decode'
 
-const GoogleLogin = () => {
+const GoogleLogin = ({ navigation }) => {
     const dispatch = useDispatch()
 
     GoogleSignin.configure({
@@ -18,19 +21,24 @@ const GoogleLogin = () => {
         await GoogleSignin.hasPlayServices();  
         const userInfo = await GoogleSignin.signIn(); 
         const new_user = {
-            token: userInfo.idToken,
             email: userInfo.user.email
         }
-        axios.post('https://pet-dating-server.herokuapp.com/users/insert_new_user', new_user)
-            .then(() => {
-                dispatch(saveUserInfo(new_user))
+        RequestApiAsyncPost('login', 'POST', {}, new_user)
+            .then((res) => {
+                // Save to AsyncStorage
+                // Set token to AsyncStorage
+                const { pd_token, data } = res.data
+                AsyncStorage.setItem('jwtToken', pd_token);
+                // Set token to Auth headers
+                setAuthToken(pd_token)
+                dispatch(saveUserInfo(data))
                 console.log("Save user successful")
+                
             }).catch((error) => {
                 console.log("Api call error")
                 alert(error.message)
-            })
+            }) 
     }   
-    
 
     return (
         <View>
@@ -66,3 +74,4 @@ const styles = StyleSheet.create({
 })
 
 export default GoogleLogin
+
