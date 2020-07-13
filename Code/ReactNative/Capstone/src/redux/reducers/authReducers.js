@@ -8,7 +8,6 @@ import _ from 'lodash'
 const initialState = {
     userInfo: {},
     petInfo: [],
-    isAuthenticated: false
 }
 
 const authReducer = (state = initialState, action) => {
@@ -19,13 +18,6 @@ const authReducer = (state = initialState, action) => {
                 userInfo: action.userInfo
             }
         }
-        // case SET_CURRENT_USER: {
-        //     return {
-        //         ...state,
-        //         isisAuthenticated: !_.isEmpty(action.payload),
-        //         userInfo: action.payload
-        //     }
-        // }
         case CLEAR_USERINFO: {
             return {
                 ...state,

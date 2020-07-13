@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Modal, Keyboard } from 'react-native'
-import { Title, Subheading, Text, TextInput } from 'react-native-paper'
+import { View, StyleSheet, Image, TouchableOpacity, Modal, Keyboard, Text, TextInput } from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -57,7 +56,7 @@ const PetProfile = () => {
                                 onPress={() => setShowModal(false)}
                             />
                             <View style={styles.content}>
-                                <Subheading style={styles.subheadingModal}>Edit Profile</Subheading>
+                                <Text style={styles.subheadingModal}>Edit Profile</Text>
                                 <TextInput 
                                     style={styles.textInput}
                                     mode="outlined"
@@ -121,35 +120,35 @@ const PetProfile = () => {
             </View>
             <View style={styles.content}>
                 <View style={styles.navbar}>
-                    <Title style={styles.titleNav}>PET</Title>
+                    <Text style={styles.titleNav}>PET</Text>
                     <View style={styles.horizontalLine}></View>
                 </View>
                 <View style={styles.information}>
                     <View style={styles.contentLeft}>
                         <View style={styles.item}>
-                            <Subheading style={styles.subheading}>Name</Subheading>
+                            <Text style={styles.subheading}>Name</Text>
                             <Text style={styles.text}>{name}</Text>
                         </View>
                         <View style={styles.item}>
-                            <Subheading style={styles.subheading}>Breed</Subheading>
+                            <Text style={styles.subheading}>Breed</Text>
                             <Text style={styles.text}>{breed}</Text>
                         </View>
                         <View style={styles.item}>
-                            <Subheading style={styles.subheading}>Gender</Subheading>
+                            <Text style={styles.subheading}>Gender</Text>
                             <Text style={styles.text}>{gender}</Text>
                         </View>  
                     </View>
                     <View style={styles.contentRight}>
                         <View style={styles.item}>
-                            <Subheading style={styles.subheading}>Weight</Subheading>
+                            <Text style={styles.subheading}>Weight</Text>
                             <Text style={styles.text}>{weight} kg</Text>
                         </View> 
                         <View style={styles.item}>
-                            <Subheading style={styles.subheading}>Age</Subheading>
+                            <Text style={styles.subheading}>Age</Text>
                             <Text style={styles.text}>{age}</Text>
                         </View> 
                         <View style={styles.item}>
-                            <Subheading style={styles.subheading}>City</Subheading>
+                            <Text style={styles.subheading}>City</Text>
                             <Text style={styles.text}>{city}</Text>
                         </View> 
                     </View>

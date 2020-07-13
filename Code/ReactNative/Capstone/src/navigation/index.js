@@ -2,6 +2,10 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+// import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Fontisto from 'react-native-vector-icons/Fontisto'
 import { useSelector } from 'react-redux';
 import _ from 'lodash'
 import {
@@ -21,6 +25,70 @@ import {
 import { color } from '../utility';
 
 const Stack = createStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
+
+const MainTabScreen = () => (
+    <Tab.Navigator
+      initialRouteName="Home"
+      activeColor={color.WHITE}
+    >
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarColor: color.PINK,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="ios-home" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Messages"
+        component={Chat}
+        options={{
+          tabBarLabel: 'Messages',
+          tabBarColor: color.PINK,
+          tabBarIcon: ({ color }) => (
+            <Fontisto name="hipchat" color={color} size={22} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarColor: color.PINK,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="ios-person" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Filter"
+        component={Filter}
+        options={{
+          tabBarLabel: 'Search',
+          tabBarColor: color.PINK,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="ios-search" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Setting"
+        component={Setting}
+        options={{
+          tabBarLabel: 'Setting',
+          tabBarColor: color.PINK,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="ios-settings" color={color} size={26} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+)
 
 const LoginStack = () => {
     return (
@@ -51,7 +119,7 @@ const HomeStack = ({ userInfo }) => {
                 },
                 headerTintColor: color.PINK
             }}>
-            <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+            <Stack.Screen name="Home" component={MainTabScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Chat" component={Chat} />
             <Stack.Screen name="AccountSetting" component={AccountSetting} />   
             <Stack.Screen name="PetSetting" component={PetSetting} />

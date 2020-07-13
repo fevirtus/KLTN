@@ -15,12 +15,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { color } from '../../utility'
-import axios from 'axios'
 import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost } from '../../api/config'
 
-const AccountSetting = ({ navigation }) => {
+const AccountSetting = () => {
     const [avatarBoss, setAvatarBoss] = useState(null)
     const [nameSetting, setName] = useState('')
     const [phoneSetting, setPhone] = useState('')
@@ -97,6 +96,7 @@ const AccountSetting = ({ navigation }) => {
                         <Feather name="phone" color={color.GRAY} size={20} />
                         <TextInput 
                             placeholder="Phone"
+                            keyboardType="numeric"
                             value={phoneSetting}
                             placeholderTextColor={color.GRAY}
                             onChangeText={handleChangePhone}

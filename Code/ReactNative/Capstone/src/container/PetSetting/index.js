@@ -12,13 +12,13 @@ import { Container } from '../../components';
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import Feather from 'react-native-vector-icons/Feather';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { color } from '../../utility'
-import axios from 'axios'
 import { useDispatch } from 'react-redux';
 import { saveAccountSettings } from '../../redux/actions/authActions';
+import { RequestApiAsyncPost } from '../../api/config'
 
 const PetSetting = ({ navigation }) => {
     const [image, setAvatarBoss] = useState(null)
@@ -51,15 +51,14 @@ const PetSetting = ({ navigation }) => {
     }
 
     const _postData = () => {
-        const account_settings = {
+        const new_pet = {
             name: nameSetting,
             phone: phoneSetting
         }
         console.log(new_user)
-
-        axios.post('https://pet-dating-server.herokuapp.com/users/insert_new_user', account_settings)
+        RequestApiAsyncPost('pets', 'POST', {}, new_pet)
             .then(() => {
-                dispatch(saveAccountSettings(account_settings))
+                dispatch(saveAccountSettings(new_pet))
                 console.log("Save user successful")
             }).catch((e) => {
                 console.log("Api call error")
@@ -94,7 +93,7 @@ const PetSetting = ({ navigation }) => {
                         />
                     </View>
                     <View style={styles.action}>
-                        <Fontisto name="email" color={color.GRAY} size={20} />
+                        <MaterialIcons name="pets" color={color.GRAY} size={20} />
                         <TextInput 
                             placeholder="Breed"
                             // value={nameSetting}
@@ -104,7 +103,7 @@ const PetSetting = ({ navigation }) => {
                         />
                     </View>
                     <View style={styles.action}>
-                        <Feather name="phone" color={color.GRAY} size={20} />
+                        <FontAwesome name="transgender" color={color.GRAY} size={20} />
                         <TextInput 
                             placeholder="Gender"
                             value={phoneSetting}
@@ -114,9 +113,10 @@ const PetSetting = ({ navigation }) => {
                         />
                     </View>
                     <View style={styles.action}>
-                        <Feather name="phone" color={color.GRAY} size={20} />
+                        <MaterialCommunityIcons name="weight-kilogram" color={color.GRAY} size={20} />
                         <TextInput 
                             placeholder="Weight"
+                            keyboardType="numeric"
                             value={phoneSetting}
                             placeholderTextColor={color.GRAY}
                             onChangeText={handleChangePhone}
@@ -124,9 +124,10 @@ const PetSetting = ({ navigation }) => {
                         />
                     </View>
                     <View style={styles.action}>
-                        <Feather name="phone" color={color.GRAY} size={20} />
+                        <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
                         <TextInput 
                             placeholder="Age"
+                            keyboardType="numeric"
                             value={phoneSetting}
                             placeholderTextColor={color.GRAY}
                             onChangeText={handleChangePhone}
@@ -134,7 +135,7 @@ const PetSetting = ({ navigation }) => {
                         />
                     </View>
                     <View style={styles.action}>
-                        <Feather name="phone" color={color.GRAY} size={20} />
+                        <EvilIcons name="location" color={color.GRAY} size={22} />
                         <TextInput 
                             placeholder="City"
                             value={phoneSetting}
@@ -161,8 +162,8 @@ const styles = StyleSheet.create({
         height: 130,
         borderRadius: 100,
         alignSelf: 'center',
-        marginTop: 40,
-        marginBottom: 50
+        marginTop: 20,
+        marginBottom: 20
     },
     camera: {
         width: 35,
@@ -178,8 +179,8 @@ const styles = StyleSheet.create({
     },
     action: {
         flexDirection: 'row',
-        marginTop: 20,
-        marginBottom: 12,
+        marginTop: 16,
+        marginBottom: 5,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
         paddingLeft: 20,
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
         backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 50,
+        marginTop: 20,
         width: '90%',
         alignSelf: 'center'
     },

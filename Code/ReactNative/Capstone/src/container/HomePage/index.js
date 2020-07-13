@@ -1,12 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, YellowBox } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import Entypo from 'react-native-vector-icons/Entypo'
 import { Container } from '../../components'
-import { YellowBox } from 'react-native';
 import { color } from '../../utility';
 import { useSelector } from 'react-redux';
 import data from '../../../data';
@@ -145,35 +142,9 @@ const Home = ({ navigation }) => {
                     </View>
                 </Container>)             
             }   
-              
-            <View style={styles.dataContainer}>
-                <TouchableOpacity style={styles.contentBox}>
-                    <FontAwesome5 name="hands-helping" size={38} color={color.WHITE} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.contentBox} onPress={() => navigation.navigate('Chat')}>
-                    <Entypo name="chat" size={40} color={color.WHITE} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.contentBox} onPress={() => navigation.navigate('Profile')}>
-                    <FontAwesome name="user" size={42} color={color.WHITE} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.contentBox} onPress={() => navigation.navigate('Filter')}>
-                    <AntDesign name="barschart" size={45} color={color.WHITE} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.contentBox}>
-                    <AntDesign 
-                        name="setting" 
-                        size={40} 
-                        color={color.WHITE} 
-                        onPress={() => navigation.navigate('Setting')} 
-                    />
-                </TouchableOpacity>
-            </View>
         </View>
     )
 }
-
-YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`', 
-                        'Animated.event now requires a second argument for options']);
 
 const styles = StyleSheet.create({
     container: {
@@ -193,7 +164,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain'
     },
     swiperContainer: {
-        flex: 1
+        flex: 1.6
     },
     cardDetails: {
         alignItems: 'center'
@@ -208,8 +179,9 @@ const styles = StyleSheet.create({
         fontSize: 22
     },
     bottomButtonsContainer: {
+        flex: 0.4,
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-evenly'
     },
     iconContainer: {
         borderRadius: 50,
@@ -218,19 +190,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: 65,
         height: 65  
-    },
-    dataContainer: {
-        flexDirection: 'row',
-        flex: 0.2,
-        justifyContent: 'space-evenly',
-        paddingTop: 10
-    },
-    contentBox: {
-        width: 70,
-        height: 70,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: color.PINK
     },
     hideMode: {
         flex: 1,
@@ -251,5 +210,8 @@ const styles = StyleSheet.create({
         paddingTop: 22
     }
 });
+
+YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`', 
+                        'Animated.event now requires a second argument for options']);
 
 export default Home;

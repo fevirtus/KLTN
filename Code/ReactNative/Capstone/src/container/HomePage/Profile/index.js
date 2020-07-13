@@ -1,45 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, FlatList, ScrollView, Dimensions, ImageBackground } from 'react-native'
-import { TextInput, Subheading } from 'react-native-paper';
+import { 
+    StyleSheet, 
+    View, 
+    Text, 
+    TouchableOpacity, 
+    Image, FlatList, 
+    ScrollView, 
+    Dimensions, 
+    ImageBackground, 
+    TextInput,
+    YellowBox
+} from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { DismissKeyboard } from '../../../components'
 import { RequestApiAsyncGet } from '../../../api/config'
+import { Container } from '../../../components'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Feather from 'react-native-vector-icons/Feather';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import { color } from '../../../utility'
+import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Profile = ({ navigation }) => {
     const [avatarBoss, setAvatarBoss] = useState(null)
     const [avatarPet, setAvatarPet] = useState([])
-    // const [name, setName] = useState('')
-    // const [email, setEmail] = useState('')
-    // const [phone, setPhone] = useState('')
-    // const [location, setLocation] = useState('')
-
-    // const handleChangeName = text => {
-    //     setName(text)
-    // }
-
-    // const handleChangeEmail = text => {
-    //     setEmail(text)
-    // }
-
-    // const handleChangeLocation = text => {
-    //     setLocation(text)
-    // }
-
-    // const handleChangePhone = text => {
-    //     setPhone(text)
-    // }
-
-    useEffect(() => {
-        
-        //call api get user
-    }, [])
-
-    const handleChangeInfo = (type, value) => {
-        setInfo({...info, [type]: value})
-    }
-
     const [info, setInfo] = useState({
         name: '',
         email: '',
@@ -47,7 +34,49 @@ const Profile = ({ navigation }) => {
         image: ''
     })
 
-    const { name, email, phone } = info
+    const getUserById = async () => {
+        try {
+            const userID = await AsyncStorage.getItem('userId')
+            if(userID !== null) {
+                console.log(userID)
+                axios.get(`https://pet-dating-server.herokuapp.com/users?user_id=${userID}`)
+                // RequestApiAsyncGet('users', {}, {'user_id' : userID})
+                .then(res => {
+                    console.log(res.data)
+                    // Set info
+                    setInfo(res.data)
+                }).catch(e => {
+                    console.log("Api call error")
+                    alert(e.message)
+                })
+            }
+        } catch(e) {
+        }
+    }
+
+    useEffect(() => {
+        getUserById()  
+    }, [])
+
+    const _saveData = () => {
+        const account_settings = {
+            name: name,
+            phone: phone,
+            email: email
+        }
+        console.log(account_settings)
+        RequestApiAsyncPost('users', 'PUT', {}, account_settings)
+            .then((res) => {
+                dispatch(saveUserInfo(res.data.data))
+            }).catch((e) => {
+                console.log("Api call error")
+                alert(e.message)
+            })
+    }
+
+    const handleChangeInfo = (type, value) => {
+        setInfo({...info, [type]: value})
+    }
 
     const selectImage = () => {
         ImagePicker.showImagePicker({mediaType:'photo'}, (response) => {
@@ -82,9 +111,11 @@ const Profile = ({ navigation }) => {
         });
     }
 
+    const { name, email, phone } = info
     return (
         <DismissKeyboard>
-            <View style={styles.container}>
+            <Container>
+                <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <ImageBackground 
                         source={require('../../../../images/avatar.jpg')} 
@@ -95,37 +126,51 @@ const Profile = ({ navigation }) => {
                             <Image source={{uri: avatarBoss.uri }} style={styles.profileImage} />
                         )}
                         <TouchableOpacity onPress={selectImage} style={styles.camera}>
-                            <MaterialIcons name="add-a-photo" size={25} color="#DFD8C8" />
+                            <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
                         </TouchableOpacity>
                     </ImageBackground> 
 
                     <View style={styles.inputInformation}>
-                        <TextInput 
-                            mode="outlined"
-                            label="Name"
-                            value={name}
-                            onChangeText={(name) => handleChangeInfo('name', name)}
-                        />
-                        <TextInput 
-                            mode="outlined"
-                            label="Email"
-                            value={email}
-                            onChangeText={(email) => handleChangeInfo('email', email)}
-                        />
-                        <TextInput 
-                            mode="outlined"
-                            label="Phone"
-                            value={phone}
-                            onChangeText={(phone) => handleChangeInfo('phone', phone)}
-                        />
+                        <View style={styles.action}>
+                            <FontAwesome name="user-o" color={color.GRAY} size={22} />
+                            <TextInput 
+                                placeholder="Name"
+                                value={name}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={(name) => handleChangeInfo('name', name)}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <Fontisto name="email" color={color.GRAY} size={22} />
+                            <TextInput 
+                                placeholder="Email"
+                                value={email}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={(email) => handleChangeInfo('email', email)}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <Feather name="phone" color={color.GRAY} size={22} />
+                            <TextInput 
+                                placeholder="Phone"
+                                keyboardType="numeric"
+                                value={phone}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={(phone) => handleChangeInfo('phone', phone)}
+                                style={styles.textInput}
+                            />
+                        </View>
                     </View>
-                    <TouchableOpacity style={styles.saveButton}>
-                        <Text style={styles.save}>Save</Text>
+                    <TouchableOpacity style={styles.commandButton} onPress={_saveData}>
+                        <Text style={styles.panelButtonTitle}>Save</Text>
                     </TouchableOpacity>
                     <View style={styles.listPetWrapper}>
                         <View style={styles.menuListPet}> 
-                            <Subheading style={styles.text}>List pet</Subheading>
-                            <TouchableOpacity onPress={selectImagePet}>
+                            <Text style={styles.text}>List pet</Text>
+                            {/* <TouchableOpacity onPress={selectImagePet}> */}
+                            <TouchableOpacity onPress={() => navigation.navigate('PetSetting')}>
                                 <Ionicons name="ios-add-circle-outline" size={28} color="gray" />
                             </TouchableOpacity>
                         </View>  
@@ -142,38 +187,24 @@ const Profile = ({ navigation }) => {
                             )}
                         />
                     </View>
-                    <View>
-                        <Subheading style={styles.text}>All photos:</Subheading>
-                        <FlatList
-                            numColumns={2}
-                            data={avatarPet}
-                            renderItem={({item}) => (
-                                <View style={styles.imageGallery}>
-                                    <Image source={{uri: item.uri}} style={styles.imgGallery} />
-                                </View>
-                            )}
-                        />
-                    </View>
                 </ScrollView>
             </View>
+            </Container>
         </DismissKeyboard>
     )
 }
 
-export default Profile;
-
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+        flex: 1
     },  
     profilePicWrap: {
         width: 130,
         height: 130,
         borderRadius: 100,
         alignSelf: 'center',
-        marginTop: 40
+        marginTop: 30,
+        marginBottom: 20
     },
     profileImage: {
         width: 130,
@@ -181,42 +212,48 @@ const styles = StyleSheet.create({
         borderRadius: 100
     },
     camera: {
-        width: 35,
-        height: 35,
+        width: 34,
+        height: 34,
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
         top: 98,
         left: 90,
-        backgroundColor: '#41444B'
+        backgroundColor: '#41444B',
+        borderWidth: 2,
+        borderColor: color.WHITE
     },
-    inputInformation: {
-        paddingTop: 25, 
-        paddingBottom: 20
-    },
-    textInputWrapper: {
-        paddingBottom: 14, 
-        flexDirection: 'row'
+    action: {
+        flexDirection: 'row',
+        marginTop: 18,
+        marginBottom: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f2f2f2',
+        paddingLeft: 20,
+        borderBottomEndRadius: 20,
+        borderBottomStartRadius: 20,
     },
     textInput: {
-        height: 25,
-        width: 220,
-        borderWidth: 1,
-        borderColor: 'gray',
-        paddingRight : 20,
-        flexGrow: 1
+        flex: 1,
+        marginTop: -12,
+        paddingLeft: 15,
+        color: '#05375a',
     },
-    saveButton: {
-        borderWidth: 1,
-        borderColor: 'gray',
-        width: 300,
+    commandButton: {
+        padding: 15,
+        borderRadius: 10,
+        backgroundColor: color.PINK,
+        alignItems: 'center',
         justifyContent: 'center',
-        alignItems: 'center'
+        marginTop: 20,
+        width: '90%',
+        alignSelf: 'center'
     },
-    save: {
-        paddingTop: 10, 
-        paddingBottom: 10
+    panelButtonTitle: {
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: color.WHITE,
     },
     listPetWrapper: {
         height: 146,
@@ -243,14 +280,9 @@ const styles = StyleSheet.create({
         width: 80,
         borderRadius: 50
     },
-    imageGallery: {
-        width: Dimensions.get('window').width / 2,
-        height: 200
-    },
-    imgGallery: {
-        width: '100%',
-        height: 200,
-        resizeMode: 'cover',
-        borderRadius: 10
-    }
 })
+
+YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same', 
+                            'orientation - use another VirtualizedList-backed container instead.']);
+
+export default Profile;

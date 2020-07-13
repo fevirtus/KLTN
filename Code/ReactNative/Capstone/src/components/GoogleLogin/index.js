@@ -8,9 +8,8 @@ import { saveUserInfo } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
 import _ from 'lodash'
 import AsyncStorage from '@react-native-community/async-storage';
-import jwt_decode from 'jwt-decode'
 
-const GoogleLogin = ({ navigation }) => {
+const GoogleLogin = () => {
     const dispatch = useDispatch()
 
     GoogleSignin.configure({
@@ -28,12 +27,13 @@ const GoogleLogin = ({ navigation }) => {
                 // Save to AsyncStorage
                 // Set token to AsyncStorage
                 const { pd_token, data } = res.data
+                const { user_id } = res.data.data
                 AsyncStorage.setItem('jwtToken', pd_token);
+                AsyncStorage.setItem('userId', JSON.stringify(user_id));
                 // Set token to Auth headers
                 setAuthToken(pd_token)
                 dispatch(saveUserInfo(data))
-                console.log("Save user successful")
-                
+                console.log("Save user successful")          
             }).catch((error) => {
                 console.log("Api call error")
                 alert(error.message)
