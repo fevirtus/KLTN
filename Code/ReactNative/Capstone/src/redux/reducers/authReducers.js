@@ -1,13 +1,14 @@
 import {
     SAVE_USERINFO, 
     CLEAR_USERINFO,
-    SET_CURRENT_USER
+    SAVE_TOKEN
 } from '../constants/constants'
 import _ from 'lodash'
 
 const initialState = {
     userInfo: {},
     petInfo: [],
+    token: ''
 }
 
 const authReducer = (state = initialState, action) => {
@@ -22,6 +23,12 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 userInfo: {}
+            }
+        }
+        case SAVE_TOKEN: {
+            return {
+                ...state,
+                token: action.token
             }
         }
         default:

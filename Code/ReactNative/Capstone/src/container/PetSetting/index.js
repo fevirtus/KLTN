@@ -4,9 +4,10 @@ import {
     View, 
     Text,
     TouchableOpacity, 
-    ImageBackground, 
+    ScrollView, 
     Image,
-    TextInput
+    TextInput,
+    Dimensions
 } from 'react-native'
 import { Container } from '../../components';
 import ImagePicker from 'react-native-image-picker';
@@ -50,6 +51,17 @@ const PetSetting = ({ navigation }) => {
         });
     }
 
+    const ImagePick = () => (
+        <View style={styles.pictureWrapper}>
+            {image && (
+                <Image source={{uri: image.uri }} style={styles.image} />
+            )}
+            <TouchableOpacity onPress={selectImage} style={styles.add}>
+                <MaterialIcons name="add" size={25} color={color.WHITE} />
+            </TouchableOpacity>
+        </View>
+    )
+
     const _postData = () => {
         const new_pet = {
             name: nameSetting,
@@ -60,6 +72,7 @@ const PetSetting = ({ navigation }) => {
             .then(() => {
                 dispatch(saveAccountSettings(new_pet))
                 console.log("Save user successful")
+                navigation.navigate('AccountSetting')
             }).catch((e) => {
                 console.log("Api call error")
                 alert(e.message)
@@ -69,85 +82,80 @@ const PetSetting = ({ navigation }) => {
     return (
         <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
             <Container>
-                <View style={styles.container}>
-                    <ImageBackground 
-                        source={require('../../../images/avatar.jpg')} 
-                        style={styles.profilePicWrap} 
-                        imageStyle={{ borderRadius: 100 }}
-                    >
-                        {image && (
-                            <Image source={{uri: image.uri }} style={styles.profileImage} />
-                        )}
-                        <TouchableOpacity onPress={selectImage} style={styles.camera}>
-                            <MaterialIcons name="add-a-photo" size={25} color="#DFD8C8" />
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles.container}>
+                        <View style={[styles.action, { marginTop: 30 }]}>
+                            <FontAwesome name="user-o" color={color.GRAY} size={20} />
+                            <TextInput 
+                                placeholder="Name"
+                                value={nameSetting}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={handleChangeName}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <MaterialIcons name="pets" color={color.GRAY} size={20} />
+                            <TextInput 
+                                placeholder="Breed"
+                                // value={nameSetting}
+                                placeholderTextColor={color.GRAY}
+                                // onChangeText={handleChangeName}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <FontAwesome name="transgender" color={color.GRAY} size={20} />
+                            <TextInput 
+                                placeholder="Gender"
+                                value={phoneSetting}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={handleChangePhone}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <MaterialCommunityIcons name="weight-kilogram" color={color.GRAY} size={20} />
+                            <TextInput 
+                                placeholder="Weight"
+                                keyboardType="numeric"
+                                value={phoneSetting}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={handleChangePhone}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
+                            <TextInput 
+                                placeholder="Age"
+                                keyboardType="numeric"
+                                value={phoneSetting}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={handleChangePhone}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <EvilIcons name="location" color={color.GRAY} size={22} />
+                            <TextInput 
+                                placeholder="City"
+                                value={phoneSetting}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={handleChangePhone}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.imagePicker}>
+                            <ImagePick />
+                            <ImagePick />
+                            <ImagePick />
+                        </View>
+                        <TouchableOpacity style={styles.commandButton} onPress={_postData}>
+                            <Text style={styles.panelButtonTitle}>Submit</Text>
                         </TouchableOpacity>
-                    </ImageBackground>
-                    <View style={styles.action}>
-                        <FontAwesome name="user-o" color={color.GRAY} size={20} />
-                        <TextInput 
-                            placeholder="Name"
-                            value={nameSetting}
-                            placeholderTextColor={color.GRAY}
-                            onChangeText={handleChangeName}
-                            style={styles.textInput}
-                        />
                     </View>
-                    <View style={styles.action}>
-                        <MaterialIcons name="pets" color={color.GRAY} size={20} />
-                        <TextInput 
-                            placeholder="Breed"
-                            // value={nameSetting}
-                            placeholderTextColor={color.GRAY}
-                            // onChangeText={handleChangeName}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <FontAwesome name="transgender" color={color.GRAY} size={20} />
-                        <TextInput 
-                            placeholder="Gender"
-                            value={phoneSetting}
-                            placeholderTextColor={color.GRAY}
-                            onChangeText={handleChangePhone}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <MaterialCommunityIcons name="weight-kilogram" color={color.GRAY} size={20} />
-                        <TextInput 
-                            placeholder="Weight"
-                            keyboardType="numeric"
-                            value={phoneSetting}
-                            placeholderTextColor={color.GRAY}
-                            onChangeText={handleChangePhone}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
-                        <TextInput 
-                            placeholder="Age"
-                            keyboardType="numeric"
-                            value={phoneSetting}
-                            placeholderTextColor={color.GRAY}
-                            onChangeText={handleChangePhone}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <EvilIcons name="location" color={color.GRAY} size={22} />
-                        <TextInput 
-                            placeholder="City"
-                            value={phoneSetting}
-                            placeholderTextColor={color.GRAY}
-                            onChangeText={handleChangePhone}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <TouchableOpacity style={styles.commandButton} onPress={_postData}>
-                        <Text style={styles.panelButtonTitle}>Submit</Text>
-                    </TouchableOpacity>
-                </View>
+                </ScrollView>
             </Container>
         </KeyboardAwareScrollView>
     )
@@ -157,25 +165,32 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    profilePicWrap: {
-        width: 130,
-        height: 130,
-        borderRadius: 100,
-        alignSelf: 'center',
-        marginTop: 20,
-        marginBottom: 20
+    imagePicker: {
+        flexDirection: 'row'
     },
-    camera: {
-        width: 35,
-        height: 35,
-        borderRadius: 50,
+    pictureWrapper: {
+        width: Dimensions.get('window').width / 3.65,
+        height: 150,
+        backgroundColor: color.LIGHT_GRAY,
+        marginTop: 30,
+        marginBottom: 20,
+        marginLeft: 18
+    },
+    image: {
+        width: '100%',
+        height: 150,
+        resizeMode: 'contain'
+    },
+    add: {
+        width: 30,
+        height: 30,
+        borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        top: 95,
-        left: 90,
-        backgroundColor: '#41444B',
-        opacity: 0.8
+        top: 135,
+        left: 96,
+        backgroundColor: color.PINK,
     },
     action: {
         flexDirection: 'row',
@@ -194,14 +209,15 @@ const styles = StyleSheet.create({
         color: '#05375a',
     },
     commandButton: {
-        padding: 15,
+        width: '90%',
+        alignSelf: 'center',
         borderRadius: 10,
+        padding: 15,
         backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
-        width: '90%',
-        alignSelf: 'center'
+        marginBottom: 30
     },
     panelButtonTitle: {
         fontSize: 17,

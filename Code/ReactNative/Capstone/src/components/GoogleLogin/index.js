@@ -4,7 +4,7 @@ import { GoogleSignin } from '@react-native-community/google-signin'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
-import { saveUserInfo } from '../../redux/actions/authActions';
+import { saveUserInfo, saveToken } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
 import _ from 'lodash'
 import AsyncStorage from '@react-native-community/async-storage';
@@ -28,9 +28,9 @@ const GoogleLogin = () => {
                 // Set token to AsyncStorage
                 const { pd_token, data } = res.data
                 const { user_id } = res.data.data
-                AsyncStorage.setItem('jwtToken', pd_token);
                 AsyncStorage.setItem('userId', JSON.stringify(user_id));
                 // Set token to Auth headers
+                dispatch(saveToken(pd_token))
                 setAuthToken(pd_token)
                 dispatch(saveUserInfo(data))
                 console.log("Save user successful")          

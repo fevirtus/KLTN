@@ -41,3 +41,26 @@ export const RequestApiAsyncGet = async(endpoint, headers = {}, params = {}) => 
         headers: headers
     });
 }
+
+// export const RequestApiAsyncGet = (endpoint) => {
+//     const defaultOptions = {
+//         baseURL: URL_BASE.concat(endpoint),
+//         method: 'get',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//     }
+
+//     // Create instance
+//     let instance = axios.create(defaultOptions);
+
+//     // Set the AUTH token for any request
+//     instance.interceptors.request.use(function (config) {
+//         const token = useSelector(state => state.auth.token)
+//         config.headers.Authorization = token ? `${token}` : '';
+//         console.log(token)
+//         return config;
+//     });
+
+//     return instance;  
+// }

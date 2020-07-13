@@ -4,31 +4,29 @@ import {
     View, 
     Text, 
     TouchableOpacity, 
-    Image, FlatList, 
+    Image, 
+    FlatList, 
     ScrollView, 
-    Dimensions, 
     ImageBackground, 
     TextInput,
     YellowBox
 } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { DismissKeyboard } from '../../../components'
-import { RequestApiAsyncGet } from '../../../api/config'
+import { RequestApiAsyncGet, RequestApiAsyncPost } from '../../../api/config'
 import { Container } from '../../../components'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { color } from '../../../utility'
-import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage';
 
 const Profile = ({ navigation }) => {
     const [avatarBoss, setAvatarBoss] = useState(null)
     const [avatarPet, setAvatarPet] = useState([])
     const [info, setInfo] = useState({
-        name: '',
+        name: 'dasd',
         email: '',
         phone: '',
         image: ''
@@ -39,16 +37,15 @@ const Profile = ({ navigation }) => {
             const userID = await AsyncStorage.getItem('userId')
             if(userID !== null) {
                 console.log(userID)
-                axios.get(`https://pet-dating-server.herokuapp.com/users?user_id=${userID}`)
-                // RequestApiAsyncGet('users', {}, {'user_id' : userID})
-                .then(res => {
-                    console.log(res.data)
-                    // Set info
-                    setInfo(res.data)
-                }).catch(e => {
-                    console.log("Api call error")
-                    alert(e.message)
-                })
+                RequestApiAsyncGet(`users/${userID}`)
+                    .then(res => {
+                        console.log(res.data)
+                        // Set info
+                        setInfo(res.data)
+                    }).catch(e => {
+                        console.log("Api call error")
+                        alert(e.message)
+                    })
             }
         } catch(e) {
         }
@@ -169,10 +166,12 @@ const Profile = ({ navigation }) => {
                     <View style={styles.listPetWrapper}>
                         <View style={styles.menuListPet}> 
                             <Text style={styles.text}>List pet</Text>
-                            {/* <TouchableOpacity onPress={selectImagePet}> */}
-                            <TouchableOpacity onPress={() => navigation.navigate('PetSetting')}>
-                                <Ionicons name="ios-add-circle-outline" size={28} color="gray" />
-                            </TouchableOpacity>
+                            <Text 
+                                style={[styles.text, {color: color.PINK}]}
+                                onPress={() => navigation.navigate('PetSetting')}
+                            >
+                                Thêm thú cưng
+                            </Text>
                         </View>  
                         <FlatList
                             style={styles.flatListPet}
@@ -261,13 +260,14 @@ const styles = StyleSheet.create({
     },
     menuListPet: {
         flexDirection: 'row', 
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        paddingHorizontal: 20
     },
     text: {
         fontSize: 18
     },
     flatListPet: {
-        backgroundColor: 'grey'
+       backgroundColor: color.WHITE
     },
     petImageWrapper: {
         marginTop: 10,
