@@ -1,12 +1,19 @@
 import React from 'react';
-import { View, Text } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
+import { Container } from '../../../components'
 
 const Chat = () => {
     return (
         <View>
-            <Text>Chat nhaaa</Text>
+            <Container>
+                <Text>Chat nhaaa</Text>
+            </Container>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    
+})
 
 export default Chat

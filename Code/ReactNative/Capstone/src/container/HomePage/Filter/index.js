@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import { color } from '../../../utility'
 import { Slider } from 'react-native-elements';
+import { Container } from '../../../components'
 
 var gender = [
     { label: 'Male', value: 0 },
@@ -13,7 +14,7 @@ const Filter = ({ navigation }) => {
     const [distance, setDistance] = useState(0)
 
     return (
-        <View>
+        <Container>
             <View style={styles.form}>
                 <RadioForm 
                     style={styles.radioForm}
@@ -37,7 +38,7 @@ const Filter = ({ navigation }) => {
                     <Text style={styles.textSubmit}>Submit</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </Container>
     )
 }
 
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     form: {
         paddingRight: 20,
         paddingLeft: 20,
-        marginTop: 15,
+        marginTop: 30,
         marginLeft: 15,
         marginRight: 15,
         backgroundColor: color.LIGHT_GRAY,

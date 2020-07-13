@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text } from 'react-native'
 import { CheckBox } from 'react-native-elements'
 import { color } from '../../../utility'
 import { useSelector, useDispatch } from 'react-redux';
+import { Container } from '../../../components'
 
 const Privacy = ({ navigation }) => {
     const checked = useSelector(state => state.home.isHideSwiper)
     const dispatch = useDispatch()
     
     return (
-        <View>
+        <Container>
             <View style={styles.checkboxContainer}>
                 <Text style={styles.text}>show me on PetDating</Text>
                 <CheckBox
@@ -23,7 +24,7 @@ const Privacy = ({ navigation }) => {
                 />
             </View>
             <Text style={styles.text2}>if you select hide, you can't match new pet!</Text>
-        </View>
+        </Container>
     )
 }
 
