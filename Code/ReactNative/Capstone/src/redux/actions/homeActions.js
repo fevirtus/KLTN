@@ -1,4 +1,4 @@
-import { HIDE_SWIPER } from '../constants/constants'
+import { HIDE_SWIPER } from './types'
 
 export const hideSwiper = () => ({
     type: HIDE_SWIPER

@@ -4,10 +4,9 @@ import { GoogleSignin } from '@react-native-community/google-signin'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
-import { saveUserInfo, saveToken } from '../../redux/actions/authActions';
+import { saveUserInfo, saveToken, saveTokenImage } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
-import _ from 'lodash'
-import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios'
 
 const GoogleLogin = () => {
     const dispatch = useDispatch()
@@ -16,24 +15,38 @@ const GoogleLogin = () => {
         webClientId: '57907873541-r853h7dljsh3lbjf94atj7tuntu4qpm4.apps.googleusercontent.com'
     }) 
     
+    const imageLogin = () => {
+        axios.post('https://api.imageshack.com/v2/user/login', {
+            user: 'phongnhse05668',
+            password: '12345678'
+        })
+            .then(res => {
+                dispatch(saveTokenImage(res.data.result.auth_token))
+            }).catch(e => {
+                console.log(e)
+            })
+    }
+
     const _signIn = async () => {  
         await GoogleSignin.hasPlayServices();  
         const userInfo = await GoogleSignin.signIn(); 
         const new_user = {
-            email: userInfo.user.email
+            email: userInfo.user.email,
+            name: userInfo.user.givenName
         }
-        RequestApiAsyncPost('login', 'POST', {}, new_user)
+        RequestApiAsyncPost('register', 'POST', {}, new_user)
             .then((res) => {
                 // Save to AsyncStorage
                 // Set token to AsyncStorage
                 const { pd_token, data } = res.data
-                const { user_id } = res.data.data
-                AsyncStorage.setItem('userId', JSON.stringify(user_id));
+                console.log(res.data.pd_token)
                 // Set token to Auth headers
                 dispatch(saveToken(pd_token))
                 setAuthToken(pd_token)
-                dispatch(saveUserInfo(data))
-                console.log("Save user successful")          
+                // // Image
+                // imageLogin()
+                // Save user info
+                dispatch(saveUserInfo(data))         
             }).catch((error) => {
                 console.log("Api call error")
                 alert(error.message)

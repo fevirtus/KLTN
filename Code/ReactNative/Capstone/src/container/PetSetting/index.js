@@ -9,15 +9,15 @@ import {
     TextInput,
     Dimensions
 } from 'react-native'
-import { Container } from '../../components';
 import ImagePicker from 'react-native-image-picker';
+import { useDispatch } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import RadioForm from 'react-native-simple-radio-button';
 import { color } from '../../utility'
-import { useDispatch } from 'react-redux';
+import { Container } from '../../components';
 import { saveAccountSettings } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost } from '../../api/config'
 
@@ -25,7 +25,21 @@ const PetSetting = ({ navigation }) => {
     const [image, setAvatarBoss] = useState(null)
     const [nameSetting, setName] = useState('')
     const [phoneSetting, setPhone] = useState('')
+    const [info, setInfo] = useState({
+        name: '',
+        type: '',
+        breed: '',
+        gender: 0,
+        weight: '',
+        age: '',
+        status: ''
+    })
     const dispatch = useDispatch()
+
+    var gender = [
+        { label: 'Male', value: 0 },
+        { label: 'Female', value: 1 }
+    ]
 
     const handleChangeName = text => {
         setName(text)
@@ -64,8 +78,7 @@ const PetSetting = ({ navigation }) => {
 
     const _postData = () => {
         const new_pet = {
-            name: nameSetting,
-            phone: phoneSetting
+           
         }
         console.log(new_user)
         RequestApiAsyncPost('pets', 'POST', {}, new_pet)
@@ -106,12 +119,18 @@ const PetSetting = ({ navigation }) => {
                         </View>
                         <View style={styles.action}>
                             <FontAwesome name="transgender" color={color.GRAY} size={20} />
-                            <TextInput 
-                                placeholder="Gender"
-                                value={phoneSetting}
-                                placeholderTextColor={color.GRAY}
-                                onChangeText={handleChangePhone}
-                                style={styles.textInput}
+                            <RadioForm 
+                                style={styles.radioForm}
+                                radio_props={gender}
+                                initial={0}
+                                buttonSize={18}
+                                formHorizontal={true}
+                                labelColor={color.GRAY}
+                                selectedButtonColor={color.PINK}
+                                buttonColor={color.PINK}
+                                labelStyle={{fontSize: 15}}
+                                labelStyle={{ marginRight: 40 }}
+                                onPress={() => {}}
                             />
                         </View>
                         <View style={styles.action}>
@@ -137,9 +156,9 @@ const PetSetting = ({ navigation }) => {
                             />
                         </View>
                         <View style={styles.action}>
-                            <EvilIcons name="location" color={color.GRAY} size={22} />
+                            <MaterialIcons name="description" color={color.GRAY} size={22} />
                             <TextInput 
-                                placeholder="City"
+                                placeholder="Status"
                                 value={phoneSetting}
                                 placeholderTextColor={color.GRAY}
                                 onChangeText={handleChangePhone}
@@ -207,6 +226,10 @@ const styles = StyleSheet.create({
         marginTop: -12,
         paddingLeft: 15,
         color: '#05375a',
+    },
+    radioForm: {
+        paddingLeft: 18,
+        marginBottom: 10
     },
     commandButton: {
         width: '90%',

@@ -15,15 +15,17 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { color } from '../../utility'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost } from '../../api/config'
+import axios from 'axios';
 
 const AccountSetting = () => {
-    const [avatarBoss, setAvatarBoss] = useState(null)
+    const [picture, setPicture] = useState(null)
     const [nameSetting, setName] = useState('')
     const [phoneSetting, setPhone] = useState('')
     const dispatch = useDispatch()
+    const token = useSelector(state => state.auth.token)
     
     const handleChangeName = text => {
         setName(text)
@@ -33,8 +35,8 @@ const AccountSetting = () => {
         setPhone(text)
     }
 
-    const selectImage = () => {
-        ImagePicker.showImagePicker({noData:true, mediaType:'photo'}, (response) => {
+    const selectImage = async () => {
+        await ImagePicker.showImagePicker({noData:true, mediaType:'photo'}, (response) => {
             console.log(response)
             if (response.didCancel) {
                 return
@@ -46,19 +48,42 @@ const AccountSetting = () => {
                     response.fileName || 
                     response.uri.substr(response.uri.lastIndexOf('/') + 1)
             }
-            setAvatarBoss(img)
+            setPicture(img)
+            handleUpload(img)
         });
     }
 
+
+    const handleUpload = (image) => {
+        const data = new FormData()
+        data.append('file', image)
+        data.append('upload_preset', 'petDating')
+        data.append("cloud_name", "capstone98")
+
+        axios.post('https://api.cloudinary.com/v1_1/capstone98/image/upload', data)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+            })
+    }
+
+
     const _postData = () => {
+        // const account_settings = {
+        //     name: nameSetting,
+        //     phone: phoneSetting,
+        //     // avatar: picture.name
+        // }
         const account_settings = {
-            name: nameSetting,
-            phone: phoneSetting,
-            avatar: avatarBoss.uri
+            updateFields: {
+                name: nameSetting,
+                phone: phoneSetting,
+            }
         }
         console.log(account_settings)
         RequestApiAsyncPost('users', 'PUT', {}, account_settings)
             .then((res) => {
+                console.log(res.data)
                 dispatch(saveUserInfo(res.data.data))
             }).catch((e) => {
                 console.log("Api call error")
@@ -75,8 +100,8 @@ const AccountSetting = () => {
                         style={styles.profilePicWrap} 
                         imageStyle={{ borderRadius: 100 }}
                     >
-                        {avatarBoss && (
-                            <Image source={{uri: avatarBoss.uri }} style={styles.profileImage} />
+                        {picture && (
+                            <Image source={{uri: picture.uri }} style={styles.profileImage} />
                         )}
                         <TouchableOpacity onPress={selectImage} style={styles.camera}>
                             <MaterialIcons name="add-a-photo" size={25} color="#DFD8C8" />

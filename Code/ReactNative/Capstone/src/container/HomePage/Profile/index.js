@@ -15,56 +15,52 @@ import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { DismissKeyboard } from '../../../components'
 import { RequestApiAsyncGet, RequestApiAsyncPost } from '../../../api/config'
-import { Container } from '../../../components'
+import { Container, Loading } from '../../../components'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { color } from '../../../utility'
-import AsyncStorage from '@react-native-community/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveUserInfo } from '../../../redux/actions/authActions';
+import axios from 'axios';
 
 const Profile = ({ navigation }) => {
-    const [avatarBoss, setAvatarBoss] = useState(null)
+    const [avatar, setAvatar] = useState(null)
     const [avatarPet, setAvatarPet] = useState([])
     const [info, setInfo] = useState({
-        name: 'dasd',
+        name: '',
         email: '',
         phone: '',
-        image: ''
     })
-
-    const getUserById = async () => {
-        try {
-            const userID = await AsyncStorage.getItem('userId')
-            if(userID !== null) {
-                console.log(userID)
-                RequestApiAsyncGet(`users/${userID}`)
-                    .then(res => {
-                        console.log(res.data)
-                        // Set info
-                        setInfo(res.data)
-                    }).catch(e => {
-                        console.log("Api call error")
-                        alert(e.message)
-                    })
-            }
-        } catch(e) {
-        }
-    }
+    const [loading, setLoading] = useState(true)
+    const dispatch = useDispatch()
+    const tokenImg = useSelector(state => state.auth.tokenImage)
 
     useEffect(() => {
-        getUserById()  
-    }, [])
+        RequestApiAsyncGet('users/currentUser')
+            .then(res => {
+                console.log(res.data[0])
+                // Set info
+                setInfo(res.data[0])
+                setLoading(false)
+            }).catch(e => {
+                console.log("Api call error!", e)
+            })
+    }, [200])
 
     const _saveData = () => {
-        const account_settings = {
-            name: name,
-            phone: phone,
-            email: email
+        const settings = {
+            updateFields: {
+                name: name,
+                phone: phone,
+                email: email,
+            }
         }
-        console.log(account_settings)
-        RequestApiAsyncPost('users', 'PUT', {}, account_settings)
+        console.log(settings)
+        RequestApiAsyncPost('users', 'PUT', {}, settings)
             .then((res) => {
                 dispatch(saveUserInfo(res.data.data))
+                alert('Save successful')
             }).catch((e) => {
                 console.log("Api call error")
                 alert(e.message)
@@ -75,11 +71,12 @@ const Profile = ({ navigation }) => {
         setInfo({...info, [type]: value})
     }
 
-    const selectImage = () => {
-        ImagePicker.showImagePicker({mediaType:'photo'}, (response) => {
-            console.log(response)
+    const handlePicker = () => {
+        ImagePicker.showImagePicker({}, (response) => {
+            console.log('Response = ', response);
+
             if (response.didCancel) {
-                return
+                console.log('User cancelled image picker');
             } 
             const img = {
                 uri: response.uri,
@@ -88,7 +85,7 @@ const Profile = ({ navigation }) => {
                     response.fileName || 
                     response.uri.substr(response.uri.lastIndexOf('/') + 1)
             }
-            setAvatarBoss(img)
+            setAvatar(img)
         });
     }
 
@@ -112,82 +109,85 @@ const Profile = ({ navigation }) => {
     return (
         <DismissKeyboard>
             <Container>
-                <View style={styles.container}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <ImageBackground 
-                        source={require('../../../../images/avatar.jpg')} 
-                        style={styles.profilePicWrap} 
-                        imageStyle={{ borderRadius: 100 }}
-                    >
-                        {avatarBoss && (
-                            <Image source={{uri: avatarBoss.uri }} style={styles.profileImage} />
-                        )}
-                        <TouchableOpacity onPress={selectImage} style={styles.camera}>
-                            <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
-                        </TouchableOpacity>
-                    </ImageBackground> 
-
-                    <View style={styles.inputInformation}>
-                        <View style={styles.action}>
-                            <FontAwesome name="user-o" color={color.GRAY} size={22} />
-                            <TextInput 
-                                placeholder="Name"
-                                value={name}
-                                placeholderTextColor={color.GRAY}
-                                onChangeText={(name) => handleChangeInfo('name', name)}
-                                style={styles.textInput}
-                            />
-                        </View>
-                        <View style={styles.action}>
-                            <Fontisto name="email" color={color.GRAY} size={22} />
-                            <TextInput 
-                                placeholder="Email"
-                                value={email}
-                                placeholderTextColor={color.GRAY}
-                                onChangeText={(email) => handleChangeInfo('email', email)}
-                                style={styles.textInput}
-                            />
-                        </View>
-                        <View style={styles.action}>
-                            <Feather name="phone" color={color.GRAY} size={22} />
-                            <TextInput 
-                                placeholder="Phone"
-                                keyboardType="numeric"
-                                value={phone}
-                                placeholderTextColor={color.GRAY}
-                                onChangeText={(phone) => handleChangeInfo('phone', phone)}
-                                style={styles.textInput}
-                            />
-                        </View>
-                    </View>
-                    <TouchableOpacity style={styles.commandButton} onPress={_saveData}>
-                        <Text style={styles.panelButtonTitle}>Save</Text>
-                    </TouchableOpacity>
-                    <View style={styles.listPetWrapper}>
-                        <View style={styles.menuListPet}> 
-                            <Text style={styles.text}>List pet</Text>
-                            <Text 
-                                style={[styles.text, {color: color.PINK}]}
-                                onPress={() => navigation.navigate('PetSetting')}
-                            >
-                                Thêm thú cưng
-                            </Text>
-                        </View>  
-                        <FlatList
-                            style={styles.flatListPet}
-                            horizontal={true}
-                            data={avatarPet}
-                            renderItem={({item}) => (
-                                <View style={styles.petImageWrapper}>
-                                    <TouchableOpacity onPress={() => navigation.navigate('PetProfile')}>
-                                        <Image source={{uri : item.uri}} style={styles.petImage} />
-                                    </TouchableOpacity>       
-                                </View> 
+            {
+                loading ? <Loading />
+                : <View style={styles.container}>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <ImageBackground 
+                            source={require('../../../../images/avatar.jpg')} 
+                            style={styles.profilePicWrap} 
+                            imageStyle={{ borderRadius: 100 }}
+                        >
+                            {avatar && (
+                                <Image source={{uri: avatar.uri }} style={styles.profileImage} />
                             )}
-                        />
-                    </View>
-                </ScrollView>
-            </View>
+                            <TouchableOpacity onPress={handlePicker} style={styles.camera}>
+                                <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
+                            </TouchableOpacity>
+                        </ImageBackground> 
+
+                        <View style={styles.inputInformation}>
+                            <View style={styles.action}>
+                                <FontAwesome name="user-o" color={color.GRAY} size={22} />
+                                <TextInput 
+                                    placeholder="Name"
+                                    value={name}
+                                    placeholderTextColor={color.GRAY}
+                                    onChangeText={(name) => handleChangeInfo('name', name)}
+                                    style={styles.textInput}
+                                />
+                            </View>
+                            <View style={styles.action}>
+                                <Fontisto name="email" color={color.GRAY} size={22} />
+                                <TextInput 
+                                    placeholder="Email"
+                                    value={email}
+                                    placeholderTextColor={color.GRAY}
+                                    onChangeText={(email) => handleChangeInfo('email', email)}
+                                    style={styles.textInput}
+                                />
+                            </View>
+                            <View style={styles.action}>
+                                <Feather name="phone" color={color.GRAY} size={22} />
+                                <TextInput 
+                                    placeholder="Phone"
+                                    keyboardType="numeric"
+                                    value={phone}
+                                    placeholderTextColor={color.GRAY}
+                                    onChangeText={(phone) => handleChangeInfo('phone', phone)}
+                                    style={styles.textInput}
+                                />
+                            </View>
+                        </View>
+                        <TouchableOpacity style={styles.commandButton} onPress={_saveData}>
+                            <Text style={styles.panelButtonTitle}>Save</Text>
+                        </TouchableOpacity>
+                        <View style={styles.listPetWrapper}>
+                            <View style={styles.menuListPet}> 
+                                <Text style={styles.text}>List pet</Text>
+                                <Text 
+                                    style={[styles.text, {color: color.PINK}]}
+                                    onPress={() => navigation.navigate('PetSetting')}
+                                >
+                                    Thêm thú cưng
+                                </Text>
+                            </View>  
+                            <FlatList
+                                style={styles.flatListPet}
+                                horizontal={true}
+                                data={avatarPet}
+                                renderItem={({item}) => (
+                                    <View style={styles.petImageWrapper}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('PetProfile')}>
+                                            <Image source={{uri : item.uri}} style={styles.petImage} />
+                                        </TouchableOpacity>       
+                                    </View> 
+                                )}
+                            />
+                        </View>
+                    </ScrollView>
+                </View>
+            }
             </Container>
         </DismissKeyboard>
     )

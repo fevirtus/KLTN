@@ -10,6 +10,24 @@ const Feedback = ({ navigation }) => {
     const [checked3, setChecked3] = useState(false)
     const [feedback, setFeedback] = useState('')
 
+    const onePressed = () => {
+        setChecked1(true)
+        setChecked2(false)
+        setChecked3(false)
+    }
+
+    const twoPressed = () => {
+        setChecked1(false)
+        setChecked2(true)
+        setChecked3(false)
+    }
+
+    const threePressed = () => {
+        setChecked1(false)
+        setChecked2(false)
+        setChecked3(true)
+    }
+
     return (
         <DismissKeyboard>
             <Container>
@@ -23,7 +41,7 @@ const Feedback = ({ navigation }) => {
                                 checkedColor={color.PINK}
                                 uncheckedColor={color.PINK}
                                 checked={checked1}
-                                onPress={() => setChecked1(!checked1)}
+                                onPress={onePressed}
                             />
                             <Text style={styles.text}>Suggestion</Text>
                         </View>
@@ -35,7 +53,7 @@ const Feedback = ({ navigation }) => {
                                 checkedColor={color.PINK}
                                 uncheckedColor={color.PINK}
                                 checked={checked2}
-                                onPress={() => setChecked2(!checked2)}
+                                onPress={twoPressed}
                             />
                             <Text style={styles.text}>Complain</Text>
                         </View>
@@ -47,7 +65,7 @@ const Feedback = ({ navigation }) => {
                                 checkedColor={color.PINK}
                                 uncheckedColor={color.PINK}
                                 checked={checked3}
-                                onPress={() => setChecked3(!checked3)}
+                                onPress={threePressed}
                             />
                             <Text style={styles.text}>Bug</Text>
                         </View>

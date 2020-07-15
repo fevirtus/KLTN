@@ -109,7 +109,7 @@ const LoginStack = () => {
 const HomeStack = ({ userInfo }) => {
     return (
         <Stack.Navigator
-            initialRouteName={userInfo.name === null ? 'AccountSetting' : 'Home'}
+            initialRouteName={userInfo.phone === null ? 'AccountSetting' : 'Home'}
             screenOptions={{
                 headerShown: true,
                 headerTitleAlign: 'center',

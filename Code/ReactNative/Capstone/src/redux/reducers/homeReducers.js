@@ -1,6 +1,6 @@
 import {
     HIDE_SWIPER
-} from '../constants/constants'
+} from '../actions/types'
 
 const initialState = {
     isHideSwiper: false
