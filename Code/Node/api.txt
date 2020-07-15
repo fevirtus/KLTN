@@ -1,46 +1,65 @@
-----/login
+
+------------- user -----------------
+
+/api/register
 	+ POST: {
 		email: required,
-		name:
+		name:required
 		...
 	}
 	=> insert new user and return a token
 
-----/users
-	+ GET: => return all users
+/api/users/currentUser
+	+ GET: => get current user
+
+/api/users/
 	+ PUT: {
 		headers:{Authorization: token},
 		data:{
-			update fields ...
+			"updateFields":{
+				"name":"Vanh TV 48692",
+				"phone":"12323243243"
+			}
 		}
 	}
-	=>update an user
+	=>update current user
 	
-----/users/:id
+/api/users/:id
 	+ GET: {headers:{Authorization: token}}
 	=> get an user by user_id
-	
-----/pets
+
+------------- pet -----------------	
+
+/api/pets
 	+ GET: {headers:{Authorization: token}}
-	=> get all pets of the logined user
+	=> get all pets of the current user
+	
+/api/pets
 	+ POST:{
 		headers:{Authorization: token},
 		data:{
 			fields ...
 		}
 	}=> create a new pet of the login user
+	
+
+/api/pets/:id
 	+ PUT:{
 		headers:{Authorization: token},
 		data:{
-			pet_id: required
-			...
+			"updateFields":{
+				"name":"phong doggy",
+				"dob":"2020-01-01",
+				"introduction":"4 chan"
+				...
+			}
 		}
-	}=> update a new pet of the login user
+	}=> update a pet(:id) of the login user
 
-----/pets/:id
+/api/pets/breeds
 	+ GET: {headers:{Authorization: token}}
-	=> get pet of user by pet_id
+	=> get all breeds of pet
 
-----/pets/petBreeds
+/api/pets/:id
 	+ GET: {headers:{Authorization: token}}
-	=> get all pet breeds 
+	=> get pet by id
