@@ -18,13 +18,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import RadioForm from 'react-native-simple-radio-button';
 import { color } from '../../utility'
 import { Container } from '../../components';
-import { saveAccountSettings } from '../../redux/actions/authActions';
+import { newPetInfo } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost } from '../../api/config'
 
 const PetSetting = ({ navigation }) => {
-    const [image, setAvatarBoss] = useState(null)
-    const [nameSetting, setName] = useState('')
-    const [phoneSetting, setPhone] = useState('')
+    const [image, setImage] = useState(null)
     const [info, setInfo] = useState({
         name: '',
         type: '',
@@ -32,7 +30,7 @@ const PetSetting = ({ navigation }) => {
         gender: 0,
         weight: '',
         age: '',
-        status: ''
+        introduction: ''
     })
     const dispatch = useDispatch()
 
@@ -41,12 +39,8 @@ const PetSetting = ({ navigation }) => {
         { label: 'Female', value: 1 }
     ]
 
-    const handleChangeName = text => {
-        setName(text)
-    }
-
-    const handleChangePhone = text => {
-        setPhone(text)
+    const handleChangeInfo = (type, value) => {
+        setInfo({...info, [type]: value})
     }
 
     const selectImage = () => {
@@ -61,7 +55,7 @@ const PetSetting = ({ navigation }) => {
                     response.fileName || 
                     response.uri.substr(response.uri.lastIndexOf('/') + 1)
             }
-            setAvatarBoss(img)
+            setImage(img)
         });
     }
 
@@ -78,20 +72,26 @@ const PetSetting = ({ navigation }) => {
 
     const _postData = () => {
         const new_pet = {
-           
+            name: name,
+            breed: breed,
+            weight: weight,
+            age: age,
+            introduction: introduction
         }
-        console.log(new_user)
+        console.log(new_pet)
         RequestApiAsyncPost('pets', 'POST', {}, new_pet)
-            .then(() => {
-                dispatch(saveAccountSettings(new_pet))
-                console.log("Save user successful")
-                navigation.navigate('AccountSetting')
+            .then(res => {
+                console.log(res.data)
+                dispatch(newPetInfo(res.data.data))
+                console.log("Add new pet successful")
+                navigation.navigate('Profile')
             }).catch((e) => {
                 console.log("Api call error")
                 alert(e.message)
             })
     }
 
+    const { name, breed, weight, age, introduction } = info
     return (
         <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
             <Container>
@@ -101,9 +101,9 @@ const PetSetting = ({ navigation }) => {
                             <FontAwesome name="user-o" color={color.GRAY} size={20} />
                             <TextInput 
                                 placeholder="Name"
-                                value={nameSetting}
+                                value={name}
                                 placeholderTextColor={color.GRAY}
-                                onChangeText={handleChangeName}
+                                onChangeText={(name) => handleChangeInfo('name', name)}
                                 style={styles.textInput}
                             />
                         </View>
@@ -111,9 +111,9 @@ const PetSetting = ({ navigation }) => {
                             <MaterialIcons name="pets" color={color.GRAY} size={20} />
                             <TextInput 
                                 placeholder="Breed"
-                                // value={nameSetting}
+                                value={breed}
                                 placeholderTextColor={color.GRAY}
-                                // onChangeText={handleChangeName}
+                                onChangeText={(breed) => handleChangeInfo('breed', breed)}
                                 style={styles.textInput}
                             />
                         </View>
@@ -138,9 +138,9 @@ const PetSetting = ({ navigation }) => {
                             <TextInput 
                                 placeholder="Weight"
                                 keyboardType="numeric"
-                                value={phoneSetting}
+                                value={weight}
                                 placeholderTextColor={color.GRAY}
-                                onChangeText={handleChangePhone}
+                                onChangeText={(weight) => handleChangeInfo('weight', weight)}
                                 style={styles.textInput}
                             />
                         </View>
@@ -149,19 +149,19 @@ const PetSetting = ({ navigation }) => {
                             <TextInput 
                                 placeholder="Age"
                                 keyboardType="numeric"
-                                value={phoneSetting}
+                                value={age}
                                 placeholderTextColor={color.GRAY}
-                                onChangeText={handleChangePhone}
+                                onChangeText={(age) => handleChangeInfo('age', age)}
                                 style={styles.textInput}
                             />
                         </View>
                         <View style={styles.action}>
                             <MaterialIcons name="description" color={color.GRAY} size={22} />
                             <TextInput 
-                                placeholder="Status"
-                                value={phoneSetting}
+                                placeholder="Introduction"
+                                value={introduction}
                                 placeholderTextColor={color.GRAY}
-                                onChangeText={handleChangePhone}
+                                onChangeText={(introduction) => handleChangeInfo('introduction', introduction)}
                                 style={styles.textInput}
                             />
                         </View>

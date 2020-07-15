@@ -4,7 +4,7 @@ import { GoogleSignin } from '@react-native-community/google-signin'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
-import { saveUserInfo, saveToken, saveTokenImage } from '../../redux/actions/authActions';
+import { saveUserInfo, saveToken } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
 import axios from 'axios'
 
@@ -14,18 +14,6 @@ const GoogleLogin = () => {
     GoogleSignin.configure({
         webClientId: '57907873541-r853h7dljsh3lbjf94atj7tuntu4qpm4.apps.googleusercontent.com'
     }) 
-    
-    const imageLogin = () => {
-        axios.post('https://api.imageshack.com/v2/user/login', {
-            user: 'phongnhse05668',
-            password: '12345678'
-        })
-            .then(res => {
-                dispatch(saveTokenImage(res.data.result.auth_token))
-            }).catch(e => {
-                console.log(e)
-            })
-    }
 
     const _signIn = async () => {  
         await GoogleSignin.hasPlayServices();  
@@ -43,8 +31,6 @@ const GoogleLogin = () => {
                 // Set token to Auth headers
                 dispatch(saveToken(pd_token))
                 setAuthToken(pd_token)
-                // // Image
-                // imageLogin()
                 // Save user info
                 dispatch(saveUserInfo(data))         
             }).catch((error) => {

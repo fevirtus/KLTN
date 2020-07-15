@@ -20,7 +20,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { color } from '../../../utility'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../../redux/actions/authActions';
 import axios from 'axios';
 
@@ -34,7 +34,6 @@ const Profile = ({ navigation }) => {
     })
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
-    const tokenImg = useSelector(state => state.auth.tokenImage)
 
     useEffect(() => {
         RequestApiAsyncGet('users/currentUser')
@@ -109,9 +108,10 @@ const Profile = ({ navigation }) => {
     return (
         <DismissKeyboard>
             <Container>
-            {
+            {/* {
                 loading ? <Loading />
-                : <View style={styles.container}>
+                :  */}
+                <View style={styles.container}>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <ImageBackground 
                             source={require('../../../../images/avatar.jpg')} 
@@ -187,7 +187,7 @@ const Profile = ({ navigation }) => {
                         </View>
                     </ScrollView>
                 </View>
-            }
+            {/* } */}
             </Container>
         </DismissKeyboard>
     )

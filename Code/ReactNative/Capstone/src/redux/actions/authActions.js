@@ -2,7 +2,7 @@ import {
     SAVE_USERINFO,
     CLEAR_USERINFO,
     SAVE_TOKEN,
-    SAVE_TOKEN_IMAGE
+    NEW_PET
 } from './types'
 
 export const saveUserInfo = (userInfo) => ({
@@ -19,8 +19,8 @@ export const saveToken = (token) => ({
     token
 });
 
-// Save auth token to upload image
-export const saveTokenImage = (tokenImage) => ({
-    type: SAVE_TOKEN_IMAGE,
-    tokenImage
+/** actions for pet */
+export const newPetInfo = (petInfo) => ({
+    type: NEW_PET,
+    petInfo
 });
