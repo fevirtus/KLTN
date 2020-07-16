@@ -22,11 +22,10 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import { color } from '../../../utility'
 import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../../redux/actions/authActions';
-import axios from 'axios';
 
 const Profile = ({ navigation }) => {
     const [avatar, setAvatar] = useState(null)
-    const [avatarPet, setAvatarPet] = useState([])
+    const [dataPet, setDataPet] = useState([])
     const [info, setInfo] = useState({
         name: '',
         email: '',
@@ -47,11 +46,25 @@ const Profile = ({ navigation }) => {
             })
     }, [200])
 
+    useEffect(() => {
+        RequestApiAsyncGet('pets')
+            .then(res => {
+                // Set data for pet
+                console.log(res.data)
+                setDataPet(res.data)
+                setLoading(false)
+            }).catch(e => {
+                console.log("Api call error!", e)
+            })
+    }, [200])
+
     const _saveData = () => {
         const settings = {
             updateFields: {
                 name: name,
                 phone: phone,
+
+
                 email: email,
             }
         }
@@ -88,21 +101,16 @@ const Profile = ({ navigation }) => {
         });
     }
 
-    const selectImagePet = () => {
-        ImagePicker.showImagePicker({noData:true, mediaType:'photo'}, (response) => {
-            if (response.didCancel) {
-                return
-            } 
-            const img = {
-                uri: response.uri,
-                type: response.type,
-                name: 
-                    response.fileName || 
-                    response.uri.substr(response.uri.lastIndexOf('/') + 1)
-            }
-            setAvatarPet(prevImages => prevImages.concat(img))   
-        });
-    }
+    const renderList = ((item) => {
+        return (
+            <View style={styles.petImageWrapper}>
+                <TouchableOpacity onPress={() => navigation.navigate('PetProfile', {itemId: item.id})}>
+                    {/* <Image source={{uri : item.uri}} style={styles.petImage} /> */}
+                    <Text>{item.name}</Text>
+                </TouchableOpacity>       
+            </View> 
+        )
+    })
 
     const { name, email, phone } = info
     return (
@@ -175,14 +183,12 @@ const Profile = ({ navigation }) => {
                             <FlatList
                                 style={styles.flatListPet}
                                 horizontal={true}
-                                data={avatarPet}
-                                renderItem={({item}) => (
-                                    <View style={styles.petImageWrapper}>
-                                        <TouchableOpacity onPress={() => navigation.navigate('PetProfile')}>
-                                            <Image source={{uri : item.uri}} style={styles.petImage} />
-                                        </TouchableOpacity>       
-                                    </View> 
-                                )}
+                                data={dataPet}
+                                renderItem={({item}) => {
+                                    return renderList(item)
+                                }}
+                                keyExtractor={item => item.id}
+                                refreshing={loading}
                             />
                         </View>
                     </ScrollView>

@@ -1,44 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, Modal, Keyboard, Text, TextInput } from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { color } from '../../../../utility';
+import { RequestApiAsyncGet } from '../../../../api/config'
 
-const PetProfile = () => {
-    const [name, setName] = useState('Charley')
-    const [breed, setBreed] = useState('Pitbull')
-    const [gender, setGender] = useState('Male')
-    const [weight, setWeight] = useState('5')
-    const [age, setAge] = useState('2')
-    const [city, setCity] = useState('HaNoi')
-
+const PetProfile = ({ route }) => {
+    const { itemId } = route.params;
     const [showModal, setShowModal] = useState(false)
+    const [info, setInfo] = useState({
+        name: '',
+        breed: '',
+        gender: '',
+        weight: '',
+        age: '',
+        introduction: ''
+    })
 
-    const handleChangeName = text => {
-        setName(text)
+    const handleChangeInfo = (type, value) => {
+        setInfo({...info, [type]: value})
     }
 
-    const handleChangeBreed = text => {
-        setBreed(text)
-    }
+    useEffect(() => {
+        RequestApiAsyncGet(`pets/${itemId}`)
+            .then(res => {
+                // Set info
+                setInfo(res.data[0])
+                // setLoading(false)
+            }).catch(e => {
+                console.log("Api call error!", e)
+            })
+    }, [200])
 
-    const handleChangeGender = text => {
-        setGender(text)
-    }
-
-    const handleChangeWeight = text => {
-        setWeight(text)
-    }
-
-    const handleChangeAge = text => {
-        setAge(text)
-    }
-
-    const handleChangeCity = text => {
-        setCity(text)
-    }
-
+    const { name, breed, gender, weight, age, introduction } = info
     return (
         <View style={styles.container}>
             <Modal 
@@ -62,42 +57,42 @@ const PetProfile = () => {
                                     mode="outlined"
                                     label="Name"
                                     value={name}
-                                    onChangeText={handleChangeName}
+                                    onChangeText={(name) => handleChangeInfo('name', name)}
                                 />
                                 <TextInput 
                                     style={styles.textInput}
                                     mode="outlined"
                                     label="Breed"
                                     value={breed}
-                                    onChangeText={handleChangeBreed}
+                                    onChangeText={(breed) => handleChangeInfo('breed', breed)}
                                 />
                                 <TextInput 
                                     style={styles.textInput}
                                     mode="outlined"
                                     label="Gender"
                                     value={gender}
-                                    onChangeText={handleChangeGender}
+                                    onChangeText={(gender) => handleChangeInfo('gender', gender)}
                                 />
                                 <TextInput 
                                     style={styles.textInput}
                                     mode="outlined"
                                     label="Weight"
                                     value={weight}
-                                    onChangeText={handleChangeWeight}
+                                    onChangeText={(weight) => handleChangeInfo('weight', weight)}
                                 />
                                 <TextInput 
                                     style={styles.textInput}
                                     mode="outlined"
                                     label="Age"
                                     value={age}
-                                    onChangeText={handleChangeAge}
+                                    onChangeText={(age) => handleChangeInfo('age', age)}
                                 />
                                 <TextInput 
                                     style={styles.textInput}
                                     mode="outlined"
-                                    label="City"
-                                    value={city}
-                                    onChangeText={handleChangeCity}
+                                    label="Introduction"
+                                    value={introduction}
+                                    onChangeText={(introduction) => handleChangeInfo('introduction', introduction)}
                                 />
                                 <TouchableOpacity style={styles.saveButton} onPress={() => setShowModal(false)}>
                                     <Text style={styles.textButton}>Save</Text>
@@ -148,8 +143,8 @@ const PetProfile = () => {
                             <Text style={styles.text}>{age}</Text>
                         </View> 
                         <View style={styles.item}>
-                            <Text style={styles.subheading}>City</Text>
-                            <Text style={styles.text}>{city}</Text>
+                            <Text style={styles.subheading}>Introduction</Text>
+                            <Text style={styles.text}>{introduction}</Text>
                         </View> 
                     </View>
                 </View>

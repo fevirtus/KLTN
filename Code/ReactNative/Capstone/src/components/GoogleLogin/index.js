@@ -6,7 +6,6 @@ import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
 import { saveUserInfo, saveToken } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
-import axios from 'axios'
 
 const GoogleLogin = () => {
     const dispatch = useDispatch()
