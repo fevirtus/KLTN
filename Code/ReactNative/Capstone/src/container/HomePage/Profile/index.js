@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    StyleSheet, 
-    View, 
-    Text, 
-    TouchableOpacity, 
-    Image, 
-    FlatList, 
-    ScrollView, 
-    ImageBackground, 
+import {
+    StyleSheet,
+    View,
+    Text,
+    TouchableOpacity,
+    Image,
+    FlatList,
+    ScrollView,
+    ImageBackground,
     TextInput,
     YellowBox
 } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { DismissKeyboard } from '../../../components'
-import { RequestApiAsyncGet, RequestApiAsyncPost } from '../../../api/config'
+import { RequestApiAsyncGet, RequestApiAsyncPost, UploadApiAsyncPost } from '../../../api/config'
 import { Container, Loading } from '../../../components'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
@@ -22,6 +22,8 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import { color } from '../../../utility'
 import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../../redux/actions/authActions';
+import mime from 'mime'
+import axios from 'axios'
 
 const Profile = ({ navigation }) => {
     const [avatar, setAvatar] = useState(null)
@@ -63,8 +65,6 @@ const Profile = ({ navigation }) => {
             updateFields: {
                 name: name,
                 phone: phone,
-
-
                 email: email,
             }
         }
@@ -80,35 +80,56 @@ const Profile = ({ navigation }) => {
     }
 
     const handleChangeInfo = (type, value) => {
-        setInfo({...info, [type]: value})
+        setInfo({ ...info, [type]: value })
     }
 
     const handlePicker = () => {
-        ImagePicker.showImagePicker({}, (response) => {
+        let options = {
+            title: 'Select Image',
+            noData: true,
+            maxWidth: 500,
+            maxHeight: 500,
+        };
+        ImagePicker.showImagePicker(options, (response) => {
             console.log('Response = ', response);
 
             if (response.didCancel) {
                 console.log('User cancelled image picker');
-            } 
+            }
             const img = {
                 uri: response.uri,
-                type: response.type,
-                name: 
-                    response.fileName || 
+                type: mime.getType(response.uri),
+                name:
+                    response.fileName ||
                     response.uri.substr(response.uri.lastIndexOf('/') + 1)
             }
-            setAvatar(img)
+            setAvatar({ uri: response.uri })
+            //use FormData
+            const formData = new FormData()
+            formData.append('picture', img)
+            // Call API to upload image
+            axios({
+                method: 'post',
+                url: 'https://pet-dating-server.herokuapp.com/api/common/upload',
+                data: formData,
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+                .then((res) => {
+                    console.log('upload success', res);
+                }).catch((e) => {
+                    console.log("Error", e)
+                })
         });
     }
 
     const renderList = ((item) => {
         return (
             <View style={styles.petImageWrapper}>
-                <TouchableOpacity onPress={() => navigation.navigate('PetProfile', {itemId: item.id})}>
+                <TouchableOpacity onPress={() => navigation.navigate('PetProfile', { itemId: item.id })}>
                     {/* <Image source={{uri : item.uri}} style={styles.petImage} /> */}
                     <Text>{item.name}</Text>
-                </TouchableOpacity>       
-            </View> 
+                </TouchableOpacity>
+            </View>
         )
     })
 
@@ -116,28 +137,28 @@ const Profile = ({ navigation }) => {
     return (
         <DismissKeyboard>
             <Container>
-            {/* {
+                {/* {
                 loading ? <Loading />
                 :  */}
                 <View style={styles.container}>
                     <ScrollView showsVerticalScrollIndicator={false}>
-                        <ImageBackground 
-                            source={require('../../../../images/avatar.jpg')} 
-                            style={styles.profilePicWrap} 
+                        <ImageBackground
+                            source={require('../../../../images/avatar.jpg')}
+                            style={styles.profilePicWrap}
                             imageStyle={{ borderRadius: 100 }}
                         >
                             {avatar && (
-                                <Image source={{uri: avatar.uri }} style={styles.profileImage} />
+                                <Image source={{ uri: avatar.uri }} style={styles.profileImage} />
                             )}
                             <TouchableOpacity onPress={handlePicker} style={styles.camera}>
                                 <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
                             </TouchableOpacity>
-                        </ImageBackground> 
+                        </ImageBackground>
 
                         <View style={styles.inputInformation}>
                             <View style={styles.action}>
                                 <FontAwesome name="user-o" color={color.GRAY} size={22} />
-                                <TextInput 
+                                <TextInput
                                     placeholder="Name"
                                     value={name}
                                     placeholderTextColor={color.GRAY}
@@ -147,7 +168,7 @@ const Profile = ({ navigation }) => {
                             </View>
                             <View style={styles.action}>
                                 <Fontisto name="email" color={color.GRAY} size={22} />
-                                <TextInput 
+                                <TextInput
                                     placeholder="Email"
                                     value={email}
                                     placeholderTextColor={color.GRAY}
@@ -157,7 +178,7 @@ const Profile = ({ navigation }) => {
                             </View>
                             <View style={styles.action}>
                                 <Feather name="phone" color={color.GRAY} size={22} />
-                                <TextInput 
+                                <TextInput
                                     placeholder="Phone"
                                     keyboardType="numeric"
                                     value={phone}
@@ -171,29 +192,29 @@ const Profile = ({ navigation }) => {
                             <Text style={styles.panelButtonTitle}>Save</Text>
                         </TouchableOpacity>
                         <View style={styles.listPetWrapper}>
-                            <View style={styles.menuListPet}> 
+                            <View style={styles.menuListPet}>
                                 <Text style={styles.text}>List pet</Text>
-                                <Text 
-                                    style={[styles.text, {color: color.PINK}]}
+                                <Text
+                                    style={[styles.text, { color: color.PINK }]}
                                     onPress={() => navigation.navigate('PetSetting')}
                                 >
                                     Thêm thú cưng
                                 </Text>
-                            </View>  
+                            </View>
                             <FlatList
                                 style={styles.flatListPet}
                                 horizontal={true}
                                 data={dataPet}
-                                renderItem={({item}) => {
+                                renderItem={({ item }) => {
                                     return renderList(item)
                                 }}
-                                keyExtractor={item => item.id}
+                                keyExtractor={(item, index) => index.toString()}
                                 refreshing={loading}
                             />
                         </View>
                     </ScrollView>
                 </View>
-            {/* } */}
+                {/* } */}
             </Container>
         </DismissKeyboard>
     )
@@ -202,7 +223,7 @@ const Profile = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1
-    },  
+    },
     profilePicWrap: {
         width: 130,
         height: 130,
@@ -265,7 +286,7 @@ const styles = StyleSheet.create({
         paddingTop: 16
     },
     menuListPet: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 20
     },
@@ -273,7 +294,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     flatListPet: {
-       backgroundColor: color.WHITE
+        backgroundColor: color.WHITE
     },
     petImageWrapper: {
         marginTop: 10,
@@ -288,7 +309,7 @@ const styles = StyleSheet.create({
     },
 })
 
-YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same', 
-                            'orientation - use another VirtualizedList-backed container instead.']);
+YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same',
+    'orientation - use another VirtualizedList-backed container instead.']);
 
 export default Profile;

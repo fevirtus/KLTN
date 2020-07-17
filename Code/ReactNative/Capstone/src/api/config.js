@@ -31,6 +31,25 @@ export const RequestApiAsyncPost = (endpoint, method, headers = {}, body) => {
     }
 }
 
+export const UploadApiAsyncPost = (endpoint, method, headers = {}, body) => {
+    const endPointUrl = URL_BASE.concat(endpoint);
+    console.log(endPointUrl);
+    const requestBody = body ? JSON.stringify(body) : null;
+    const headerParam = { headers }
+    if ((method === "POST" && method === "PUT") && !requestBody) {
+        throw new Error("Request body required!");
+    }
+    if (body) {
+        headerParam.headers["Content-type"] = "multipart/form-data";
+        return axios({
+            method: method,
+            url: endPointUrl,
+            data: requestBody,
+            headers: headerParam.headers
+        });
+    }
+}
+
 export const RequestApiAsyncGet = async(endpoint, headers = {}, params = {}) => {
     const endPointUrl = URL_BASE.concat(endpoint);
     const requestParam = { params };
