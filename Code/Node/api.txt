@@ -63,3 +63,11 @@
 /api/pets/:id
 	+ GET: {headers:{Authorization: token}}
 	=> get pet by id
+	
+/api/pets/others
+	+ GET: {headers:{Authorization: token}}
+	=> get all pet but current user's pet
+	
+/api/pets/:id
+	+ DELETE: {headers:{Authorization: token}}
+	=> delete pet by id
