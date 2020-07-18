@@ -7,7 +7,6 @@ import {
     Image,
     FlatList,
     ScrollView,
-    ImageBackground,
     TextInput,
     YellowBox
 } from 'react-native'
@@ -127,7 +126,6 @@ const Profile = ({ navigation }) => {
             <View style={styles.petImageWrapper}>
                 <TouchableOpacity onPress={() => navigation.navigate('PetProfile', { itemId: item.id })}>
                     <Image source={{ uri: item.avatar }} style={styles.petImage} />
-                    <Text>{item.name}</Text>
                 </TouchableOpacity>
             </View>
         )

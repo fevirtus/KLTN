@@ -8,10 +8,10 @@ import { color } from '../../utility';
 import { useSelector } from 'react-redux';
 import data from '../../../data';
 
-const Card = ({card, index}) => (
+const Card = ({ card, index }) => (
     <View style={styles.card}>
         <View>
-            <Image source={{uri: card.image}} style={styles.cardImage}/>
+            <Image source={{ uri: card.image }} style={styles.cardImage} />
         </View>
         <View style={styles.cardDetails}>
             <Text style={styles.title}>{data[index].name}</Text>
@@ -27,30 +27,30 @@ const Home = ({ navigation }) => {
     const onSwiped = () => {
         setIndex((index + 1) % data.length)
     }
-    
+
     return (
         <View style={styles.container}>
-            { hide ? 
-                (<Container>    
+            {hide ?
+                (<Container>
                     <View style={styles.container}>
                         <View style={styles.hideMode}>
-                            <FontAwesome5 name="umbrella-beach" size={150} color={color.GRAY}/>
+                            <FontAwesome5 name="umbrella-beach" size={150} color={color.GRAY} />
                             <Text style={styles.textHide}>Nothing to see here!</Text>
                         </View>
                     </View>
-                </Container>) : 
+                </Container>) :
                 (<Container>
                     <View style={styles.container}>
                         <View style={styles.swiperContainer}>
                             <Swiper
                                 cards={data}
                                 cardIndex={index}
-                                renderCard={(card, index) => <Card card={card} index={index}/>}
+                                renderCard={(card, index) => <Card card={card} index={index} />}
                                 ref={swiperRef}
                                 onSwiped={onSwiped}
-                                stackSize={2} 
+                                stackSize={2}
                                 disableBottomSwipe
-                                animateOverlayLabelsOpacity	
+                                animateOverlayLabelsOpacity
                                 infinite
                                 backgroundColor={'transparent'}
                                 overlayLabels={{
@@ -115,7 +115,7 @@ const Home = ({ navigation }) => {
                         </View>
                         <View style={styles.bottomButtonsContainer}>
                             <TouchableOpacity style={styles.iconContainer}>
-                                <AntDesign 
+                                <AntDesign
                                     name="close"
                                     size={45}
                                     color={color.RED}
@@ -137,11 +137,11 @@ const Home = ({ navigation }) => {
                                     color={color.GREEN}
                                     onPress={() => swiperRef.current.swipeRight()}
                                 />
-                            </TouchableOpacity>  
+                            </TouchableOpacity>
                         </View>
                     </View>
-                </Container>)             
-            }   
+                </Container>)
+            }
         </View>
     )
 }
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: color.WHITE
     },
-    cardImage:{
+    cardImage: {
         width: 300,
         flex: 0.7,
         resizeMode: 'contain'
@@ -170,8 +170,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     title: {
-        fontSize: 26, 
-        marginBottom: 10, 
+        fontSize: 26,
+        marginBottom: 10,
         color: color.BLACK
     },
     description: {
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: 65,
-        height: 65  
+        height: 65
     },
     hideMode: {
         flex: 1,
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     }
 });
 
-YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`', 
-                        'Animated.event now requires a second argument for options']);
+YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
+    'Animated.event now requires a second argument for options']);
 
 export default Home;

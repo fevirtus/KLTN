@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native'
+import {
+    View,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    Text,
+    Alert
+} from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../../../utility';
 import { RequestApiAsyncGet } from '../../../../api/config'
+import { Loading } from '../../../../components'
+import axios from 'axios'
 
 const PetProfile = ({ navigation, route }) => {
     const { itemId } = route.params;
+    const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState({
         name: '',
         breed: '',
@@ -21,62 +32,101 @@ const PetProfile = ({ navigation, route }) => {
             .then(res => {
                 // Set info
                 setInfo(res.data[0])
-                // setLoading(false)
+                setLoading(false)
             }).catch(e => {
                 console.log("Api call error!", e)
             })
     }, [200])
 
+
+    const _delete = () => {
+        axios.delete(`https://pet-dating-server.herokuapp.com/api/pets/${itemId}`)
+            .then(res => {
+                console.log(res.data)
+                navigation.navigate('Profile')
+            })
+    }
+
+    const _deletePet = () => {
+        Alert.alert(
+            `Delete ${name}?`,
+            `Are you sure to delete ${name}?`,
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('User cancel delete!'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'OK',
+                    onPress: _delete
+                }
+            ],
+            { cancelable: false }
+        )
+    }
+
     const { name, breed, gender, weight, age, introduction, avatar } = info
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>MY PETPROFILE</Text>
-                <Image source={{ uri: avatar }} style={styles.img} />
-                <TouchableOpacity
-                    style={styles.buttonEdit}
-                    onPress={() => navigation.navigate('EditPetProfile', { petId: itemId })}
-                >
-                    <Entypo name="edit" size={25} color="white" />
-                </TouchableOpacity>
-            </View>
-            <View style={styles.content}>
-                <View style={styles.navbar}>
-                    <Text style={styles.titleNav}>PET</Text>
-                    <View style={styles.horizontalLine}></View>
-                </View>
-                <View style={styles.information}>
-                    <View style={styles.contentLeft}>
-                        <View style={styles.item}>
-                            <Text style={styles.subheading}>Name</Text>
-                            <Text style={styles.text}>{name}</Text>
+        <>
+            {
+                loading ? <Loading />
+                    : <View style={styles.container}>
+                        <View style={styles.header}>
+                            <Text style={styles.title}>MY PETPROFILE</Text>
+                            <Image source={{ uri: avatar }} style={styles.img} />
+                            <TouchableOpacity
+                                style={styles.buttonDelete}
+                                onPress={_deletePet}
+                            >
+                                <FontAwesome5 name="trash" size={24} color="white" />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.buttonEdit}
+                                onPress={() => navigation.navigate('EditPetProfile', { petId: itemId })}
+                            >
+                                <Entypo name="edit" size={25} color="white" />
+                            </TouchableOpacity>
                         </View>
-                        <View style={styles.item}>
-                            <Text style={styles.subheading}>Breed</Text>
-                            <Text style={styles.text}>{breed}</Text>
-                        </View>
-                        <View style={styles.item}>
-                            <Text style={styles.subheading}>Gender</Text>
-                            <Text style={styles.text}>{gender}</Text>
+                        <View style={styles.content}>
+                            <View style={styles.navbar}>
+                                <Text style={styles.titleNav}>PET</Text>
+                                <View style={styles.horizontalLine}></View>
+                            </View>
+                            <View style={styles.information}>
+                                <View style={styles.contentLeft}>
+                                    <View style={styles.item}>
+                                        <Text style={styles.subheading}>Name</Text>
+                                        <Text style={styles.text}>{name}</Text>
+                                    </View>
+                                    <View style={styles.item}>
+                                        <Text style={styles.subheading}>Breed</Text>
+                                        <Text style={styles.text}>{breed}</Text>
+                                    </View>
+                                    <View style={styles.item}>
+                                        <Text style={styles.subheading}>Gender</Text>
+                                        <Text style={styles.text}>{gender}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.contentRight}>
+                                    <View style={styles.item}>
+                                        <Text style={styles.subheading}>Weight</Text>
+                                        <Text style={styles.text}>{weight} kg</Text>
+                                    </View>
+                                    <View style={styles.item}>
+                                        <Text style={styles.subheading}>Age</Text>
+                                        <Text style={styles.text}>{age}</Text>
+                                    </View>
+                                    <View style={styles.item}>
+                                        <Text style={styles.subheading}>Introduction</Text>
+                                        <Text style={styles.text}>{introduction}</Text>
+                                    </View>
+                                </View>
+                            </View>
                         </View>
                     </View>
-                    <View style={styles.contentRight}>
-                        <View style={styles.item}>
-                            <Text style={styles.subheading}>Weight</Text>
-                            <Text style={styles.text}>{weight} kg</Text>
-                        </View>
-                        <View style={styles.item}>
-                            <Text style={styles.subheading}>Age</Text>
-                            <Text style={styles.text}>{age}</Text>
-                        </View>
-                        <View style={styles.item}>
-                            <Text style={styles.subheading}>Introduction</Text>
-                            <Text style={styles.text}>{introduction}</Text>
-                        </View>
-                    </View>
-                </View>
-            </View>
-        </View>
+            }
+        </>
     )
 }
 
@@ -84,54 +134,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    //Modal
-    modalContent: {
-        backgroundColor: '#000000aa',
-        flex: 1
-    },
-    form: {
-        backgroundColor: color.WHITE,
-        flex: 1,
-        borderRadius: 15,
-        marginTop: 20,
-        marginBottom: 20,
-        marginLeft: 40,
-        marginRight: 40,
-        paddingTop: 40,
-        paddingBottom: 40,
-        paddingLeft: 40,
-        paddingRight: 40
-    },
-    close: {
-        alignSelf: 'flex-end'
-    },
-    content: {
-        paddingTop: 20
-    },
-    subheadingModal: {
-        fontSize: 22,
-        fontWeight: '700',
-        paddingBottom: 15
-    },
-    textInput: {
-        paddingBottom: 5
-    },
-    saveButton: {
-        borderWidth: 1,
-        borderColor: color.GRAY,
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 10
-    },
-    textButton: {
-        fontSize: 18,
-        marginTop: 5,
-        marginBottom: 5,
-        marginLeft: 5,
-        marginRight: 5
-    },
-    //Content
     header: {
         flex: 1,
         backgroundColor: color.PINK,
@@ -156,7 +158,18 @@ const styles = StyleSheet.create({
     buttonEdit: {
         position: 'absolute',
         top: 180,
-        right: 40,
+        right: 54,
+        borderRadius: 50,
+        backgroundColor: color.ORANGE,
+        width: 38,
+        height: 38,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    buttonDelete: {
+        position: 'absolute',
+        top: 180,
+        left: 54,
         borderRadius: 50,
         backgroundColor: color.ORANGE,
         width: 38,
