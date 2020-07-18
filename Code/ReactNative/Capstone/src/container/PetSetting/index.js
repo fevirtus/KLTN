@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
+import {
     StyleSheet,
-    View, 
+    View,
     Text,
-    TouchableOpacity, 
-    ScrollView, 
+    TouchableOpacity,
+    ScrollView,
     Image,
     TextInput,
     Dimensions
@@ -40,19 +40,19 @@ const PetSetting = ({ navigation }) => {
     ]
 
     const handleChangeInfo = (type, value) => {
-        setInfo({...info, [type]: value})
+        setInfo({ ...info, [type]: value })
     }
 
     const selectImage = () => {
-        ImagePicker.showImagePicker({noData:true, mediaType:'photo'}, (response) => {
+        ImagePicker.showImagePicker({ noData: true, mediaType: 'photo' }, (response) => {
             if (response.didCancel) {
                 return
-            } 
+            }
             const img = {
                 uri: response.uri,
                 type: response.type,
-                name: 
-                    response.fileName || 
+                name:
+                    response.fileName ||
                     response.uri.substr(response.uri.lastIndexOf('/') + 1)
             }
             setImage(img)
@@ -62,7 +62,7 @@ const PetSetting = ({ navigation }) => {
     const ImagePick = () => (
         <View style={styles.pictureWrapper}>
             {image && (
-                <Image source={{uri: image.uri }} style={styles.image} />
+                <Image source={{ uri: image.uri }} style={styles.image} />
             )}
             <TouchableOpacity onPress={selectImage} style={styles.add}>
                 <MaterialIcons name="add" size={25} color={color.WHITE} />
@@ -99,7 +99,7 @@ const PetSetting = ({ navigation }) => {
                     <View style={styles.container}>
                         <View style={[styles.action, { marginTop: 30 }]}>
                             <FontAwesome name="user-o" color={color.GRAY} size={20} />
-                            <TextInput 
+                            <TextInput
                                 placeholder="Name"
                                 value={name}
                                 placeholderTextColor={color.GRAY}
@@ -109,7 +109,7 @@ const PetSetting = ({ navigation }) => {
                         </View>
                         <View style={styles.action}>
                             <MaterialIcons name="pets" color={color.GRAY} size={20} />
-                            <TextInput 
+                            <TextInput
                                 placeholder="Breed"
                                 value={breed}
                                 placeholderTextColor={color.GRAY}
@@ -119,7 +119,7 @@ const PetSetting = ({ navigation }) => {
                         </View>
                         <View style={styles.action}>
                             <FontAwesome name="transgender" color={color.GRAY} size={20} />
-                            <RadioForm 
+                            <RadioForm
                                 style={styles.radioForm}
                                 radio_props={gender}
                                 initial={0}
@@ -128,14 +128,14 @@ const PetSetting = ({ navigation }) => {
                                 labelColor={color.GRAY}
                                 selectedButtonColor={color.PINK}
                                 buttonColor={color.PINK}
-                                labelStyle={{fontSize: 15}}
+                                labelStyle={{ fontSize: 15 }}
                                 labelStyle={{ marginRight: 40 }}
-                                onPress={() => {}}
+                                onPress={() => { }}
                             />
                         </View>
                         <View style={styles.action}>
                             <MaterialCommunityIcons name="weight-kilogram" color={color.GRAY} size={20} />
-                            <TextInput 
+                            <TextInput
                                 placeholder="Weight"
                                 keyboardType="numeric"
                                 value={weight}
@@ -146,7 +146,7 @@ const PetSetting = ({ navigation }) => {
                         </View>
                         <View style={styles.action}>
                             <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
-                            <TextInput 
+                            <TextInput
                                 placeholder="Age"
                                 keyboardType="numeric"
                                 value={age}
@@ -157,7 +157,7 @@ const PetSetting = ({ navigation }) => {
                         </View>
                         <View style={styles.action}>
                             <MaterialIcons name="description" color={color.GRAY} size={22} />
-                            <TextInput 
+                            <TextInput
                                 placeholder="Introduction"
                                 value={introduction}
                                 placeholderTextColor={color.GRAY}

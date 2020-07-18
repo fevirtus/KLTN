@@ -13,9 +13,8 @@ import {
 } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { DismissKeyboard } from '../../../components'
-import { RequestApiAsyncGet, RequestApiAsyncPost, UploadApiAsyncPost } from '../../../api/config'
-import { Container, Loading } from '../../../components'
+import { RequestApiAsyncGet, RequestApiAsyncPost } from '../../../api/config'
+import { Container, Loading, DismissKeyboard } from '../../../components'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -23,15 +22,14 @@ import { color } from '../../../utility'
 import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../../redux/actions/authActions';
 import mime from 'mime'
-import axios from 'axios'
 
 const Profile = ({ navigation }) => {
-    const [avatar, setAvatar] = useState(null)
     const [dataPet, setDataPet] = useState([])
     const [info, setInfo] = useState({
         name: '',
         email: '',
         phone: '',
+        avatar: ''
     })
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
@@ -39,8 +37,6 @@ const Profile = ({ navigation }) => {
     useEffect(() => {
         RequestApiAsyncGet('users/currentUser')
             .then(res => {
-                console.log(res.data[0])
-                // Set info
                 setInfo(res.data[0])
                 setLoading(false)
             }).catch(e => {
@@ -66,6 +62,7 @@ const Profile = ({ navigation }) => {
                 name: name,
                 phone: phone,
                 email: email,
+                avatar: avatar
             }
         }
         console.log(settings)
@@ -95,30 +92,33 @@ const Profile = ({ navigation }) => {
 
             if (response.didCancel) {
                 console.log('User cancelled image picker');
+            } else {
+                const img = {
+                    uri: response.uri,
+                    type: mime.getType(response.uri),
+                    name:
+                        response.fileName ||
+                        response.uri.substr(response.uri.lastIndexOf('/') + 1)
+                }
+                const data = new FormData()
+                data.append('file', img)
+                data.append("upload_preset", "petDating")
+                data.append("cloud_name", "capstone98")
+                fetch("https://api.cloudinary.com/v1_1/capstone98/image/upload", {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(res => res.json())
+                    .then(data => {
+                        setInfo({ avatar: data.url })
+                        console.log(data)
+                    }).catch(e => {
+                        alert(e.message)
+                    })
             }
-            const img = {
-                uri: response.uri,
-                type: mime.getType(response.uri),
-                name:
-                    response.fileName ||
-                    response.uri.substr(response.uri.lastIndexOf('/') + 1)
-            }
-            setAvatar({ uri: response.uri })
-            //use FormData
-            const formData = new FormData()
-            formData.append('picture', img)
-            // Call API to upload image
-            axios({
-                method: 'post',
-                url: 'https://pet-dating-server.herokuapp.com/api/common/upload',
-                data: formData,
-                headers: { 'Content-Type': 'multipart/form-data' }
-            })
-                .then((res) => {
-                    console.log('upload success', res);
-                }).catch((e) => {
-                    console.log("Error", e)
-                })
         });
     }
 
@@ -126,95 +126,89 @@ const Profile = ({ navigation }) => {
         return (
             <View style={styles.petImageWrapper}>
                 <TouchableOpacity onPress={() => navigation.navigate('PetProfile', { itemId: item.id })}>
-                    {/* <Image source={{uri : item.uri}} style={styles.petImage} /> */}
+                    <Image source={{ uri: item.avatar }} style={styles.petImage} />
                     <Text>{item.name}</Text>
                 </TouchableOpacity>
             </View>
         )
     })
 
-    const { name, email, phone } = info
+    const { name, email, phone, avatar } = info
     return (
         <DismissKeyboard>
             <Container>
-                {/* {
-                loading ? <Loading />
-                :  */}
-                <View style={styles.container}>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        <ImageBackground
-                            source={require('../../../../images/avatar.jpg')}
-                            style={styles.profilePicWrap}
-                            imageStyle={{ borderRadius: 100 }}
-                        >
-                            {avatar && (
-                                <Image source={{ uri: avatar.uri }} style={styles.profileImage} />
-                            )}
-                            <TouchableOpacity onPress={handlePicker} style={styles.camera}>
-                                <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
-                            </TouchableOpacity>
-                        </ImageBackground>
+                {
+                    loading ? <Loading />
+                        :
+                        <View style={styles.container}>
+                            <ScrollView showsVerticalScrollIndicator={false}>
+                                <View style={styles.profilePicWrap}>
+                                    <Image source={{ uri: avatar }} style={styles.profileImage} />
+                                    <TouchableOpacity onPress={handlePicker} style={styles.camera}>
+                                        <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
+                                    </TouchableOpacity>
+                                </View>
 
-                        <View style={styles.inputInformation}>
-                            <View style={styles.action}>
-                                <FontAwesome name="user-o" color={color.GRAY} size={22} />
-                                <TextInput
-                                    placeholder="Name"
-                                    value={name}
-                                    placeholderTextColor={color.GRAY}
-                                    onChangeText={(name) => handleChangeInfo('name', name)}
-                                    style={styles.textInput}
-                                />
-                            </View>
-                            <View style={styles.action}>
-                                <Fontisto name="email" color={color.GRAY} size={22} />
-                                <TextInput
-                                    placeholder="Email"
-                                    value={email}
-                                    placeholderTextColor={color.GRAY}
-                                    onChangeText={(email) => handleChangeInfo('email', email)}
-                                    style={styles.textInput}
-                                />
-                            </View>
-                            <View style={styles.action}>
-                                <Feather name="phone" color={color.GRAY} size={22} />
-                                <TextInput
-                                    placeholder="Phone"
-                                    keyboardType="numeric"
-                                    value={phone}
-                                    placeholderTextColor={color.GRAY}
-                                    onChangeText={(phone) => handleChangeInfo('phone', phone)}
-                                    style={styles.textInput}
-                                />
-                            </View>
-                        </View>
-                        <TouchableOpacity style={styles.commandButton} onPress={_saveData}>
-                            <Text style={styles.panelButtonTitle}>Save</Text>
-                        </TouchableOpacity>
-                        <View style={styles.listPetWrapper}>
-                            <View style={styles.menuListPet}>
-                                <Text style={styles.text}>List pet</Text>
-                                <Text
-                                    style={[styles.text, { color: color.PINK }]}
-                                    onPress={() => navigation.navigate('PetSetting')}
-                                >
-                                    Thêm thú cưng
+                                <View style={styles.inputInformation}>
+                                    <View style={styles.action}>
+                                        <FontAwesome name="user-o" color={color.GRAY} size={22} />
+                                        <TextInput
+                                            placeholder="Name"
+                                            value={name}
+                                            placeholderTextColor={color.GRAY}
+                                            onChangeText={(name) => handleChangeInfo('name', name)}
+                                            style={styles.textInput}
+                                        />
+                                    </View>
+                                    <View style={styles.action}>
+                                        <Fontisto name="email" color={color.GRAY} size={22} />
+                                        <TextInput
+                                            placeholder="Email"
+                                            value={email}
+                                            placeholderTextColor={color.GRAY}
+                                            onChangeText={(email) => handleChangeInfo('email', email)}
+                                            style={styles.textInput}
+                                        />
+                                    </View>
+                                    <View style={styles.action}>
+                                        <Feather name="phone" color={color.GRAY} size={22} />
+                                        <TextInput
+                                            placeholder="Phone"
+                                            keyboardType="numeric"
+                                            value={phone}
+                                            placeholderTextColor={color.GRAY}
+                                            onChangeText={(phone) => handleChangeInfo('phone', phone)}
+                                            style={styles.textInput}
+                                        />
+                                    </View>
+                                </View>
+                                <TouchableOpacity style={styles.commandButton} onPress={_saveData}>
+                                    <Text style={styles.panelButtonTitle}>Save</Text>
+                                </TouchableOpacity>
+                                <View style={styles.listPetWrapper}>
+                                    <View style={styles.menuListPet}>
+                                        <Text style={styles.text}>List pet</Text>
+                                        <Text
+                                            style={[styles.text, { color: color.PINK }]}
+                                            onPress={() => navigation.navigate('PetSetting')}
+                                        >
+                                            Thêm thú cưng
                                 </Text>
-                            </View>
-                            <FlatList
-                                style={styles.flatListPet}
-                                horizontal={true}
-                                data={dataPet}
-                                renderItem={({ item }) => {
-                                    return renderList(item)
-                                }}
-                                keyExtractor={(item, index) => index.toString()}
-                                refreshing={loading}
-                            />
+                                    </View>
+                                    <FlatList
+                                        style={styles.flatListPet}
+                                        horizontal={true}
+                                        data={dataPet}
+                                        renderItem={({ item }) => {
+                                            return renderList(item)
+                                        }}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        refreshing={loading}
+                                    />
+                                </View>
+                            </ScrollView>
                         </View>
-                    </ScrollView>
-                </View>
-                {/* } */}
+                }
             </Container>
         </DismissKeyboard>
     )

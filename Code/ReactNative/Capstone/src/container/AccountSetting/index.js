@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
+import {
     StyleSheet,
-    View, 
+    View,
     Text,
-    TouchableOpacity, 
-    ImageBackground, 
+    TouchableOpacity,
+    ImageBackground,
     Image,
     TextInput
 } from 'react-native'
@@ -15,18 +15,16 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { color } from '../../utility'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost } from '../../api/config'
-import axios from 'axios';
 
 const AccountSetting = () => {
     const [picture, setPicture] = useState(null)
     const [nameSetting, setName] = useState('')
     const [phoneSetting, setPhone] = useState('')
     const dispatch = useDispatch()
-    const token = useSelector(state => state.auth.token)
-    
+
     const handleChangeName = text => {
         setName(text)
     }
@@ -36,44 +34,23 @@ const AccountSetting = () => {
     }
 
     const selectImage = async () => {
-        await ImagePicker.showImagePicker({noData:true, mediaType:'photo'}, (response) => {
+        await ImagePicker.showImagePicker({ noData: true, mediaType: 'photo' }, (response) => {
             console.log(response)
             if (response.didCancel) {
                 return
-            } 
+            }
             const img = {
                 uri: response.uri,
                 type: response.type,
-                name: 
-                    response.fileName || 
+                name:
+                    response.fileName ||
                     response.uri.substr(response.uri.lastIndexOf('/') + 1)
             }
             setPicture(img)
-            handleUpload(img)
         });
     }
 
-
-    const handleUpload = (image) => {
-        const data = new FormData()
-        data.append('file', image)
-        data.append('upload_preset', 'petDating')
-        data.append("cloud_name", "capstone98")
-
-        axios.post('https://api.cloudinary.com/v1_1/capstone98/image/upload', data)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-            })
-    }
-
-
     const _postData = () => {
-        // const account_settings = {
-        //     name: nameSetting,
-        //     phone: phoneSetting,
-        //     // avatar: picture.name
-        // }
         const account_settings = {
             updateFields: {
                 name: nameSetting,
@@ -95,13 +72,13 @@ const AccountSetting = () => {
         <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
             <Container>
                 <View style={styles.container}>
-                    <ImageBackground 
-                        source={require('../../../images/avatar.jpg')} 
-                        style={styles.profilePicWrap} 
+                    <ImageBackground
+                        source={require('../../../images/avatar.jpg')}
+                        style={styles.profilePicWrap}
                         imageStyle={{ borderRadius: 100 }}
                     >
                         {picture && (
-                            <Image source={{uri: picture.uri }} style={styles.profileImage} />
+                            <Image source={{ uri: picture.uri }} style={styles.profileImage} />
                         )}
                         <TouchableOpacity onPress={selectImage} style={styles.camera}>
                             <MaterialIcons name="add-a-photo" size={25} color="#DFD8C8" />
@@ -109,7 +86,7 @@ const AccountSetting = () => {
                     </ImageBackground>
                     <View style={styles.action}>
                         <FontAwesome name="user-o" color={color.GRAY} size={20} />
-                        <TextInput 
+                        <TextInput
                             placeholder="Name"
                             value={nameSetting}
                             placeholderTextColor={color.GRAY}
@@ -119,7 +96,7 @@ const AccountSetting = () => {
                     </View>
                     <View style={styles.action}>
                         <Feather name="phone" color={color.GRAY} size={20} />
-                        <TextInput 
+                        <TextInput
                             placeholder="Phone"
                             keyboardType="numeric"
                             value={phoneSetting}

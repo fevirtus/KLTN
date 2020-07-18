@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Modal, Keyboard, Text, TextInput } from 'react-native'
+import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { color } from '../../../../utility';
 import { RequestApiAsyncGet } from '../../../../api/config'
 
-const PetProfile = ({ route }) => {
+const PetProfile = ({ navigation, route }) => {
     const { itemId } = route.params;
-    const [showModal, setShowModal] = useState(false)
     const [info, setInfo] = useState({
         name: '',
         breed: '',
         gender: '',
         weight: '',
         age: '',
+        avatar: '',
         introduction: ''
     })
-
-    const handleChangeInfo = (type, value) => {
-        setInfo({...info, [type]: value})
-    }
 
     useEffect(() => {
         RequestApiAsyncGet(`pets/${itemId}`)
@@ -33,82 +27,15 @@ const PetProfile = ({ route }) => {
             })
     }, [200])
 
-    const { name, breed, gender, weight, age, introduction } = info
+    const { name, breed, gender, weight, age, introduction, avatar } = info
     return (
         <View style={styles.container}>
-            <Modal 
-                visible={showModal} 
-                animationType='slide'
-                transparent={true}
-            >
-                <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
-                    <View style={styles.modalContent}>
-                        <View style={styles.form}>
-                            <AntDesign 
-                                style={styles.close}
-                                name="closecircleo"
-                                size={32}
-                                onPress={() => setShowModal(false)}
-                            />
-                            <View style={styles.content}>
-                                <Text style={styles.subheadingModal}>Edit Profile</Text>
-                                <TextInput 
-                                    style={styles.textInput}
-                                    mode="outlined"
-                                    label="Name"
-                                    value={name}
-                                    onChangeText={(name) => handleChangeInfo('name', name)}
-                                />
-                                <TextInput 
-                                    style={styles.textInput}
-                                    mode="outlined"
-                                    label="Breed"
-                                    value={breed}
-                                    onChangeText={(breed) => handleChangeInfo('breed', breed)}
-                                />
-                                <TextInput 
-                                    style={styles.textInput}
-                                    mode="outlined"
-                                    label="Gender"
-                                    value={gender}
-                                    onChangeText={(gender) => handleChangeInfo('gender', gender)}
-                                />
-                                <TextInput 
-                                    style={styles.textInput}
-                                    mode="outlined"
-                                    label="Weight"
-                                    value={weight}
-                                    onChangeText={(weight) => handleChangeInfo('weight', weight)}
-                                />
-                                <TextInput 
-                                    style={styles.textInput}
-                                    mode="outlined"
-                                    label="Age"
-                                    value={age}
-                                    onChangeText={(age) => handleChangeInfo('age', age)}
-                                />
-                                <TextInput 
-                                    style={styles.textInput}
-                                    mode="outlined"
-                                    label="Introduction"
-                                    value={introduction}
-                                    onChangeText={(introduction) => handleChangeInfo('introduction', introduction)}
-                                />
-                                <TouchableOpacity style={styles.saveButton} onPress={() => setShowModal(false)}>
-                                    <Text style={styles.textButton}>Save</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>  
-                    </View>
-                </KeyboardAwareScrollView>
-            </Modal>   
-
             <View style={styles.header}>
                 <Text style={styles.title}>MY PETPROFILE</Text>
-                <Image source={require('../../../../../images/users/2.jpg')} style={styles.img}/>
-                <TouchableOpacity 
-                    style={styles.buttonEdit} 
-                    onPress={() => setShowModal(true)}
+                <Image source={{ uri: avatar }} style={styles.img} />
+                <TouchableOpacity
+                    style={styles.buttonEdit}
+                    onPress={() => navigation.navigate('EditPetProfile', { petId: itemId })}
                 >
                     <Entypo name="edit" size={25} color="white" />
                 </TouchableOpacity>
@@ -131,29 +58,27 @@ const PetProfile = ({ route }) => {
                         <View style={styles.item}>
                             <Text style={styles.subheading}>Gender</Text>
                             <Text style={styles.text}>{gender}</Text>
-                        </View>  
+                        </View>
                     </View>
                     <View style={styles.contentRight}>
                         <View style={styles.item}>
                             <Text style={styles.subheading}>Weight</Text>
                             <Text style={styles.text}>{weight} kg</Text>
-                        </View> 
+                        </View>
                         <View style={styles.item}>
                             <Text style={styles.subheading}>Age</Text>
                             <Text style={styles.text}>{age}</Text>
-                        </View> 
+                        </View>
                         <View style={styles.item}>
                             <Text style={styles.subheading}>Introduction</Text>
                             <Text style={styles.text}>{introduction}</Text>
-                        </View> 
+                        </View>
                     </View>
                 </View>
             </View>
         </View>
     )
 }
-
-export default PetProfile;
 
 const styles = StyleSheet.create({
     container: {
@@ -284,3 +209,5 @@ const styles = StyleSheet.create({
         color: color.GRAY
     }
 })
+
+export default PetProfile;
