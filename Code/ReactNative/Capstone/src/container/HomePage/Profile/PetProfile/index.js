@@ -157,25 +157,27 @@ const styles = StyleSheet.create({
     },
     buttonEdit: {
         position: 'absolute',
-        top: 180,
+        // top: 180,
         right: 54,
         borderRadius: 50,
         backgroundColor: color.ORANGE,
         width: 38,
         height: 38,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginTop: 5
     },
     buttonDelete: {
         position: 'absolute',
-        top: 180,
+        // top: 180,
         left: 54,
         borderRadius: 50,
         backgroundColor: color.ORANGE,
         width: 38,
         height: 38,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginTop: 5
     },
     content: {
         flex: 2,

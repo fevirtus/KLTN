@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, YellowBox } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -7,6 +7,10 @@ import { Container } from '../../components'
 import { color } from '../../utility';
 import { useSelector } from 'react-redux';
 import data from '../../../data';
+
+useEffect(() => {
+
+}, [50])
 
 const Card = ({ card, index }) => (
     <View style={styles.card}>

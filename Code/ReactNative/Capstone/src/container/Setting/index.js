@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ImageBackground } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { color } from '../../utility'
+import { Container } from '../../components'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -12,35 +13,32 @@ const Setting = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <ImageBackground 
-                source={require('../../../images/login-pets.jpg')} 
-                style={styles.image}
-            >
+            <Container>
                 <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Privacy')}>
                     <View style={styles.iconWrapper}>
                         <FontAwesome name="lock" size={28} color={color.WHITE} />
-                    </View>            
+                    </View>
                     <Text style={styles.text}>Privacy</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Feedback')}>
                     <View style={styles.iconWrapper}>
                         <FontAwesome name="lightbulb-o" size={28} color={color.WHITE} />
-                    </View>            
+                    </View>
                     <Text style={styles.text}>Feedback</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item} onPress={() => dispatch(clearUserInfo())}>
                     <View style={styles.iconWrapper}>
                         <MaterialCommunityIcons name="logout" size={26} color={color.WHITE} />
-                    </View>            
+                    </View>
                     <Text style={styles.text}>Sign Out</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item}>
                     <View style={styles.iconWrapper}>
                         <Entypo name="emoji-sad" size={26} color={color.WHITE} />
-                    </View>            
+                    </View>
                     <Text style={styles.text}>Delete Account</Text>
-                </TouchableOpacity>  
-            </ImageBackground>     
+                </TouchableOpacity>
+            </Container>
         </View>
     )
 }

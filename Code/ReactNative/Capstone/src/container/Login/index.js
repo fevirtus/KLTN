@@ -8,8 +8,8 @@ import * as Animatable from 'react-native-animatable';
 const Login = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <ImageBackground 
-                source={require('../../../images/login-pets.jpg')} 
+            <ImageBackground
+                source={require('../../../images/login-pets.jpg')}
                 style={styles.image}
             >
                 <View style={styles.header}>
@@ -19,14 +19,14 @@ const Login = ({ navigation }) => {
                             PetDating
                         </Text>
                     </View>
-                    <Animatable.Text 
-                        animation="shake" 
+                    <Animatable.Text
+                        animation="shake"
                         style={styles.title}
-                    >   
+                    >
                         Match . Chat . Date
                     </Animatable.Text>
                 </View>
-                <Animatable.View 
+                <Animatable.View
                     style={styles.footer}
                     animation="fadeInUpBig"
                 >
@@ -57,7 +57,7 @@ const Login = ({ navigation }) => {
                         {/* Login with facebook */}
                         <FacebookLogin />
                     </View>
-                </Animatable.View>  
+                </Animatable.View>
             </ImageBackground>
         </View>
     )
@@ -65,7 +65,7 @@ const Login = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex : 1
+        flex: 1
     },
     image: {
         flex: 1,
@@ -88,16 +88,16 @@ const styles = StyleSheet.create({
         top: 35,
         left: 20,
         flexDirection: 'row'
-    }, 
+    },
     name: {
-        color: color.WHITE, 
-        fontSize: 30 
-    }, 
+        color: color.WHITE,
+        fontSize: 30
+    },
     title: {
         fontWeight: '700',
         fontSize: 40,
         color: color.WHITE,
-        letterSpacing: 1,
+        letterSpacing: 0.5,
         opacity: 0.9,
         alignSelf: 'center',
         paddingVertical: 160

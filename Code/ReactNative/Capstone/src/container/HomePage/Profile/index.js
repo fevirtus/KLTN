@@ -11,16 +11,17 @@ import {
     YellowBox
 } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
+import mime from 'mime'
+import { useDispatch, useSelector } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { RequestApiAsyncGet, RequestApiAsyncPost } from '../../../api/config'
-import { Container, Loading, DismissKeyboard } from '../../../components'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import _ from 'lodash'
 import { color } from '../../../utility'
-import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../../redux/actions/authActions';
-import mime from 'mime'
+import { Container, Loading, DismissKeyboard } from '../../../components'
+import { RequestApiAsyncGet, RequestApiAsyncPost } from '../../../api/config'
 
 const Profile = ({ navigation }) => {
     const [dataPet, setDataPet] = useState([])
@@ -32,6 +33,7 @@ const Profile = ({ navigation }) => {
     })
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
+    const listPet = useSelector(state => state.auth.petInfo)
 
     useEffect(() => {
         RequestApiAsyncGet('users/currentUser')
@@ -184,26 +186,35 @@ const Profile = ({ navigation }) => {
                                     <Text style={styles.panelButtonTitle}>Save</Text>
                                 </TouchableOpacity>
                                 <View style={styles.listPetWrapper}>
-                                    <View style={styles.menuListPet}>
-                                        <Text style={styles.text}>List pet</Text>
-                                        <Text
-                                            style={[styles.text, { color: color.PINK }]}
-                                            onPress={() => navigation.navigate('PetSetting')}
-                                        >
-                                            Thêm thú cưng
-                                </Text>
-                                    </View>
-                                    <FlatList
-                                        style={styles.flatListPet}
-                                        horizontal={true}
-                                        data={dataPet}
-                                        renderItem={({ item }) => {
-                                            return renderList(item)
-                                        }}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        refreshing={loading}
-                                    />
+                                    <Text style={styles.text}>Your pets</Text>
+                                    {
+                                        _.isEmpty(listPet) ?
+                                            <View style={styles.emptyView}>
+                                                <FontAwesome name="hand-o-down" size={25} color={color.BLUE} />
+                                                <Text style={styles.emptyText}>Your Pet List is Empty</Text>
+                                                <Text style={styles.emptyText2}>Pets added to your list will appear here.</Text>
+                                            </View>
+                                            : <FlatList
+                                                // style={styles.flatListPet}
+                                                horizontal={true}
+                                                data={dataPet}
+                                                renderItem={({ item }) => {
+                                                    return renderList(item)
+                                                }}
+                                                keyExtractor={(item, index) => index.toString()}
+                                                refreshing={loading}
+                                            />
+                                    }
                                 </View>
+                                <TouchableOpacity
+                                    style={styles.addButton}
+                                    onPress={() => navigation.navigate('PetSetting')}
+                                >
+                                    <TouchableOpacity style={styles.add}>
+                                        <MaterialIcons name="add" size={20} color={color.WHITE} />
+                                    </TouchableOpacity>
+                                    <Text style={styles.addTitle}>Add a new pet</Text>
+                                </TouchableOpacity>
                             </ScrollView>
                         </View>
                 }
@@ -259,12 +270,12 @@ const styles = StyleSheet.create({
         color: '#05375a',
     },
     commandButton: {
-        padding: 15,
+        padding: 14,
         borderRadius: 10,
         backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: 15,
         width: '90%',
         alignSelf: 'center'
     },
@@ -273,20 +284,40 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: color.WHITE,
     },
-    listPetWrapper: {
-        height: 146,
-        paddingTop: 16
+    addButton: {
+        width: '90%',
+        padding: 15,
+        alignSelf: 'center',
+        borderRadius: 10,
+        backgroundColor: color.LIGHT_PINK,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 15,
+        marginBottom: 15,
+        flexDirection: 'row'
     },
-    menuListPet: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20
+    addTitle: {
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: color.PINK,
+    },
+    add: {
+        width: 22,
+        height: 22,
+        borderRadius: 25,
+        backgroundColor: color.PINK,
+        justifyContent: 'center',
+        marginRight: 10,
+        alignItems: 'center'
+    },
+    listPetWrapper: {
+        height: 140,
+        paddingTop: 20
     },
     text: {
-        fontSize: 18
-    },
-    flatListPet: {
-        backgroundColor: color.WHITE
+        fontSize: 20,
+        fontWeight: 'bold',
+        paddingLeft: 20
     },
     petImageWrapper: {
         marginTop: 10,
@@ -299,6 +330,21 @@ const styles = StyleSheet.create({
         width: 80,
         borderRadius: 50
     },
+    emptyView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 10
+    },
+    emptyText: {
+        fontSize: 20,
+        marginBottom: 5,
+        marginTop: 5,
+        color: color.GRAY,
+        letterSpacing: 1.5
+    },
+    emptyText2: {
+        color: color.GRAY
+    }
 })
 
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same',

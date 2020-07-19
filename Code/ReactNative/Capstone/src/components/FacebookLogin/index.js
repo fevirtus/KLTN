@@ -15,40 +15,40 @@ export default class FacebookLogin extends Component {
     getInfoFromToken = token => {
         const PROFILE_REQUEST_PARAMS = {
             fields: {
-            string: 'id, name, first_name, last_name'
+                string: 'id, name, first_name, last_name'
             },
-    }
+        }
 
-    const profileRequest = new GraphRequest('/me', { token, parameters: PROFILE_REQUEST_PARAMS },
-        (error, result) => {
-            if (error) {
-            console.log('Login Info has an error:', err)
-            }
-            else {
-            this.setState({ userInfo: result })
-            console.log('result:', result)
-            }
-        },
+        const profileRequest = new GraphRequest('/me', { token, parameters: PROFILE_REQUEST_PARAMS },
+            (error, result) => {
+                if (error) {
+                    console.log('Login Info has an error:', err)
+                }
+                else {
+                    this.setState({ userInfo: result })
+                    console.log('result:', result)
+                }
+            },
         )
         new GraphRequestManager().addRequest(profileRequest).start()
     }
 
     loginWithFacebook = () => {
         LoginManager.logInWithPermissions(['public_profile']).then(
-        login => {
-            if (login.isCancelled) {
-                console.log('login canceled')
-            }
-            else {
-                AccessToken.getCurrentAccessToken().then(data => {
-                    const accessToken = data.accessToken.toString()
-                    this.getInfoFromToken(accessToken)
-                })
-            }
-        },
-        error => {
-            console.log('login fail with error: ' + console.error());
-        },
+            login => {
+                if (login.isCancelled) {
+                    console.log('login canceled')
+                }
+                else {
+                    AccessToken.getCurrentAccessToken().then(data => {
+                        const accessToken = data.accessToken.toString()
+                        this.getInfoFromToken(accessToken)
+                    })
+                }
+            },
+            error => {
+                console.log('login fail with error: ' + console.error());
+            },
         )
     }
 
@@ -61,7 +61,7 @@ export default class FacebookLogin extends Component {
         return (
             <View>
                 <TouchableOpacity style={styles.formLogin} onPress={onPressButton}>
-                    <Entypo name="facebook" size={18} color='white' style={styles.facebook}/>
+                    <Entypo name="facebook" size={18} color='white' style={styles.facebook} />
                     <Text style={styles.text}>
                         LOG IN WITH FACEBOOK
                     </Text>
@@ -75,24 +75,25 @@ export default class FacebookLogin extends Component {
     }
 }
 
-const styles = StyleSheet.create({   
+const styles = StyleSheet.create({
     formLogin: {
         marginTop: 15,
         height: 45,
-        width: 340,
+        // width: 340,
+        width: '100%',
         backgroundColor: color.BLUE,
         borderRadius: 20,
         flexDirection: 'row',
         alignItems: 'center'
     },
     facebook: {
-        marginLeft: 10, 
-        marginRight: 42, 
+        marginLeft: 10,
+        marginRight: 42,
         marginTop: 1
     },
     text: {
-        fontSize: 18, 
-        color: color.WHITE, 
+        fontSize: 18,
+        color: color.WHITE,
         fontWeight: "bold"
     }
 });

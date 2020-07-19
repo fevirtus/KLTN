@@ -20,9 +20,9 @@ import { color } from '../../utility'
 import { Container } from '../../components';
 import { newPetInfo } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost } from '../../api/config'
+import mime from 'mime'
 
 const PetSetting = ({ navigation }) => {
-    const [image, setImage] = useState(null)
     const [info, setInfo] = useState({
         name: '',
         type: '',
@@ -30,7 +30,8 @@ const PetSetting = ({ navigation }) => {
         gender: 0,
         weight: '',
         age: '',
-        introduction: ''
+        introduction: '',
+        image: ''
     })
     const dispatch = useDispatch()
 
@@ -43,28 +44,52 @@ const PetSetting = ({ navigation }) => {
         setInfo({ ...info, [type]: value })
     }
 
-    const selectImage = () => {
-        ImagePicker.showImagePicker({ noData: true, mediaType: 'photo' }, (response) => {
+    const handlePicker = () => {
+        let options = {
+            title: 'Select Image',
+            noData: true,
+            maxWidth: 500,
+            maxHeight: 500,
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
             if (response.didCancel) {
-                return
+                console.log('User cancelled image picker');
+            } else {
+                const img = {
+                    uri: response.uri,
+                    type: mime.getType(response.uri),
+                    name:
+                        response.fileName ||
+                        response.uri.substr(response.uri.lastIndexOf('/') + 1)
+                }
+                const data = new FormData()
+                data.append('file', img)
+                data.append("upload_preset", "petDating")
+                data.append("cloud_name", "capstone98")
+                fetch("https://api.cloudinary.com/v1_1/capstone98/image/upload", {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(res => res.json())
+                    .then(data => {
+                        setInfo({ image: data.url })
+                        console.log(data)
+                    }).catch(e => {
+                        alert(e.message)
+                    })
             }
-            const img = {
-                uri: response.uri,
-                type: response.type,
-                name:
-                    response.fileName ||
-                    response.uri.substr(response.uri.lastIndexOf('/') + 1)
-            }
-            setImage(img)
         });
     }
 
     const ImagePick = () => (
         <View style={styles.pictureWrapper}>
-            {image && (
-                <Image source={{ uri: image.uri }} style={styles.image} />
-            )}
-            <TouchableOpacity onPress={selectImage} style={styles.add}>
+            <Image source={{ uri: image }} style={styles.image} />
+            <TouchableOpacity onPress={handlePicker} style={styles.add}>
                 <MaterialIcons name="add" size={25} color={color.WHITE} />
             </TouchableOpacity>
         </View>
@@ -76,7 +101,8 @@ const PetSetting = ({ navigation }) => {
             breed: breed,
             weight: weight,
             age: age,
-            introduction: introduction
+            introduction: introduction,
+            avatar: image
         }
         console.log(new_pet)
         RequestApiAsyncPost('pets', 'POST', {}, new_pet)
@@ -91,7 +117,7 @@ const PetSetting = ({ navigation }) => {
             })
     }
 
-    const { name, breed, weight, age, introduction } = info
+    const { name, breed, weight, age, introduction, image } = info
     return (
         <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
             <Container>

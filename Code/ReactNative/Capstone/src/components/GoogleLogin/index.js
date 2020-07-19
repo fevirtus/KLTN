@@ -12,11 +12,11 @@ const GoogleLogin = () => {
 
     GoogleSignin.configure({
         webClientId: '57907873541-r853h7dljsh3lbjf94atj7tuntu4qpm4.apps.googleusercontent.com'
-    }) 
+    })
 
-    const _signIn = async () => {  
-        await GoogleSignin.hasPlayServices();  
-        const userInfo = await GoogleSignin.signIn(); 
+    const _signIn = async () => {
+        await GoogleSignin.hasPlayServices();
+        const userInfo = await GoogleSignin.signIn();
         const new_user = {
             email: userInfo.user.email,
             name: userInfo.user.givenName
@@ -31,17 +31,17 @@ const GoogleLogin = () => {
                 dispatch(saveToken(pd_token))
                 setAuthToken(pd_token)
                 // Save user info
-                dispatch(saveUserInfo(data))         
+                dispatch(saveUserInfo(data))
             }).catch((error) => {
                 console.log("Api call error")
                 alert(error.message)
-            }) 
-    }   
+            })
+    }
 
     return (
         <View>
             <TouchableOpacity style={styles.formLogin} onPress={_signIn}>
-                <FontAwesome5 name="google" size={18} color="white" style={styles.google}/>
+                <FontAwesome5 name="google" size={18} color="white" style={styles.google} />
                 <Text style={styles.text}>
                     LOG IN WITH GOOGLE
                 </Text>
@@ -53,20 +53,21 @@ const GoogleLogin = () => {
 const styles = StyleSheet.create({
     formLogin: {
         height: 45,
-        width: 340,
+        // width: 340,
+        width: '100%',
         borderRadius: 20,
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: color.RED
     },
     google: {
-        marginLeft: 10, 
-        marginRight: 42, 
+        marginLeft: 10,
+        marginRight: 42,
         marginTop: 1
     },
     text: {
-        fontSize: 18, 
-        color: color.WHITE,  
+        fontSize: 18,
+        color: color.WHITE,
         fontWeight: "bold"
     }
 })

@@ -18,6 +18,7 @@ import mime from 'mime'
 import { RequestApiAsyncGet, RequestApiAsyncPost } from '../../../../../api/config'
 import { newPetInfo } from '../../../../../redux/actions/authActions';
 import { useDispatch } from 'react-redux'
+import { ScrollView } from 'react-native-gesture-handler';
 
 const EditPetProfile = ({ navigation, route }) => {
     const petId = route.params.petId;
@@ -109,7 +110,6 @@ const EditPetProfile = ({ navigation, route }) => {
                     }
                 }).then(res => res.json())
                     .then(data => {
-                        // setAvatar({ uri: data.uri })
                         setInfo({ avatar: data.url })
                         console.log(data)
                     }).catch(e => {
@@ -124,83 +124,85 @@ const EditPetProfile = ({ navigation, route }) => {
         <DismissKeyboard>
             <Container>
                 <View style={styles.container}>
-                    <View style={styles.profilePicWrap}>
-                        <Image source={{ uri: avatar }} style={styles.profileImage} />
-                        <TouchableOpacity onPress={handlePicker} style={styles.camera}>
-                            <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <View style={styles.profilePicWrap}>
+                            <Image source={{ uri: avatar }} style={styles.profileImage} />
+                            <TouchableOpacity onPress={handlePicker} style={styles.camera}>
+                                <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.action}>
+                            <FontAwesome name="user-o" color={color.GRAY} size={20} />
+                            <TextInput
+                                placeholder="Name"
+                                value={name}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={(name) => handleChangeInfo('name', name)}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <MaterialIcons name="pets" color={color.GRAY} size={20} />
+                            <TextInput
+                                placeholder="Breed"
+                                value={breed}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={(breed) => handleChangeInfo('breed', breed)}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <FontAwesome name="transgender" color={color.GRAY} size={20} />
+                            <RadioForm
+                                style={styles.radioForm}
+                                radio_props={gender}
+                                initial={0}
+                                buttonSize={18}
+                                formHorizontal={true}
+                                labelColor={color.GRAY}
+                                selectedButtonColor={color.PINK}
+                                buttonColor={color.PINK}
+                                labelStyle={{ fontSize: 15 }}
+                                labelStyle={{ marginRight: 40 }}
+                                onPress={() => { }}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
+                            <TextInput
+                                placeholder="Age"
+                                keyboardType="numeric"
+                                value={age}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={(age) => handleChangeInfo('age', age)}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <MaterialCommunityIcons name="weight-kilogram" color={color.GRAY} size={20} />
+                            <TextInput
+                                placeholder="Weight"
+                                keyboardType="numeric"
+                                value={weight}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={(weight) => handleChangeInfo('weight', weight)}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <MaterialIcons name="description" color={color.GRAY} size={22} />
+                            <TextInput
+                                placeholder="Introduction"
+                                value={introduction}
+                                placeholderTextColor={color.GRAY}
+                                onChangeText={(introduction) => handleChangeInfo('introduction', introduction)}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <TouchableOpacity style={styles.commandButton} onPress={_saveData}>
+                            <Text style={styles.panelButtonTitle}>Save</Text>
                         </TouchableOpacity>
-                    </View>
-                    <View style={styles.action}>
-                        <FontAwesome name="user-o" color={color.GRAY} size={20} />
-                        <TextInput
-                            placeholder="Name"
-                            value={name}
-                            placeholderTextColor={color.GRAY}
-                            onChangeText={(name) => handleChangeInfo('name', name)}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <MaterialIcons name="pets" color={color.GRAY} size={20} />
-                        <TextInput
-                            placeholder="Breed"
-                            value={breed}
-                            placeholderTextColor={color.GRAY}
-                            onChangeText={(breed) => handleChangeInfo('breed', breed)}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <FontAwesome name="transgender" color={color.GRAY} size={20} />
-                        <RadioForm
-                            style={styles.radioForm}
-                            radio_props={gender}
-                            initial={0}
-                            buttonSize={18}
-                            formHorizontal={true}
-                            labelColor={color.GRAY}
-                            selectedButtonColor={color.PINK}
-                            buttonColor={color.PINK}
-                            labelStyle={{ fontSize: 15 }}
-                            labelStyle={{ marginRight: 40 }}
-                            onPress={() => { }}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
-                        <TextInput
-                            placeholder="Age"
-                            keyboardType="numeric"
-                            value={age}
-                            placeholderTextColor={color.GRAY}
-                            onChangeText={(age) => handleChangeInfo('age', age)}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <MaterialCommunityIcons name="weight-kilogram" color={color.GRAY} size={20} />
-                        <TextInput
-                            placeholder="Weight"
-                            keyboardType="numeric"
-                            value={weight}
-                            placeholderTextColor={color.GRAY}
-                            onChangeText={(weight) => handleChangeInfo('weight', weight)}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <MaterialIcons name="description" color={color.GRAY} size={22} />
-                        <TextInput
-                            placeholder="Introduction"
-                            value={introduction}
-                            placeholderTextColor={color.GRAY}
-                            onChangeText={(introduction) => handleChangeInfo('introduction', introduction)}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <TouchableOpacity style={styles.commandButton} onPress={_saveData}>
-                        <Text style={styles.panelButtonTitle}>Save</Text>
-                    </TouchableOpacity>
+                    </ScrollView>
                 </View>
             </Container>
         </DismissKeyboard>

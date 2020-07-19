@@ -4,7 +4,6 @@ import {
     View,
     Text,
     TouchableOpacity,
-    ImageBackground,
     Image,
     TextInput
 } from 'react-native'
@@ -18,9 +17,10 @@ import { color } from '../../utility'
 import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost } from '../../api/config'
+import mime from 'mime'
 
 const AccountSetting = () => {
-    const [picture, setPicture] = useState(null)
+    const [picture, setPicture] = useState('')
     const [nameSetting, setName] = useState('')
     const [phoneSetting, setPhone] = useState('')
     const dispatch = useDispatch()
@@ -33,20 +33,44 @@ const AccountSetting = () => {
         setPhone(text)
     }
 
-    const selectImage = async () => {
-        await ImagePicker.showImagePicker({ noData: true, mediaType: 'photo' }, (response) => {
-            console.log(response)
+    const handlePicker = () => {
+        let options = {
+            title: 'Select Image',
+            noData: true,
+            maxWidth: 500,
+            maxHeight: 500,
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log(response);
+
             if (response.didCancel) {
-                return
+                console.log('User cancelled image picker');
+            } else {
+                const img = {
+                    uri: response.uri,
+                    type: mime.getType(response.uri),
+                    name:
+                        response.fileName ||
+                        response.uri.substr(response.uri.lastIndexOf('/') + 1)
+                }
+                const data = new FormData()
+                data.append('file', img)
+                data.append("upload_preset", "petDating")
+                data.append("cloud_name", "capstone98")
+                fetch("https://api.cloudinary.com/v1_1/capstone98/image/upload", {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(res => res.json())
+                    .then(data => {
+                        setPicture(data.url)
+                    }).catch(e => {
+                        alert(e.message)
+                    })
             }
-            const img = {
-                uri: response.uri,
-                type: response.type,
-                name:
-                    response.fileName ||
-                    response.uri.substr(response.uri.lastIndexOf('/') + 1)
-            }
-            setPicture(img)
         });
     }
 
@@ -55,6 +79,7 @@ const AccountSetting = () => {
             updateFields: {
                 name: nameSetting,
                 phone: phoneSetting,
+                avatar: picture
             }
         }
         console.log(account_settings)
@@ -72,18 +97,12 @@ const AccountSetting = () => {
         <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
             <Container>
                 <View style={styles.container}>
-                    <ImageBackground
-                        source={require('../../../images/avatar.jpg')}
-                        style={styles.profilePicWrap}
-                        imageStyle={{ borderRadius: 100 }}
-                    >
-                        {picture && (
-                            <Image source={{ uri: picture.uri }} style={styles.profileImage} />
-                        )}
-                        <TouchableOpacity onPress={selectImage} style={styles.camera}>
-                            <MaterialIcons name="add-a-photo" size={25} color="#DFD8C8" />
+                    <View style={styles.profilePicWrap}>
+                        <Image source={{ uri: picture }} style={styles.profileImage} />
+                        <TouchableOpacity onPress={handlePicker} style={styles.camera}>
+                            <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
                         </TouchableOpacity>
-                    </ImageBackground>
+                    </View>
                     <View style={styles.action}>
                         <FontAwesome name="user-o" color={color.GRAY} size={20} />
                         <TextInput
@@ -127,16 +146,17 @@ const styles = StyleSheet.create({
         marginBottom: 50
     },
     camera: {
-        width: 35,
-        height: 35,
+        width: 34,
+        height: 34,
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        top: 95,
+        top: 98,
         left: 90,
         backgroundColor: '#41444B',
-        opacity: 0.8
+        borderWidth: 2,
+        borderColor: color.WHITE
     },
     action: {
         flexDirection: 'row',
