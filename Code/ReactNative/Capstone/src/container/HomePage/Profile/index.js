@@ -195,7 +195,6 @@ const Profile = ({ navigation }) => {
                                                 <Text style={styles.emptyText2}>Pets added to your list will appear here.</Text>
                                             </View>
                                             : <FlatList
-                                                // style={styles.flatListPet}
                                                 horizontal={true}
                                                 data={dataPet}
                                                 renderItem={({ item }) => {

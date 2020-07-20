@@ -79,8 +79,7 @@ const styles = StyleSheet.create({
     formLogin: {
         marginTop: 15,
         height: 45,
-        // width: 340,
-        width: '100%',
+        width: 340,
         backgroundColor: color.BLUE,
         borderRadius: 20,
         flexDirection: 'row',

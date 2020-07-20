@@ -3,34 +3,46 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, YellowBox } from 'reac
 import Swiper from 'react-native-deck-swiper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { Container } from '../../components'
+import { Container, Loading } from '../../components'
 import { color } from '../../utility';
 import { useSelector } from 'react-redux';
 import data from '../../../data';
-
-useEffect(() => {
-
-}, [50])
-
-const Card = ({ card, index }) => (
-    <View style={styles.card}>
-        <View>
-            <Image source={{ uri: card.image }} style={styles.cardImage} />
-        </View>
-        <View style={styles.cardDetails}>
-            <Text style={styles.title}>{data[index].name}</Text>
-            <Text style={styles.description}>{data[index].description}</Text>
-        </View>
-    </View>
-)
+import { RequestApiAsyncGet } from '../../api/config'
 
 const Home = ({ navigation }) => {
+    const [pets, setPets] = useState([])
     const [index, setIndex] = useState(0)
     const hide = useSelector(state => state.home.isHideSwiper)
     const swiperRef = useRef(null)
+    const [loading, setLoading] = useState(true)
     const onSwiped = () => {
-        setIndex((index + 1) % data.length)
+        setIndex((index + 1) % pets.length)
     }
+
+    useEffect(() => {
+        RequestApiAsyncGet('pets/others')
+            .then(res => {
+                // Set data for pet
+                setPets(res.data)
+                setLoading(false)
+            }).catch(e => {
+                console.log("Api call error!", e)
+            })
+    }, [50])
+
+    const Card = ((item) => {
+        return (
+            <View style={styles.card}>
+                <View>
+                    <Image source={{ uri: item.avatar }} style={styles.cardImage} />
+                </View>
+                <View style={styles.cardDetails}>
+                    <Text style={styles.title}>{item.name}</Text>
+                    <Text style={styles.description}>{item.introduction}</Text>
+                </View>
+            </View>
+        )
+    })
 
     return (
         <View style={styles.container}>
@@ -46,76 +58,78 @@ const Home = ({ navigation }) => {
                 (<Container>
                     <View style={styles.container}>
                         <View style={styles.swiperContainer}>
-                            <Swiper
-                                cards={data}
-                                cardIndex={index}
-                                renderCard={(card, index) => <Card card={card} index={index} />}
-                                ref={swiperRef}
-                                onSwiped={onSwiped}
-                                stackSize={2}
-                                disableBottomSwipe
-                                animateOverlayLabelsOpacity
-                                infinite
-                                backgroundColor={'transparent'}
-                                overlayLabels={{
-                                    left: {
-                                        title: 'NOPE',
-                                        style: {
-                                            label: {
-                                                backgroundColor: 'transparent',
-                                                color: color.RED,
-                                                fontSize: 24,
-                                                borderColor: color.RED,
-                                                borderWidth: 3
+                            {
+                                loading ? <Loading />
+                                    : <Swiper
+                                        cards={pets}
+                                        cardIndex={index}
+                                        renderCard={(item) => { return Card(item) }}
+                                        ref={swiperRef}
+                                        onSwiped={onSwiped}
+                                        stackSize={2}
+                                        disableBottomSwipe
+                                        infinite
+                                        backgroundColor={'transparent'}
+                                        overlayLabels={{
+                                            left: {
+                                                title: 'NOPE',
+                                                style: {
+                                                    label: {
+                                                        backgroundColor: 'transparent',
+                                                        color: color.RED,
+                                                        fontSize: 24,
+                                                        borderColor: color.RED,
+                                                        borderWidth: 3
+                                                    },
+                                                    wrapper: {
+                                                        flexDirection: 'column',
+                                                        alignItems: 'flex-end',
+                                                        justifyContent: 'flex-start',
+                                                        marginTop: -35,
+                                                        marginLeft: -20,
+                                                    }
+                                                }
                                             },
-                                            wrapper: {
-                                                flexDirection: 'column',
-                                                alignItems: 'flex-end',
-                                                justifyContent: 'flex-start',
-                                                marginTop: -35,
-                                                marginLeft: -20,
-                                            }
-                                        }
-                                    },
-                                    right: {
-                                        title: 'LIKE',
-                                        style: {
-                                            label: {
-                                                backgroundColor: 'transparent',
-                                                color: color.GREEN,
-                                                fontSize: 24,
-                                                borderColor: color.GREEN,
-                                                borderWidth: 3
+                                            right: {
+                                                title: 'LIKE',
+                                                style: {
+                                                    label: {
+                                                        backgroundColor: 'transparent',
+                                                        color: color.GREEN,
+                                                        fontSize: 24,
+                                                        borderColor: color.GREEN,
+                                                        borderWidth: 3
+                                                    },
+                                                    wrapper: {
+                                                        flexDirection: 'column',
+                                                        alignItems: 'flex-start',
+                                                        justifyContent: 'flex-start',
+                                                        marginTop: -35,
+                                                        marginLeft: 20
+                                                    }
+                                                }
                                             },
-                                            wrapper: {
-                                                flexDirection: 'column',
-                                                alignItems: 'flex-start',
-                                                justifyContent: 'flex-start',
-                                                marginTop: -35,
-                                                marginLeft: 20
+                                            top: {
+                                                title: 'SUPER LIKE',
+                                                style: {
+                                                    label: {
+                                                        backgroundColor: 'transparent',
+                                                        color: color.BLUE,
+                                                        fontSize: 24,
+                                                        borderColor: color.BLUE,
+                                                        borderWidth: 3
+                                                    },
+                                                    wrapper: {
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        marginTop: -60
+                                                    }
+                                                }
                                             }
-                                        }
-                                    },
-                                    top: {
-                                        title: 'SUPER LIKE',
-                                        style: {
-                                            label: {
-                                                backgroundColor: 'transparent',
-                                                color: color.BLUE,
-                                                fontSize: 24,
-                                                borderColor: color.BLUE,
-                                                borderWidth: 3
-                                            },
-                                            wrapper: {
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                marginTop: -60
-                                            }
-                                        }
-                                    }
-                                }}
-                            />
+                                        }}
+                                    />
+                            }
                         </View>
                         <View style={styles.bottomButtonsContainer}>
                             <TouchableOpacity style={styles.iconContainer}>
@@ -164,7 +178,7 @@ const styles = StyleSheet.create({
     },
     cardImage: {
         width: 300,
-        flex: 0.7,
+        flex: 0.75,
         resizeMode: 'contain'
     },
     swiperContainer: {

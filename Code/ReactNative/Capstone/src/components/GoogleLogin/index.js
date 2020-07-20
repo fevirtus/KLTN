@@ -18,8 +18,7 @@ const GoogleLogin = () => {
         await GoogleSignin.hasPlayServices();
         const userInfo = await GoogleSignin.signIn();
         const new_user = {
-            email: userInfo.user.email,
-            name: userInfo.user.givenName
+            email: userInfo.user.email
         }
         RequestApiAsyncPost('register', 'POST', {}, new_user)
             .then((res) => {
@@ -53,8 +52,7 @@ const GoogleLogin = () => {
 const styles = StyleSheet.create({
     formLogin: {
         height: 45,
-        // width: 340,
-        width: '100%',
+        width: 340,
         borderRadius: 20,
         flexDirection: 'row',
         alignItems: 'center',

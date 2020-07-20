@@ -21,10 +21,11 @@ const store = createStore(persitedReducer, applyMiddleware(createLogger()))
 const persitedStore = persistStore(store)
 
 const App = () => {
+    console.log(store.getState())
     return (
         <Provider store={store}>
             <PersistGate persistor={persitedStore} loading={null}>
-                <Nav /> 
+                <Nav />
             </PersistGate>
         </Provider>
     )
