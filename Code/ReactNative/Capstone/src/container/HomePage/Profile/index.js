@@ -255,7 +255,9 @@ const styles = StyleSheet.create({
     profileImage: {
         width: 130,
         height: 130,
-        borderRadius: 100
+        borderRadius: 100,
+        borderWidth: 2,
+        borderColor: color.WHITE
     },
     camera: {
         width: 34,
