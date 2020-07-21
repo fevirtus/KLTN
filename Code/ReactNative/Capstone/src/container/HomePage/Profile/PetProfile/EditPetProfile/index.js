@@ -12,7 +12,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ImagePicker from 'react-native-image-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import RadioForm from 'react-native-simple-radio-button';
 import { color } from '../../../../../utility'
 import mime from 'mime'
 import { newPetInfo } from '../../../../../redux/actions/authActions';
@@ -20,25 +19,22 @@ import { useDispatch } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage';
+import { RadioButton } from 'react-native-paper'
 
 const EditPetProfile = ({ navigation, route }) => {
     const petId = route.params.petId;
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(true)
     const [avatar, setAvatar] = useState('')
+    const [checked, setChecked] = useState(gender === 1 ? 'Male' : 'Female')
     const [info, setInfo] = useState({
         name: '',
         breed: '',
-        gender: 0,
+        gender: '',
         weight: '',
         age: '',
         introduction: ''
     })
-
-    var gender = [
-        { label: 'Male', value: 0 },
-        { label: 'Female', value: 1 }
-    ]
 
     const dataPet = async () => {
         const token = await AsyncStorage.getItem("token")
@@ -71,6 +67,7 @@ const EditPetProfile = ({ navigation, route }) => {
                 breed: breed,
                 weight: weight,
                 age: age,
+                gender: gender,
                 introduction: introduction,
                 avatar: avatar
             }
@@ -132,7 +129,7 @@ const EditPetProfile = ({ navigation, route }) => {
         });
     }
 
-    const { name, breed, weight, age, introduction } = info
+    const { name, breed, weight, gender, age, introduction } = info
     return (
         <DismissKeyboard>
             <Container>
@@ -170,19 +167,30 @@ const EditPetProfile = ({ navigation, route }) => {
                                 </View>
                                 <View style={styles.action}>
                                     <FontAwesome name="transgender" color={color.GRAY} size={20} />
-                                    <RadioForm
-                                        style={styles.radioForm}
-                                        radio_props={gender}
-                                        initial={0}
-                                        buttonSize={18}
-                                        formHorizontal={true}
-                                        labelColor={color.GRAY}
-                                        selectedButtonColor={color.PINK}
-                                        buttonColor={color.PINK}
-                                        labelStyle={{ fontSize: 15 }}
-                                        labelStyle={{ marginRight: 40 }}
-                                        onPress={() => { }}
-                                    />
+                                    <View style={styles.radioBtn}>
+                                        <RadioButton
+                                            color={color.PINK}
+                                            value="Male"
+                                            status={checked === 'Male' ? 'checked' : 'unchecked'}
+                                            onPress={() => {
+                                                setChecked('Male');
+                                                handleChangeInfo('gender', 1);
+                                            }}
+                                        />
+                                        <Text style={styles.radioText}>Male</Text>
+                                    </View>
+                                    <View style={styles.radioBtn}>
+                                        <RadioButton
+                                            color={color.PINK}
+                                            value="Female"
+                                            status={checked === 'Female' ? 'checked' : 'unchecked'}
+                                            onPress={() => {
+                                                setChecked('Female');
+                                                handleChangeInfo('gender', 0);
+                                            }}
+                                        />
+                                        <Text style={styles.radioText}>Female</Text>
+                                    </View>
                                 </View>
                                 <View style={styles.action}>
                                     <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
@@ -272,12 +280,18 @@ const styles = StyleSheet.create({
     textInput: {
         flex: 1,
         marginTop: -12,
-        paddingLeft: 15,
+        paddingLeft: 20,
         color: '#05375a',
+        fontSize: 16
     },
-    radioForm: {
-        paddingLeft: 18,
-        marginBottom: 10
+    radioBtn: {
+        flexDirection: 'row',
+        paddingLeft: 14,
+        paddingHorizontal: 20,
+    },
+    radioText: {
+        marginTop: 8,
+        fontSize: 15
     },
     commandButton: {
         width: '90%',

@@ -118,7 +118,7 @@ const PetProfile = ({ navigation, route }) => {
                                     </View>
                                     <View style={styles.item}>
                                         <Text style={styles.subheading}>Gender</Text>
-                                        <Text style={styles.text}>{gender}</Text>
+                                        <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
                                     </View>
                                 </View>
                                 <View style={styles.contentRight}>

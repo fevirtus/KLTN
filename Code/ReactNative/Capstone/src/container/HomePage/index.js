@@ -1,5 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, YellowBox } from 'react-native'
+import {
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    FlatList,
+    YellowBox
+} from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -11,6 +19,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 const Home = ({ navigation }) => {
     const [pets, setPets] = useState([])
+    const [myPet, setMyPet] = useState([])
+    const [petActived, setPetActived] = useState('')
     const [index, setIndex] = useState(0)
     const hide = useSelector(state => state.home.isHideSwiper)
     const swiperRef = useRef(null)
@@ -34,8 +44,24 @@ const Home = ({ navigation }) => {
         })
     }
 
+    const dataPets = async () => {
+        const token = await AsyncStorage.getItem("token")
+        axios.get('https://pet-dating-server.herokuapp.com/api/pets', {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            console.log('My pet', res.data)
+            setMyPet(res.data)
+            setLoading(false)
+        }).catch(e => {
+            console.log("Api call error!", e)
+        })
+    }
+
     useEffect(() => {
         fetchData()
+        dataPets()
     }, [])
 
     const Card = ((item) => {
@@ -48,6 +74,16 @@ const Home = ({ navigation }) => {
                     <Text style={styles.title}>{item.name}</Text>
                     <Text style={styles.description}>{item.introduction}</Text>
                 </View>
+            </View>
+        )
+    })
+
+    const renderList = ((item) => {
+        return (
+            <View style={styles.petImageWrapper}>
+                <TouchableOpacity onPress={() => { }}>
+                    {/* <Image source={{ uri: item.avatar }} style={styles.petImage} /> */}
+                </TouchableOpacity>
             </View>
         )
     })
@@ -185,12 +221,12 @@ const styles = StyleSheet.create({
         backgroundColor: color.WHITE
     },
     cardImage: {
-        width: 300,
+        width: 400,
         flex: 0.75,
         resizeMode: 'contain'
     },
     swiperContainer: {
-        flex: 1.6
+        flex: 1
     },
     cardDetails: {
         alignItems: 'center'
@@ -205,7 +241,7 @@ const styles = StyleSheet.create({
         fontSize: 22
     },
     bottomButtonsContainer: {
-        flex: 0.4,
+        flex: 0.35,
         flexDirection: 'row',
         justifyContent: 'space-evenly'
     },

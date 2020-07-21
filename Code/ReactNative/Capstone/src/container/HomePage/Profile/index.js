@@ -181,9 +181,9 @@ const Profile = ({ navigation }) => {
                                         <TextInput
                                             placeholder="Email"
                                             value={email}
+                                            editable={false}
                                             placeholderTextColor={color.GRAY}
-                                            onChangeText={(email) => handleChangeInfo('email', email)}
-                                            style={styles.textInput}
+                                            style={[styles.textInput, { color: 'grey' }]}
                                         />
                                     </View>
                                     <View style={styles.action}>
