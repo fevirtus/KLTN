@@ -15,7 +15,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import RadioForm from 'react-native-simple-radio-button';
 import { color } from '../../../../../utility'
 import mime from 'mime'
-import { RequestApiAsyncGet, RequestApiAsyncPost } from '../../../../../api/config'
 import { newPetInfo } from '../../../../../redux/actions/authActions';
 import { useDispatch } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler';
@@ -50,6 +49,7 @@ const EditPetProfile = ({ navigation, route }) => {
         }).then(res => {
             console.log(res.data[0])
             setInfo(res.data[0])
+            setAvatar(res.data[0].avatar)
             setLoading(false)
         }).catch(e => {
             console.log("Api call error!", e)
@@ -64,7 +64,7 @@ const EditPetProfile = ({ navigation, route }) => {
         setInfo({ ...info, [type]: value })
     }
 
-    const _saveData = () => {
+    const _saveData = async () => {
         const edit_pet = {
             updateFields: {
                 name: name,
@@ -76,15 +76,19 @@ const EditPetProfile = ({ navigation, route }) => {
             }
         }
         console.log(edit_pet)
-        RequestApiAsyncPost(`pets/${petId}`, 'PUT', {}, edit_pet)
-            .then((res) => {
-                console.log(res.data)
-                dispatch(newPetInfo(res.data.data))
-                navigation.navigate('PetProfile')
-            }).catch((e) => {
-                console.log("Api call error")
-                alert(e.message)
-            })
+        const token = await AsyncStorage.getItem("token")
+        axios.put(`https://pet-dating-server.herokuapp.com/api/pets/${petId}`, edit_pet, {
+            headers: {
+                Authorization: token
+            }
+        }).then((res) => {
+            console.log(res.data)
+            dispatch(newPetInfo(res.data.data))
+            navigation.navigate('PetProfile')
+        }).catch((e) => {
+            console.log("Api call error")
+            alert(e.message)
+        })
     }
 
     const handlePicker = () => {
@@ -238,7 +242,9 @@ const styles = StyleSheet.create({
     profileImage: {
         width: 130,
         height: 130,
-        borderRadius: 100
+        borderRadius: 100,
+        borderWidth: 2,
+        borderColor: color.WHITE
     },
     camera: {
         width: 34,

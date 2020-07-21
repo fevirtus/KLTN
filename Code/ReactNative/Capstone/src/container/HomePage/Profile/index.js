@@ -21,7 +21,6 @@ import _ from 'lodash'
 import { color } from '../../../utility'
 import { saveUserInfo } from '../../../redux/actions/authActions';
 import { Container, Loading, DismissKeyboard } from '../../../components'
-import { RequestApiAsyncPost } from '../../../api/config'
 import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -70,7 +69,7 @@ const Profile = ({ navigation }) => {
         dataPets()
     }, [])
 
-    const _saveData = () => {
+    const _saveData = async () => {
         const settings = {
             updateFields: {
                 name: name,
@@ -80,14 +79,18 @@ const Profile = ({ navigation }) => {
             }
         }
         console.log(settings)
-        RequestApiAsyncPost('users', 'PUT', {}, settings)
-            .then((res) => {
-                dispatch(saveUserInfo(res.data.data))
-                alert('Save successful')
-            }).catch((e) => {
-                console.log("Api call error")
-                alert(e.message)
-            })
+        const token = await AsyncStorage.getItem("token")
+        axios.put('https://pet-dating-server.herokuapp.com/api/users', settings, {
+            headers: {
+                Authorization: token
+            }
+        }).then((res) => {
+            dispatch(saveUserInfo(res.data.data))
+            alert('Save successful')
+        }).catch((e) => {
+            console.log("Api call error")
+            alert(e.message)
+        })
     }
 
     const handleChangeInfo = (type, value) => {
@@ -209,6 +212,7 @@ const Profile = ({ navigation }) => {
                                             </View>
                                             :
                                             <FlatList
+                                                style={styles.flatList}
                                                 horizontal={true}
                                                 data={dataPet}
                                                 renderItem={({ item }) => {
@@ -357,6 +361,9 @@ const styles = StyleSheet.create({
     },
     emptyText2: {
         color: color.GRAY
+    },
+    flatList: {
+        paddingLeft: 10
     }
 })
 

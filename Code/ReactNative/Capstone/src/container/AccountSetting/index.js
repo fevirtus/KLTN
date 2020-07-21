@@ -16,8 +16,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { color } from '../../utility'
 import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
-import { RequestApiAsyncPost } from '../../api/config'
 import mime from 'mime'
+import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const AccountSetting = () => {
     const [picture, setPicture] = useState('')
@@ -74,7 +75,7 @@ const AccountSetting = () => {
         });
     }
 
-    const _postData = () => {
+    const _postData = async () => {
         const account_settings = {
             updateFields: {
                 name: nameSetting,
@@ -83,14 +84,18 @@ const AccountSetting = () => {
             }
         }
         console.log(account_settings)
-        RequestApiAsyncPost('users', 'PUT', {}, account_settings)
-            .then((res) => {
-                console.log(res.data)
-                dispatch(saveUserInfo(res.data.data))
-            }).catch((e) => {
-                console.log("Api call error")
-                alert(e.message)
-            })
+        const token = await AsyncStorage.getItem("token")
+        axios.put('https://pet-dating-server.herokuapp.com/api/users', account_settings, {
+            headers: {
+                Authorization: token
+            }
+        }).then((res) => {
+            dispatch(saveUserInfo(res.data.data))
+            alert('Save successful')
+        }).catch((e) => {
+            console.log("Api call error")
+            alert(e.message)
+        })
     }
 
     return (
@@ -143,7 +148,9 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         alignSelf: 'center',
         marginTop: 40,
-        marginBottom: 50
+        marginBottom: 50,
+        borderWidth: 2,
+        borderColor: color.WHITE
     },
     camera: {
         width: 34,

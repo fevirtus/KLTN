@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL_BASE = "https://pet-dating-server.herokuapp.com/api/";
+export const URL_BASE = "https://pet-dating-server.herokuapp.com/api/";
 
 export const setAuthToken = token => {
     if (token) {

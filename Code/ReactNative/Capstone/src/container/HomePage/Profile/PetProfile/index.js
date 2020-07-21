@@ -48,12 +48,16 @@ const PetProfile = ({ navigation, route }) => {
     }, [])
 
 
-    const _delete = () => {
-        axios.delete(`https://pet-dating-server.herokuapp.com/api/pets/${itemId}`)
-            .then(res => {
-                console.log(res.data)
-                navigation.navigate('Profile')
-            })
+    const _delete = async () => {
+        const token = await AsyncStorage.getItem("token")
+        axios.delete(`https://pet-dating-server.herokuapp.com/api/pets/${itemId}`, {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            console.log(res.data)
+            navigation.navigate('Profile')
+        })
     }
 
     const _deletePet = () => {
