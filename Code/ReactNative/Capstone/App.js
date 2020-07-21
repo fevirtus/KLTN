@@ -6,7 +6,7 @@ import rootReducer from './src/redux/reducers';
 import Nav from './src/navigation'
 import { persistStore, persistReducer } from 'redux-persist'
 import { createLogger } from 'redux-logger'
-import { PersistGate } from 'redux-persist/es/integration/react'
+import { PersistGate } from 'redux-persist/integration/react'
 
 const persistConfig = {
     key: 'root',

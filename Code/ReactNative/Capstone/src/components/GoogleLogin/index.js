@@ -6,6 +6,7 @@ import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
 import { saveUserInfo, saveToken } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const GoogleLogin = () => {
     const dispatch = useDispatch()
@@ -21,13 +22,14 @@ const GoogleLogin = () => {
             email: userInfo.user.email
         }
         RequestApiAsyncPost('register', 'POST', {}, new_user)
-            .then((res) => {
+            .then(async (res) => {
                 // Save to AsyncStorage
                 // Set token to AsyncStorage
                 const { pd_token, data } = res.data
                 console.log(res.data.pd_token)
                 // Set token to Auth headers
-                dispatch(saveToken(pd_token))
+                // dispatch(saveToken(pd_token))
+                await AsyncStorage.setItem('token', pd_token)
                 setAuthToken(pd_token)
                 // Save user info
                 dispatch(saveUserInfo(data))

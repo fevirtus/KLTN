@@ -1,7 +1,6 @@
 import {
     SAVE_USERINFO,
     CLEAR_USERINFO,
-    SAVE_TOKEN,
     NEW_PET
 } from './types'
 
@@ -12,11 +11,6 @@ export const saveUserInfo = (userInfo) => ({
 
 export const clearUserInfo = () => ({
     type: CLEAR_USERINFO
-});
-
-export const saveToken = (token) => ({
-    type: SAVE_TOKEN,
-    token
 });
 
 /** actions for pet */

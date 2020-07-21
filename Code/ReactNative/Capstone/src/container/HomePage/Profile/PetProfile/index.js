@@ -5,14 +5,15 @@ import {
     Image,
     TouchableOpacity,
     Text,
-    Alert
+    Alert,
+    YellowBox
 } from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../../../utility';
-import { RequestApiAsyncGet } from '../../../../api/config'
 import { Loading } from '../../../../components'
 import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const PetProfile = ({ navigation, route }) => {
     const { itemId } = route.params;
@@ -27,16 +28,24 @@ const PetProfile = ({ navigation, route }) => {
         introduction: ''
     })
 
+    const dataPet = async () => {
+        const token = await AsyncStorage.getItem("token")
+        axios.get(`https://pet-dating-server.herokuapp.com/api/pets/${itemId}`, {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            // Set info
+            setInfo(res.data[0])
+            setLoading(false)
+        }).catch(e => {
+            console.log("Api call error!", e)
+        })
+    }
+
     useEffect(() => {
-        RequestApiAsyncGet(`pets/${itemId}`)
-            .then(res => {
-                // Set info
-                setInfo(res.data[0])
-                setLoading(false)
-            }).catch(e => {
-                console.log("Api call error!", e)
-            })
-    }, [200])
+        dataPet()
+    }, [])
 
 
     const _delete = () => {
@@ -224,5 +233,8 @@ const styles = StyleSheet.create({
         color: color.GRAY
     }
 })
+
+YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
+    'Animated.event now requires a second argument for options']);
 
 export default PetProfile;

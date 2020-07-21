@@ -1,14 +1,12 @@
 import {
     SAVE_USERINFO,
     CLEAR_USERINFO,
-    SAVE_TOKEN,
     NEW_PET
 } from '../actions/types'
 
 const initialState = {
     userInfo: {},
     petInfo: [],
-    token: '',
 }
 
 const authReducer = (state = initialState, action) => {
@@ -28,13 +26,6 @@ const authReducer = (state = initialState, action) => {
                     token: ''
                 }
             }
-        case SAVE_TOKEN:
-            {
-                return {
-                    ...state,
-                    token: action.token
-                }
-            }
         case NEW_PET:
             {
                 return {
@@ -43,7 +34,7 @@ const authReducer = (state = initialState, action) => {
                 }
             }
         default:
-            return state
+            return state;
     }
 }
 

@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 import mime from 'mime'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
@@ -21,7 +21,9 @@ import _ from 'lodash'
 import { color } from '../../../utility'
 import { saveUserInfo } from '../../../redux/actions/authActions';
 import { Container, Loading, DismissKeyboard } from '../../../components'
-import { RequestApiAsyncGet, RequestApiAsyncPost } from '../../../api/config'
+import { RequestApiAsyncPost } from '../../../api/config'
+import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Profile = ({ navigation }) => {
     const [dataPet, setDataPet] = useState([])
@@ -33,29 +35,40 @@ const Profile = ({ navigation }) => {
     })
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
-    const listPet = useSelector(state => state.auth.petInfo)
+
+    const dataUser = async () => {
+        const token = await AsyncStorage.getItem("token")
+        axios.get('https://pet-dating-server.herokuapp.com/api/users/currentUser', {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            setInfo(res.data[0])
+            setLoading(false)
+        }).catch(e => {
+            console.log("Api call error!", e)
+        })
+    }
+
+    const dataPets = async () => {
+        const token = await AsyncStorage.getItem("token")
+        axios.get('https://pet-dating-server.herokuapp.com/api/pets', {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            console.log(res.data)
+            setDataPet(res.data)
+            setLoading(false)
+        }).catch(e => {
+            console.log("Api call error!", e)
+        })
+    }
 
     useEffect(() => {
-        RequestApiAsyncGet('users/currentUser')
-            .then(res => {
-                setInfo(res.data[0])
-                setLoading(false)
-            }).catch(e => {
-                console.log("Api call error!", e)
-            })
-    }, [200])
-
-    useEffect(() => {
-        RequestApiAsyncGet('pets')
-            .then(res => {
-                // Set data for pet
-                console.log(res.data)
-                setDataPet(res.data)
-                setLoading(false)
-            }).catch(e => {
-                console.log("Api call error!", e)
-            })
-    }, [200])
+        dataUser()
+        dataPets()
+    }, [])
 
     const _saveData = () => {
         const settings = {
@@ -135,8 +148,8 @@ const Profile = ({ navigation }) => {
 
     const { name, email, phone, avatar } = info
     return (
-        <DismissKeyboard>
-            <Container>
+        <Container>
+            <DismissKeyboard>
                 {
                     loading ? <Loading />
                         :
@@ -188,13 +201,14 @@ const Profile = ({ navigation }) => {
                                 <View style={styles.listPetWrapper}>
                                     <Text style={styles.text}>Your pets</Text>
                                     {
-                                        _.isEmpty(listPet) ?
+                                        _.isEmpty(dataPet) ?
                                             <View style={styles.emptyView}>
                                                 <FontAwesome name="hand-o-down" size={25} color={color.BLUE} />
                                                 <Text style={styles.emptyText}>Your Pet List is Empty</Text>
                                                 <Text style={styles.emptyText2}>Pets added to your list will appear here.</Text>
                                             </View>
-                                            : <FlatList
+                                            :
+                                            <FlatList
                                                 horizontal={true}
                                                 data={dataPet}
                                                 renderItem={({ item }) => {
@@ -217,8 +231,8 @@ const Profile = ({ navigation }) => {
                             </ScrollView>
                         </View>
                 }
-            </Container>
-        </DismissKeyboard>
+            </DismissKeyboard>
+        </Container>
     )
 }
 
@@ -346,7 +360,6 @@ const styles = StyleSheet.create({
     }
 })
 
-YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same',
-    'orientation - use another VirtualizedList-backed container instead.']);
+YellowBox.ignoreWarnings(['source.uri should not be an empty string']);
 
 export default Profile;

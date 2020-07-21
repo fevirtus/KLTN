@@ -6,8 +6,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { Container, Loading } from '../../components'
 import { color } from '../../utility';
 import { useSelector } from 'react-redux';
-import data from '../../../data';
-import { RequestApiAsyncGet } from '../../api/config'
+import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Home = ({ navigation }) => {
     const [pets, setPets] = useState([])
@@ -19,16 +19,24 @@ const Home = ({ navigation }) => {
         setIndex((index + 1) % pets.length)
     }
 
+    const fetchData = async () => {
+        const token = await AsyncStorage.getItem("token")
+        axios.get('https://pet-dating-server.herokuapp.com/api/pets/others', {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            // Set data for pet
+            setPets(res.data)
+            setLoading(false)
+        }).catch(e => {
+            console.log("Api call error!", e)
+        })
+    }
+
     useEffect(() => {
-        RequestApiAsyncGet('pets/others')
-            .then(res => {
-                // Set data for pet
-                setPets(res.data)
-                setLoading(false)
-            }).catch(e => {
-                console.log("Api call error!", e)
-            })
-    }, [50])
+        fetchData()
+    }, [])
 
     const Card = ((item) => {
         return (
