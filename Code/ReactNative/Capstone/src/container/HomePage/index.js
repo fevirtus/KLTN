@@ -67,12 +67,36 @@ const Home = ({ navigation }) => {
     const Card = ((item) => {
         return (
             <View style={styles.card}>
-                <View>
-                    <Image source={{ uri: item.avatar }} style={styles.cardImage} />
-                </View>
                 <View style={styles.cardDetails}>
+                    <Image source={{ uri: item.avatar }} style={styles.cardImage} />
                     <Text style={styles.title}>{item.name}</Text>
                     <Text style={styles.description}>{item.introduction}</Text>
+                    <View style={styles.bottomButtonsContainer}>
+                        <TouchableOpacity style={styles.iconContainer}>
+                            <AntDesign
+                                name="close"
+                                size={35}
+                                color={color.RED}
+                                onPress={() => swiperRef.current.swipeLeft()}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.iconContainer}>
+                            <AntDesign
+                                name="star"
+                                size={34}
+                                color={color.BLUE}
+                                onPress={() => swiperRef.current.swipeTop()}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.iconContainer}>
+                            <AntDesign
+                                name="heart"
+                                size={32}
+                                color={color.GREEN}
+                                onPress={() => swiperRef.current.swipeRight()}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         )
@@ -83,6 +107,7 @@ const Home = ({ navigation }) => {
             <View style={styles.petImageWrapper}>
                 <TouchableOpacity onPress={() => { }}>
                     {/* <Image source={{ uri: item.avatar }} style={styles.petImage} /> */}
+                    <Text>{item.name}</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -175,32 +200,20 @@ const Home = ({ navigation }) => {
                                     />
                             }
                         </View>
-                        <View style={styles.bottomButtonsContainer}>
-                            <TouchableOpacity style={styles.iconContainer}>
-                                <AntDesign
-                                    name="close"
-                                    size={45}
-                                    color={color.RED}
-                                    onPress={() => swiperRef.current.swipeLeft()}
+                        {
+                            loading ? <Loading />
+                                :
+                                <FlatList
+                                    style={styles.flatList}
+                                    horizontal={true}
+                                    data={myPet}
+                                    renderItem={({ item }) => {
+                                        return renderList(item)
+                                    }}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    refreshing={loading}
                                 />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.iconContainer}>
-                                <AntDesign
-                                    name="star"
-                                    size={43}
-                                    color={color.BLUE}
-                                    onPress={() => swiperRef.current.swipeTop()}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.iconContainer}>
-                                <AntDesign
-                                    name="heart"
-                                    size={40}
-                                    color={color.GREEN}
-                                    onPress={() => swiperRef.current.swipeRight()}
-                                />
-                            </TouchableOpacity>
-                        </View>
+                        }
                     </View>
                 </Container>)
             }
@@ -214,16 +227,16 @@ const styles = StyleSheet.create({
     },
     card: {
         borderRadius: 5,
-        flex: 0.65,
+        flex: 0.8,
         elevation: 5,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: color.WHITE
     },
     cardImage: {
-        width: 400,
-        flex: 0.75,
-        resizeMode: 'contain'
+        width: 372,
+        flex: 1,
+        resizeMode: 'cover'
     },
     swiperContainer: {
         flex: 1
@@ -233,7 +246,6 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 26,
-        marginBottom: 10,
         color: color.BLACK
     },
     description: {
@@ -241,17 +253,20 @@ const styles = StyleSheet.create({
         fontSize: 22
     },
     bottomButtonsContainer: {
-        flex: 0.35,
+        flex: 0.2,
         flexDirection: 'row',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-between'
     },
     iconContainer: {
         borderRadius: 50,
-        elevation: 1,
+        elevation: 2,
         justifyContent: 'center',
         alignItems: 'center',
-        width: 65,
-        height: 65
+        width: 54,
+        height: 54
+    },
+    flatList: {
+        // alignItems: 'flex-end'
     },
     hideMode: {
         flex: 1,
