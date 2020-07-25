@@ -3,12 +3,12 @@ import { color } from "../../utility";
 
 export default StyleSheet.create({
   cardStyle: {
-    backgroundColor: color.SEMI_TRANSPARENT,
+    // backgroundColor: color.SEMI_TRANSPARENT,
     borderBottomWidth: 1,
     borderColor: color.SILVER,
   },
   cardItemStyle: {
-    backgroundColor: color.SEMI_TRANSPARENT,
+    // backgroundColor: color.SEMI_TRANSPARENT,
   },
 
   logoContainer: {
@@ -19,8 +19,8 @@ export default StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: color.DARK_GRAY,
+    backgroundColor: color.PINK,
   },
   thumbnailName: { fontSize: 30, color: color.WHITE, fontWeight: "bold" },
-  profileName: { fontSize: 20, color: color.WHITE, fontWeight: "bold" },
+  profileName: { fontSize: 20, color: color.BLACK, fontWeight: "bold" },
 });

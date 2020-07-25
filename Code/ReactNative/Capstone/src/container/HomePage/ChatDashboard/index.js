@@ -4,7 +4,7 @@ import ShowUsers from '../../../components/ShowUsers';
 import database from '@react-native-firebase/database';
 import { useSelector } from 'react-redux';
 
-const Chat = ({ navigation }) => {
+const ChatDashboard = ({ navigation }) => {
 
     const [allUsers, setAllUsers] = useState([]);
     const userInfo = useSelector(state => state.auth.userInfo);
@@ -120,4 +120,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Chat
+export default ChatDashboard;
