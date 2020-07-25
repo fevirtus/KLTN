@@ -1,78 +1,67 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import React from 'react'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { color } from '../../utility';
+import { useDispatch } from 'react-redux';
+import { saveUserInfo, saveToken } from '../../redux/actions/authActions';
+import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
+import AsyncStorage from '@react-native-community/async-storage';
+import auth from '@react-native-firebase/auth';
+import { AddUser } from '../../network/user';
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
-export default class FacebookLogin extends Component {
-    state = { userInfo: {} }
+const FacebookLogin = () => {
+    const dispatch = useDispatch()
 
-    logoutWithFacebook = () => {
-        LoginManager.logOut()
-        this.setState({ userInfo: {} })
-    }
+    const _signIn = async () => {
 
-    getInfoFromToken = token => {
-        const PROFILE_REQUEST_PARAMS = {
-            fields: {
-                string: 'id, name, first_name, last_name'
-            },
+        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+        if (result.isCancelled) {
+            throw 'User cancelled the login process';
         }
+        // Once signed in, get the users AccesToken
+        const data = await AccessToken.getCurrentAccessToken();
+        if (!data) {
+            throw 'Something went wrong obtaining access token';
+        }
+        // Create a Firebase credential with the AccessToken
+        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+        // Sign-in the user with the credential
+        const userInfo = await auth().signInWithCredential(facebookCredential);
+        console.log(userInfo)
 
-        const profileRequest = new GraphRequest('/me', { token, parameters: PROFILE_REQUEST_PARAMS },
-            (error, result) => {
-                if (error) {
-                    console.log('Login Info has an error:', err)
-                }
-                else {
-                    this.setState({ userInfo: result })
-                    console.log('result:', result)
-                }
-            },
-        )
-        new GraphRequestManager().addRequest(profileRequest).start()
+        const { displayName, email, uid } = userInfo.user;
+        if (userInfo.additionalUserInfo.isNewUser) {
+            AddUser(displayName, email, uid, '');
+        }
+        RequestApiAsyncPost('register', 'POST', {}, { name: displayName, email: email, uid: uid })
+            .then(async (res) => {
+                // Save to AsyncStorage
+                // Set token to AsyncStorage
+                const { pd_token, data } = res.data
+                console.log(res.data.pd_token)
+                // Set token to Auth headers
+                // dispatch(saveToken(pd_token))
+                await AsyncStorage.setItem('token', pd_token)
+                setAuthToken(pd_token)
+                // Save user info
+                dispatch(saveUserInfo(data))
+            }).catch((error) => {
+                console.log("Api call error")
+                alert(error.message)
+            })
     }
 
-    loginWithFacebook = () => {
-        LoginManager.logInWithPermissions(['public_profile']).then(
-            login => {
-                if (login.isCancelled) {
-                    console.log('login canceled')
-                }
-                else {
-                    AccessToken.getCurrentAccessToken().then(data => {
-                        const accessToken = data.accessToken.toString()
-                        this.getInfoFromToken(accessToken)
-                    })
-                }
-            },
-            error => {
-                console.log('login fail with error: ' + console.error());
-            },
-        )
-    }
-
-    state = { userInfo: {} }
-
-    render() {
-        const isLogin = this.state.userInfo.name
-        const onPressButton = isLogin ? this.logoutWithFacebook : this.loginWithFacebook
-
-        return (
-            <View>
-                <TouchableOpacity style={styles.formLogin} onPress={onPressButton}>
-                    <Entypo name="facebook" size={18} color='white' style={styles.facebook} />
-                    <Text style={styles.text}>
-                        LOG IN WITH FACEBOOK
+    return (
+        <View>
+            <TouchableOpacity style={styles.formLogin} onPress={_signIn}>
+                <Entypo name="facebook" size={18} color='white' style={styles.facebook} />
+                <Text style={styles.text}>
+                    LOG IN WITH FACEBOOK
                     </Text>
-                </TouchableOpacity>
-                {this.state.userInfo.name && (<Text style={{ fontSize: 16, marginVertical: 16 }} >
-                    Logged in as {this.state.userInfo.name}
-                </Text>
-                )}
-            </View>
-        );
-    }
+            </TouchableOpacity>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -96,3 +85,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     }
 });
+
+export default FacebookLogin
+
