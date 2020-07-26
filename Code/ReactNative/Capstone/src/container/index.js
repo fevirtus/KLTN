@@ -10,7 +10,6 @@ import EditPetProfile from './HomePage/Profile/PetProfile/EditPetProfile'
 import Setting from './Setting'
 import Privacy from './Setting/Privacy'
 import Feedback from './Setting/Feedback'
-import Test from './Test'
 
 export {
     Login,
@@ -24,6 +23,5 @@ export {
     Setting,
     Privacy,
     Feedback,
-    EditPetProfile,
-    Test
+    EditPetProfile
 }

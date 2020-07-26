@@ -8,10 +8,14 @@ import {
     FlatList,
     ScrollView,
     TextInput,
+    Animated,
+    Dimensions,
     YellowBox
 } from 'react-native'
-import ImagePicker from 'react-native-image-picker';
 import mime from 'mime'
+import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage';
+import ImagePicker from 'react-native-image-picker';
 import { useDispatch } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -21,8 +25,9 @@ import _ from 'lodash'
 import { color } from '../../../utility'
 import { saveUserInfo } from '../../../redux/actions/authActions';
 import { Container, Loading, DismissKeyboard } from '../../../components'
-import axios from 'axios'
-import AsyncStorage from '@react-native-community/async-storage';
+import { URL_BASE } from '../../../api/config'
+
+const { width } = Dimensions.get('window')
 
 const Profile = ({ navigation }) => {
     const [dataPet, setDataPet] = useState([])
@@ -35,9 +40,15 @@ const Profile = ({ navigation }) => {
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
 
+    const [active, setActive] = useState(0)
+    const [translateX, setTranslateX] = useState(new Animated.Value(0))
+    const [translateXTabOne, setTranslateXTabOne] = useState(new Animated.Value(0))
+    const [translateXTabTwo, setTranslateXTabTwo] = useState(new Animated.Value(width))
+    const [translateY, setTranslateY] = useState(-1000)
+
     const dataUser = async () => {
         const token = await AsyncStorage.getItem("token")
-        axios.get('https://pet-dating-server.herokuapp.com/api/users/currentUser', {
+        axios.get(`${URL_BASE}users/currentUser`, {
             headers: {
                 Authorization: token
             }
@@ -51,7 +62,7 @@ const Profile = ({ navigation }) => {
 
     const dataPets = async () => {
         const token = await AsyncStorage.getItem("token")
-        axios.get('https://pet-dating-server.herokuapp.com/api/pets', {
+        axios.get(`${URL_BASE}pets`, {
             headers: {
                 Authorization: token
             }
@@ -80,7 +91,7 @@ const Profile = ({ navigation }) => {
         }
         console.log(settings)
         const token = await AsyncStorage.getItem("token")
-        axios.put('https://pet-dating-server.herokuapp.com/api/users', settings, {
+        axios.put(`${URL_BASE}users`, settings, {
             headers: {
                 Authorization: token
             }
@@ -149,6 +160,40 @@ const Profile = ({ navigation }) => {
         )
     })
 
+    useEffect(() => {
+        handleSlide(active)
+    }, [active])
+
+    const handleSlide = type => {
+        Animated.spring(translateX, {
+            toValue: type,
+            duration: 100
+        }).start()
+        if (active === 0) {
+            Animated.parallel([
+                Animated.spring(translateXTabOne, {
+                    toValue: 0,
+                    duration: 100
+                }).start(),
+                Animated.spring(translateXTabTwo, {
+                    toValue: width,
+                    duration: 100
+                }).start()
+            ])
+        } else {
+            Animated.parallel([
+                Animated.spring(translateXTabOne, {
+                    toValue: -width,
+                    duration: 100
+                }).start(),
+                Animated.spring(translateXTabTwo, {
+                    toValue: 0,
+                    duration: 100
+                }).start()
+            ])
+        }
+    }
+
     const { name, email, phone, avatar } = info
     return (
         <Container>
@@ -157,82 +202,132 @@ const Profile = ({ navigation }) => {
                     loading ? <Loading />
                         :
                         <View style={styles.container}>
-                            <ScrollView showsVerticalScrollIndicator={false}>
-                                <View style={styles.profilePicWrap}>
-                                    <Image source={{ uri: avatar }} style={styles.profileImage} />
-                                    <TouchableOpacity onPress={handlePicker} style={styles.camera}>
-                                        <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
+                            <View style={styles.tabSliding}>
+                                <View style={styles.tabContent}>
+                                    <Animated.View
+                                        style={[styles.sliding, {
+                                            left: translateX.interpolate({
+                                                inputRange: [0, 1],
+                                                outputRange: ['0%', '50%'],
+                                                extrapolate: 'clamp'
+                                            })
+                                        }]}
+                                    />
+                                    <TouchableOpacity
+                                        style={styles.tabOne}
+                                        onPress={() => setActive(0)}
+                                    >
+                                        <Text style={{ color: active === 0 ? color.WHITE : color.BLUE }}>My Profile</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.tabTwo}
+                                        onPress={() => setActive(1)}
+                                    >
+                                        <Text style={{ color: active === 1 ? color.WHITE : color.BLUE }}>My Pets</Text>
                                     </TouchableOpacity>
                                 </View>
 
-                                <View style={styles.inputInformation}>
-                                    <View style={styles.action}>
-                                        <FontAwesome name="user-o" color={color.GRAY} size={22} />
-                                        <TextInput
-                                            placeholder="Name"
-                                            value={name}
-                                            placeholderTextColor={color.GRAY}
-                                            onChangeText={(name) => handleChangeInfo('name', name)}
-                                            style={styles.textInput}
-                                        />
-                                    </View>
-                                    <View style={styles.action}>
-                                        <Fontisto name="email" color={color.GRAY} size={22} />
-                                        <TextInput
-                                            placeholder="Email"
-                                            value={email}
-                                            editable={false}
-                                            placeholderTextColor={color.GRAY}
-                                            style={[styles.textInput, { color: 'grey' }]}
-                                        />
-                                    </View>
-                                    <View style={styles.action}>
-                                        <Feather name="phone" color={color.GRAY} size={22} />
-                                        <TextInput
-                                            placeholder="Phone"
-                                            keyboardType="numeric"
-                                            value={phone}
-                                            placeholderTextColor={color.GRAY}
-                                            onChangeText={(phone) => handleChangeInfo('phone', phone)}
-                                            style={styles.textInput}
-                                        />
-                                    </View>
-                                </View>
-                                <TouchableOpacity style={styles.commandButton} onPress={_saveData}>
-                                    <Text style={styles.panelButtonTitle}>Save</Text>
-                                </TouchableOpacity>
-                                <View style={styles.listPetWrapper}>
-                                    <Text style={styles.text}>Your pets</Text>
-                                    {
-                                        _.isEmpty(dataPet) ?
-                                            <View style={styles.emptyView}>
-                                                <FontAwesome name="hand-o-down" size={25} color={color.BLUE} />
-                                                <Text style={styles.emptyText}>Your Pet List is Empty</Text>
-                                                <Text style={styles.emptyText2}>Pets added to your list will appear here.</Text>
+                                <ScrollView showsVerticalScrollIndicator={false}>
+                                    <Animated.View
+                                        style={{
+                                            transform: [
+                                                {
+                                                    translateX: translateXTabOne
+                                                }
+                                            ]
+                                        }}
+                                        onLayout={event => setTranslateY(event.nativeEvent.layout.height)}
+                                    >
+                                        <View style={styles.profilePicWrap}>
+                                            <Image source={{ uri: avatar }} style={styles.profileImage} />
+                                            <TouchableOpacity onPress={handlePicker} style={styles.camera}>
+                                                <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={styles.inputInformation}>
+                                            <View style={styles.action}>
+                                                <FontAwesome name="user-o" color={color.GRAY} size={22} />
+                                                <TextInput
+                                                    placeholder="Name"
+                                                    value={name}
+                                                    placeholderTextColor={color.GRAY}
+                                                    onChangeText={(name) => handleChangeInfo('name', name)}
+                                                    style={styles.textInput}
+                                                />
                                             </View>
-                                            :
-                                            <FlatList
-                                                style={styles.flatList}
-                                                horizontal={true}
-                                                data={dataPet}
-                                                renderItem={({ item }) => {
-                                                    return renderList(item)
-                                                }}
-                                                keyExtractor={(item, index) => index.toString()}
-                                                refreshing={loading}
-                                            />
-                                    }
-                                </View>
-                                <TouchableOpacity
-                                    style={styles.addButton}
-                                    onPress={() => navigation.navigate('PetSetting')}
-                                >
-                                    <TouchableOpacity style={styles.add}>
-                                        <MaterialIcons name="add" size={20} color={color.WHITE} />
-                                    </TouchableOpacity>
-                                    <Text style={styles.addTitle}>Add a new pet</Text>
-                                </TouchableOpacity>
-                            </ScrollView>
+                                            <View style={styles.action}>
+                                                <Fontisto name="email" color={color.GRAY} size={22} />
+                                                <TextInput
+                                                    placeholder="Email"
+                                                    value={email}
+                                                    editable={false}
+                                                    placeholderTextColor={color.GRAY}
+                                                    style={[styles.textInput, { color: 'grey' }]}
+                                                />
+                                            </View>
+                                            <View style={styles.action}>
+                                                <Feather name="phone" color={color.GRAY} size={22} />
+                                                <TextInput
+                                                    placeholder="Phone"
+                                                    keyboardType="numeric"
+                                                    value={phone}
+                                                    placeholderTextColor={color.GRAY}
+                                                    onChangeText={(phone) => handleChangeInfo('phone', phone)}
+                                                    style={styles.textInput}
+                                                />
+                                            </View>
+                                        </View>
+                                        <TouchableOpacity style={styles.commandButton} onPress={_saveData}>
+                                            <Text style={styles.panelButtonTitle}>Save</Text>
+                                        </TouchableOpacity>
+                                    </Animated.View>
+
+                                    <Animated.View
+                                        style={{
+                                            transform: [
+                                                {
+                                                    translateX: translateXTabTwo
+                                                },
+                                                {
+                                                    translateY: -translateY
+                                                }
+                                            ]
+                                        }}
+                                    >
+                                        <View style={styles.listPetWrapper}>
+                                            <Text style={styles.text}>My Pets</Text>
+                                            {
+                                                _.isEmpty(dataPet) ?
+                                                    <View style={styles.emptyView}>
+                                                        <FontAwesome name="hand-o-down" size={25} color={color.BLUE} />
+                                                        <Text style={styles.emptyText}>Your Pet List is Empty</Text>
+                                                        <Text style={styles.emptyText2}>It Looks You Don't Have Any Pets.</Text>
+                                                    </View>
+                                                    :
+                                                    <FlatList
+                                                        style={styles.flatList}
+                                                        horizontal={true}
+                                                        data={dataPet}
+                                                        renderItem={({ item }) => {
+                                                            return renderList(item)
+                                                        }}
+                                                        keyExtractor={(item, index) => index.toString()}
+                                                        refreshing={loading}
+                                                    />
+                                            }
+                                        </View>
+                                        <TouchableOpacity
+                                            style={styles.addButton}
+                                            onPress={() => navigation.navigate('PetSetting')}
+                                        >
+                                            <TouchableOpacity style={styles.add}>
+                                                <MaterialIcons name="add" size={20} color={color.WHITE} />
+                                            </TouchableOpacity>
+                                            <Text style={styles.addTitle}>Add a new pet</Text>
+                                        </TouchableOpacity>
+                                    </Animated.View>
+                                </ScrollView>
+                            </View>
                         </View>
                 }
             </DismissKeyboard>
@@ -244,13 +339,57 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    // Tab sliding
+    tabSliding: {
+        width: '90%',
+        marginLeft: 'auto',
+        marginRight: 'auto'
+    },
+    tabContent: {
+        flexDirection: 'row',
+        marginTop: 20,
+        marginBottom: 20,
+        height: 36,
+        position: 'relative'
+    },
+    sliding: {
+        position: 'absolute',
+        width: '50%',
+        height: '100%',
+        top: 0,
+        backgroundColor: color.BLUE,
+        borderRadius: 4
+    },
+    tabOne: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: color.BLUE,
+        borderRadius: 4,
+        borderRightWidth: 0,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0
+    },
+    tabTwo: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: color.BLUE,
+        borderRadius: 4,
+        borderLeftWidth: 0,
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0
+    },
+    // CContent
     profilePicWrap: {
         width: 130,
         height: 130,
         borderRadius: 100,
         alignSelf: 'center',
-        marginTop: 30,
-        marginBottom: 20
+        marginTop: 20,
+        marginBottom: 25
     },
     profileImage: {
         width: 130,
@@ -330,13 +469,14 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     listPetWrapper: {
-        height: 140,
-        paddingTop: 20
+        height: 160,
+        paddingTop: 15
     },
     text: {
-        fontSize: 20,
+        fontSize: 25,
         fontWeight: 'bold',
-        paddingLeft: 20
+        paddingLeft: 20,
+        paddingBottom: 20
     },
     petImageWrapper: {
         marginTop: 10,

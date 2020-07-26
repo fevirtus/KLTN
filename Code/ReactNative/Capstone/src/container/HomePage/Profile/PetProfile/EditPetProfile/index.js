@@ -7,19 +7,20 @@ import {
     TextInput,
     TouchableOpacity,
 } from 'react-native'
-import { DismissKeyboard, Container, Loading } from '../../../../../components'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import ImagePicker from 'react-native-image-picker';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { color } from '../../../../../utility'
 import mime from 'mime'
-import { newPetInfo } from '../../../../../redux/actions/authActions';
-import { useDispatch } from 'react-redux'
-import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios'
+import ImagePicker from 'react-native-image-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import { RadioButton } from 'react-native-paper'
+import { ScrollView } from 'react-native-gesture-handler';
+import { useDispatch } from 'react-redux'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { DismissKeyboard, Container, Loading } from '../../../../../components'
+import { color } from '../../../../../utility'
+import { URL_BASE } from '../../../../../api/config'
+import { newPetInfo } from '../../../../../redux/actions/authActions';
 
 const EditPetProfile = ({ navigation, route }) => {
     const petId = route.params.petId;
@@ -33,12 +34,13 @@ const EditPetProfile = ({ navigation, route }) => {
         gender: '',
         weight: '',
         age: '',
-        introduction: ''
+        introduction: '',
+        is_active: ''
     })
 
     const dataPet = async () => {
         const token = await AsyncStorage.getItem("token")
-        axios.get(`https://pet-dating-server.herokuapp.com/api/pets/${petId}`, {
+        axios.get(`${URL_BASE}pets/${petId}`, {
             headers: {
                 Authorization: token
             }
@@ -74,7 +76,7 @@ const EditPetProfile = ({ navigation, route }) => {
         }
         console.log(edit_pet)
         const token = await AsyncStorage.getItem("token")
-        axios.put(`https://pet-dating-server.herokuapp.com/api/pets/${petId}`, edit_pet, {
+        axios.put(`${URL_BASE}pets/${petId}`, edit_pet, {
             headers: {
                 Authorization: token
             }
@@ -129,7 +131,7 @@ const EditPetProfile = ({ navigation, route }) => {
         });
     }
 
-    const { name, breed, weight, gender, age, introduction } = info
+    const { name, breed, weight, gender, age, introduction, is_active } = info
     return (
         <DismissKeyboard>
             <Container>
@@ -222,6 +224,16 @@ const EditPetProfile = ({ navigation, route }) => {
                                         placeholderTextColor={color.GRAY}
                                         onChangeText={(introduction) => handleChangeInfo('introduction', introduction)}
                                         style={styles.textInput}
+                                    />
+                                </View>
+                                <View style={styles.action}>
+                                    <MaterialIcons name="description" color={color.GRAY} size={22} />
+                                    <TextInput
+                                        placeholder="Status"
+                                        editable={false}
+                                        value={is_active == 0 ? 'Inactive' : 'Active'}
+                                        placeholderTextColor={color.GRAY}
+                                        style={[styles.textInput, { color: 'grey' }]}
                                     />
                                 </View>
                                 <TouchableOpacity style={styles.commandButton} onPress={_saveData}>

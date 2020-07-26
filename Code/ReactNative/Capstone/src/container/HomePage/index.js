@@ -16,27 +16,28 @@ import { color } from '../../utility';
 import { useSelector } from 'react-redux';
 import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage';
+import { URL_BASE } from '../../api/config'
 
-const Home = ({ navigation }) => {
+const Home = () => {
     const [pets, setPets] = useState([])
     const [myPet, setMyPet] = useState([])
-    const [petActived, setPetActived] = useState('')
+    const [petActived, setPetActived] = useState(false)
     const [index, setIndex] = useState(0)
+    const [match, setMatch] = useState(null)
+    const [loading, setLoading] = useState(true)
     const hide = useSelector(state => state.home.isHideSwiper)
     const swiperRef = useRef(null)
-    const [loading, setLoading] = useState(true)
     const onSwiped = () => {
         setIndex((index + 1) % pets.length)
     }
 
     const fetchData = async () => {
         const token = await AsyncStorage.getItem("token")
-        axios.get('https://pet-dating-server.herokuapp.com/api/pets/others', {
+        axios.get(`${URL_BASE}pets/others`, {
             headers: {
                 Authorization: token
             }
         }).then(res => {
-            // Set data for pet
             setPets(res.data)
             setLoading(false)
         }).catch(e => {
@@ -46,12 +47,11 @@ const Home = ({ navigation }) => {
 
     const dataPets = async () => {
         const token = await AsyncStorage.getItem("token")
-        axios.get('https://pet-dating-server.herokuapp.com/api/pets', {
+        axios.get(`${URL_BASE}pets`, {
             headers: {
                 Authorization: token
             }
         }).then(res => {
-            console.log('My pet', res.data)
             setMyPet(res.data)
             setLoading(false)
         }).catch(e => {
@@ -63,6 +63,43 @@ const Home = ({ navigation }) => {
         fetchData()
         dataPets()
     }, [])
+
+    const like = async (id) => {
+        swiperRef.current.swipeRight()
+        const pet_react = {
+            pet_id: id,
+            reaction: "like"
+        }
+        const token = await AsyncStorage.getItem("token")
+        axios.post(`${URL_BASE}common/react${id}`, pet_react, {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            console.log(res.data)
+        }).catch(e => {
+            console.log("Api call error!", e)
+        })
+    }
+
+    const matches = async (id1, id2, user2) => {
+        swiperRef.current.swipeTop()
+        const pet_match = {
+            pet_id1: id1,
+            pet_id2: id2,
+            user2: user2
+        }
+        const token = await AsyncStorage.getItem("token")
+        axios.post(`${URL_BASE}common/match${id}`, pet_match, {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            console.log(res.data)
+        }).catch(e => {
+            console.log("Api call error!", e)
+        })
+    }
 
     const Card = ((item) => {
         return (
@@ -93,7 +130,7 @@ const Home = ({ navigation }) => {
                                 name="heart"
                                 size={32}
                                 color={color.GREEN}
-                                onPress={() => swiperRef.current.swipeRight()}
+                                onPress={() => like(item.id)}
                             />
                         </TouchableOpacity>
                     </View>
@@ -102,12 +139,38 @@ const Home = ({ navigation }) => {
         )
     })
 
+    const petActive = async (petId) => {
+        const edit_petId = {
+            pet_id: petId
+        }
+        console.log(edit_petId)
+        const token = await AsyncStorage.getItem("token")
+        axios.put(`${URL_BASE}pets/setActive`, edit_petId, {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            console.log(res.data)
+            alert('Set active successful')
+        }).catch((e) => {
+            console.log("Api call error")
+            alert(e.message)
+        })
+    }
+
     const renderList = ((item) => {
+        console.log(item)
         return (
             <View style={styles.petImageWrapper}>
-                <TouchableOpacity onPress={() => { }}>
-                    {/* <Image source={{ uri: item.avatar }} style={styles.petImage} /> */}
-                    <Text>{item.name}</Text>
+                <TouchableOpacity onPress={() => petActive(item.id)}>
+                    <Image
+                        source={{ uri: item.avatar }}
+                        style={[styles.petImage,
+                        item.is_active === 0
+                            ? { borderColor: color.RED }
+                            : { borderColor: color.GREEN }
+                        ]}
+                    />
                 </TouchableOpacity>
             </View>
         )
@@ -200,20 +263,21 @@ const Home = ({ navigation }) => {
                                     />
                             }
                         </View>
-                        {
-                            loading ? <Loading />
-                                :
-                                <FlatList
-                                    style={styles.flatList}
-                                    horizontal={true}
-                                    data={myPet}
-                                    renderItem={({ item }) => {
-                                        return renderList(item)
-                                    }}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    refreshing={loading}
-                                />
-                        }
+                        <View>
+                            {
+                                loading ? <Loading />
+                                    :
+                                    <FlatList
+                                        horizontal={true}
+                                        data={myPet}
+                                        renderItem={({ item }) => {
+                                            return renderList(item)
+                                        }}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        refreshing={loading}
+                                    />
+                            }
+                        </View>
                     </View>
                 </Container>)
             }
@@ -255,7 +319,8 @@ const styles = StyleSheet.create({
     bottomButtonsContainer: {
         flex: 0.2,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        width: 400,
+        justifyContent: 'space-around'
     },
     iconContainer: {
         borderRadius: 50,
@@ -265,8 +330,17 @@ const styles = StyleSheet.create({
         width: 54,
         height: 54
     },
-    flatList: {
-        // alignItems: 'flex-end'
+    petImageWrapper: {
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 15,
+        marginRight: 10,
+    },
+    petImage: {
+        height: 70,
+        width: 70,
+        borderRadius: 50,
+        borderWidth: 3,
     },
     hideMode: {
         flex: 1,

@@ -7,6 +7,9 @@ import {
     Image,
     TextInput
 } from 'react-native'
+import mime from 'mime'
+import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage';
 import { Container } from '../../components';
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -16,9 +19,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { color } from '../../utility'
 import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
-import mime from 'mime'
-import axios from 'axios'
-import AsyncStorage from '@react-native-community/async-storage';
+import { URL_BASE } from '../../api/config'
 
 const AccountSetting = () => {
     const [picture, setPicture] = useState('')
@@ -85,7 +86,7 @@ const AccountSetting = () => {
         }
         console.log(account_settings)
         const token = await AsyncStorage.getItem("token")
-        axios.put('https://pet-dating-server.herokuapp.com/api/users', account_settings, {
+        axios.put(`${URL_BASE}users`, account_settings, {
             headers: {
                 Authorization: token
             }

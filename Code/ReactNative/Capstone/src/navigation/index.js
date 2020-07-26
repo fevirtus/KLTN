@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { useSelector } from 'react-redux';
 import _ from 'lodash'
 import {
@@ -20,8 +21,7 @@ import {
   Setting,
   Privacy,
   Feedback,
-  EditPetProfile,
-  Test
+  EditPetProfile
 } from '../container';
 import { color } from '../utility';
 
@@ -40,7 +40,7 @@ const MainTabScreen = () => (
         tabBarLabel: 'Home',
         tabBarColor: color.PINK,
         tabBarIcon: ({ color }) => (
-          <Ionicons name="ios-home" color={color} size={26} />
+          <FontAwesome name="tags" color={color} size={26} />
         ),
       }}
     />
@@ -62,7 +62,7 @@ const MainTabScreen = () => (
         tabBarLabel: 'Profile',
         tabBarColor: color.PINK,
         tabBarIcon: ({ color }) => (
-          <Ionicons name="ios-person" color={color} size={26} />
+          <Ionicons name="ios-person" color={color} size={27} />
         ),
       }}
     />
@@ -73,7 +73,7 @@ const MainTabScreen = () => (
         tabBarLabel: 'Search',
         tabBarColor: color.PINK,
         tabBarIcon: ({ color }) => (
-          <Ionicons name="ios-search" color={color} size={26} />
+          <Ionicons name="ios-search" color={color} size={27} />
         ),
       }}
     />
@@ -84,7 +84,7 @@ const MainTabScreen = () => (
         tabBarLabel: 'Setting',
         tabBarColor: color.PINK,
         tabBarIcon: ({ color }) => (
-          <Ionicons name="ios-settings" color={color} size={26} />
+          <Ionicons name="ios-settings" color={color} size={27} />
         ),
       }}
     />
@@ -131,7 +131,6 @@ const HomeStack = ({ userInfo }) => {
       <Stack.Screen name="Setting" component={Setting} options={{ title: 'Settings' }} />
       <Stack.Screen name="Privacy" component={Privacy} />
       <Stack.Screen name="Feedback" component={Feedback} />
-      {/* <Stack.Screen name="Test" component={Test} /> */}
     </Stack.Navigator>
   )
 }

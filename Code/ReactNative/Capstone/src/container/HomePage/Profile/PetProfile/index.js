@@ -6,14 +6,16 @@ import {
     TouchableOpacity,
     Text,
     Alert,
-    YellowBox
+    YellowBox,
+    ImageBackground
 } from 'react-native'
+import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage';
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../../../utility';
 import { Loading } from '../../../../components'
-import axios from 'axios'
-import AsyncStorage from '@react-native-community/async-storage';
+import { URL_BASE } from '../../../../api/config'
 
 const PetProfile = ({ navigation, route }) => {
     const { itemId } = route.params;
@@ -25,12 +27,13 @@ const PetProfile = ({ navigation, route }) => {
         weight: '',
         age: '',
         avatar: '',
-        introduction: ''
+        introduction: '',
+        is_active: ''
     })
 
     const dataPet = async () => {
         const token = await AsyncStorage.getItem("token")
-        axios.get(`https://pet-dating-server.herokuapp.com/api/pets/${itemId}`, {
+        axios.get(`${URL_BASE}pets/${itemId}`, {
             headers: {
                 Authorization: token
             }
@@ -50,7 +53,7 @@ const PetProfile = ({ navigation, route }) => {
 
     const _delete = async () => {
         const token = await AsyncStorage.getItem("token")
-        axios.delete(`https://pet-dating-server.herokuapp.com/api/pets/${itemId}`, {
+        axios.delete(`${URL_BASE}pets/${itemId}`, {
             headers: {
                 Authorization: token
             }
@@ -79,14 +82,17 @@ const PetProfile = ({ navigation, route }) => {
         )
     }
 
-    const { name, breed, gender, weight, age, introduction, avatar } = info
+    const { name, breed, gender, weight, age, introduction, avatar, is_active } = info
     return (
         <>
             {
                 loading ? <Loading />
                     : <View style={styles.container}>
-                        <View style={styles.header}>
-                            <Text style={styles.title}>MY PETPROFILE</Text>
+                        <ImageBackground
+                            style={styles.header}
+                            source={{ uri: avatar }}
+                            blurRadius={0.6}
+                        >
                             <Image source={{ uri: avatar }} style={styles.img} />
                             <TouchableOpacity
                                 style={styles.buttonDelete}
@@ -100,7 +106,7 @@ const PetProfile = ({ navigation, route }) => {
                             >
                                 <Entypo name="edit" size={25} color="white" />
                             </TouchableOpacity>
-                        </View>
+                        </ImageBackground>
                         <View style={styles.content}>
                             <View style={styles.navbar}>
                                 <Text style={styles.titleNav}>PET</Text>
@@ -119,6 +125,10 @@ const PetProfile = ({ navigation, route }) => {
                                     <View style={styles.item}>
                                         <Text style={styles.subheading}>Gender</Text>
                                         <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
+                                    </View>
+                                    <View style={styles.item}>
+                                        <Text style={styles.subheading}>Status</Text>
+                                        <Text style={styles.text}>{is_active == 0 ? 'Inactive' : 'Active'}</Text>
                                     </View>
                                 </View>
                                 <View style={styles.contentRight}>
@@ -149,15 +159,8 @@ const styles = StyleSheet.create({
     },
     header: {
         flex: 1,
-        backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center'
-    },
-    title: {
-        fontSize: 38,
-        color: color.WHITE,
-        fontWeight: '700',
-        letterSpacing: 1.5
     },
     img: {
         width: 110,
@@ -170,7 +173,7 @@ const styles = StyleSheet.create({
     },
     buttonEdit: {
         position: 'absolute',
-        // top: 180,
+        top: 180,
         right: 54,
         borderRadius: 50,
         backgroundColor: color.ORANGE,
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
     },
     buttonDelete: {
         position: 'absolute',
-        // top: 180,
+        top: 180,
         left: 54,
         borderRadius: 50,
         backgroundColor: color.ORANGE,
@@ -196,7 +199,7 @@ const styles = StyleSheet.create({
         flex: 2,
     },
     navbar: {
-        paddingTop: 80,
+        paddingTop: 75,
         paddingLeft: 45,
         flexDirection: 'row'
     },
@@ -215,7 +218,7 @@ const styles = StyleSheet.create({
     information: {
         flex: 1,
         flexDirection: 'row',
-        paddingTop: 32
+        paddingTop: 22
     },
     contentLeft: {
         width: '50%',
@@ -226,7 +229,7 @@ const styles = StyleSheet.create({
         paddingLeft: 20
     },
     item: {
-        paddingBottom: 28
+        paddingBottom: 22
     },
     subheading: {
         fontSize: 18,

@@ -4,7 +4,7 @@ import { GoogleSignin } from '@react-native-community/google-signin'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
-import { saveUserInfo, saveToken } from '../../redux/actions/authActions';
+import { saveUserInfo } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
 import AsyncStorage from '@react-native-community/async-storage';
 
