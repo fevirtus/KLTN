@@ -104,7 +104,7 @@ const Chat = ({ route, navigation }) => {
 
   //   * On image tap
   const imgTap = (chatImg) => {
-    navigation.navigate("ShowFullImg", { name, img: chatImg });
+    // navigation.navigate("ShowFullImg", { name, img: chatImg });
   };
   return (
     <SafeAreaView style={[globalStyle.flex1, { backgroundColor: color.WHITE }]}>
@@ -127,7 +127,7 @@ const Chat = ({ route, navigation }) => {
                   msg={item.msg}
                   userId={item.sendBy}
                   img={item.img}
-                // onImgTap={() => imgTap(item.img)}
+                  onImgTap={() => imgTap(item.img)}
                 />
               )}
             />

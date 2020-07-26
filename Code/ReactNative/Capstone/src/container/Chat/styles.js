@@ -6,16 +6,13 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     alignContent: "center",
-    flex: 1,
     paddingHorizontal: 5,
-    position: 'absolute',
-    bottom: 10
+    marginBottom: 5,
   },
   input: {
     borderRadius: 20,
     flex: 6,
   },
-
   sendBtnContainer: {
     height: appStyle.fieldHeight,
     backgroundColor: color.WHITE,
