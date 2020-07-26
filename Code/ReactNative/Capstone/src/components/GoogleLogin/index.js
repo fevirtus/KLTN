@@ -8,7 +8,8 @@ import { saveUserInfo, saveToken } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
 import AsyncStorage from '@react-native-community/async-storage';
 import auth from '@react-native-firebase/auth';
-import { AddUser } from '../../network/user';
+import { AddUser } from '../../network';
+import { setUniqueValue } from '../../utility/constants';
 
 const GoogleLogin = () => {
     const dispatch = useDispatch()
@@ -26,6 +27,7 @@ const GoogleLogin = () => {
         const userInfo = await auth().signInWithCredential(googleCredential);
         console.log(userInfo.user)
         const { displayName, email, uid } = userInfo.user;
+        setUniqueValue(uid);
         if (userInfo.additionalUserInfo.isNewUser) {
             AddUser(displayName, email, uid, '');
         }

@@ -7,8 +7,9 @@ import { saveUserInfo, saveToken } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
 import AsyncStorage from '@react-native-community/async-storage';
 import auth from '@react-native-firebase/auth';
-import { AddUser } from '../../network/user';
+import { AddUser } from '../../network';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
+import { setUniqueValue } from '../../utility/constants';
 
 const FacebookLogin = () => {
     const dispatch = useDispatch()
@@ -31,6 +32,7 @@ const FacebookLogin = () => {
         console.log(userInfo)
 
         const { displayName, email, uid } = userInfo.user;
+        setUniqueValue(uid);
         if (userInfo.additionalUserInfo.isNewUser) {
             AddUser(displayName, email, uid, '');
         }
