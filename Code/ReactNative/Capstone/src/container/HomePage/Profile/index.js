@@ -40,6 +40,7 @@ const Profile = ({ navigation }) => {
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
 
+    // Animated state
     const [active, setActive] = useState(0)
     const [translateX, setTranslateX] = useState(new Animated.Value(0))
     const [translateXTabOne, setTranslateXTabOne] = useState(new Animated.Value(0))
@@ -294,16 +295,19 @@ const Profile = ({ navigation }) => {
                                             ]
                                         }}
                                     >
-                                        <View style={styles.listPetWrapper}>
-                                            <Text style={styles.text}>My Pets</Text>
-                                            {
-                                                _.isEmpty(dataPet) ?
+                                        {
+                                            _.isEmpty(dataPet) ?
+                                                <View style={styles.listPetEmpty}>
                                                     <View style={styles.emptyView}>
-                                                        <FontAwesome name="hand-o-down" size={25} color={color.BLUE} />
+                                                        <Image
+                                                            source={require('../../../../images/empty-pet.png')}
+                                                            style={styles.emptyImage}
+                                                        />
                                                         <Text style={styles.emptyText}>Your Pet List is Empty</Text>
                                                         <Text style={styles.emptyText2}>It Looks You Don't Have Any Pets.</Text>
                                                     </View>
-                                                    :
+                                                </View> :
+                                                <View style={styles.listPetWrapper}>
                                                     <FlatList
                                                         style={styles.flatList}
                                                         horizontal={true}
@@ -314,8 +318,9 @@ const Profile = ({ navigation }) => {
                                                         keyExtractor={(item, index) => index.toString()}
                                                         refreshing={loading}
                                                     />
-                                            }
-                                        </View>
+                                                </View>
+                                        }
+
                                         <TouchableOpacity
                                             style={styles.addButton}
                                             onPress={() => navigation.navigate('PetSetting')}
@@ -469,14 +474,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     listPetWrapper: {
-        height: 160,
+        height: 140,
         paddingTop: 15
-    },
-    text: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        paddingLeft: 20,
-        paddingBottom: 20
     },
     petImageWrapper: {
         marginTop: 10,
@@ -489,20 +488,33 @@ const styles = StyleSheet.create({
         width: 80,
         borderRadius: 50
     },
+    // Empty pet
+    listPetEmpty: {
+        paddingTop: 75
+    },
     emptyView: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 10
+
+    },
+    emptyImage: {
+        width: 170,
+        height: 170,
+        borderRadius: 100
     },
     emptyText: {
         fontSize: 20,
         marginBottom: 5,
-        marginTop: 5,
-        color: color.GRAY,
-        letterSpacing: 1.5
+        marginTop: 30,
+        color: color.PINK,
+        letterSpacing: 1.5,
+        fontWeight: 'bold'
     },
     emptyText2: {
-        color: color.GRAY
+        color: color.GRAY,
+        fontSize: 16,
+        paddingTop: 5,
+        paddingBottom: 30
     },
     flatList: {
         paddingLeft: 10
