@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, FlatList } from 'react-native'
 import ShowUsers from '../../../components/ShowUsers';
 import database from '@react-native-firebase/database';
-import { useSelector } from 'react-redux';
+import { uuid } from '../../../utility/constants';
 
 const ChatDashboard = ({ navigation }) => {
 
     const [allUsers, setAllUsers] = useState([]);
-    const userInfo = useSelector(state => state.auth.userInfo);
 
     useEffect(() => {
+
         try {
             database().ref('users').on('value', dataSnapshot => {
                 // let users = dataSnapshot.map(child => {
@@ -21,7 +21,7 @@ const ChatDashboard = ({ navigation }) => {
                 // })
                 let users = []
                 dataSnapshot.forEach((child) => {
-                    if (userInfo.uid != child.val().uuid) {
+                    if (uuid != child.val().uuid) {
                         users.push({
                             id: child.val().uuid,
                             name: child.val().name,
@@ -51,21 +51,21 @@ const ChatDashboard = ({ navigation }) => {
 
     // * ON NAME TAP
     const nameTap = (profileImg, name, guestUserId) => {
-        // if (!profileImg) {
-        //     navigation.navigate("Chat", {
-        //         name,
-        //         imgText: name.charAt(0),
-        //         guestUserId,
-        //         currentUserId: uuid,
-        //     });
-        // } else {
-        //     navigation.navigate("Chat", {
-        //         name,
-        //         img: profileImg,
-        //         guestUserId,
-        //         currentUserId: uuid,
-        //     });
-        // }
+        if (!profileImg) {
+            navigation.navigate("Chat", {
+                name,
+                imgText: name.charAt(0),
+                guestUserId,
+                currentUserId: uuid,
+            });
+        } else {
+            navigation.navigate("Chat", {
+                name,
+                img: profileImg,
+                guestUserId,
+                currentUserId: uuid,
+            });
+        }
     };
 
     return (

@@ -24,6 +24,7 @@ import {
   Test
 } from '../container';
 import { color } from '../utility';
+import Chat from '../container/Chat';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -121,7 +122,7 @@ const HomeStack = ({ userInfo }) => {
         headerTintColor: color.PINK
       }}>
       <Stack.Screen name="Home" component={MainTabScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Chat" component={ChatDashboard} />
+      <Stack.Screen name="Chat" component={Chat} />
       <Stack.Screen name="AccountSetting" component={AccountSetting} />
       <Stack.Screen name="PetSetting" component={PetSetting} />
       <Stack.Screen name="Filter" component={Filter} options={{ title: 'Search' }} />
