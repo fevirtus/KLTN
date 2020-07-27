@@ -11,7 +11,6 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash'
 import {
   Login,
-  AccountSetting,
   PetSetting,
   Home,
   Filter,
@@ -108,7 +107,7 @@ const LoginStack = () => {
   )
 }
 
-const HomeStack = ({ userInfo }) => {
+const HomeStack = () => {
   return (
     <Stack.Navigator
       initialRouteName='Home'
@@ -123,7 +122,6 @@ const HomeStack = ({ userInfo }) => {
       }}>
       <Stack.Screen name="Home" component={MainTabScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Chat" component={Chat} />
-      <Stack.Screen name="AccountSetting" component={AccountSetting} />
       <Stack.Screen name="PetSetting" component={PetSetting} />
       <Stack.Screen name="Filter" component={Filter} options={{ title: 'Search' }} />
       <Stack.Screen name="Profile" component={Profile} options={{ title: 'Trang cá nhân' }} />
@@ -142,7 +140,7 @@ function NavContainer() {
   return (
     <NavigationContainer>
       {
-        _.isEmpty(userInfo) ? <LoginStack /> : <HomeStack userInfo={userInfo} />
+        _.isEmpty(userInfo) ? <LoginStack /> : <HomeStack />
       }
     </NavigationContainer>
 

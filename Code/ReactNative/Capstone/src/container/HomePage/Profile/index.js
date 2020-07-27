@@ -155,7 +155,7 @@ const Profile = ({ navigation }) => {
         return (
             <View style={styles.petImageWrapper}>
                 <TouchableOpacity onPress={() => navigation.navigate('PetProfile', { itemId: item.id })}>
-                    <Image source={{ uri: item.avatar }} style={styles.petImage} />
+                    <Image source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')} style={styles.petImage} />
                 </TouchableOpacity>
             </View>
         )
@@ -240,7 +240,7 @@ const Profile = ({ navigation }) => {
                                         onLayout={event => setTranslateY(event.nativeEvent.layout.height)}
                                     >
                                         <View style={styles.profilePicWrap}>
-                                            <Image source={{ uri: avatar }} style={styles.profileImage} />
+                                            <Image source={avatar ? { uri: avatar } : require('../../../../images/avatar.jpg')} style={styles.profileImage} />
                                             <TouchableOpacity onPress={handlePicker} style={styles.camera}>
                                                 <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
                                             </TouchableOpacity>

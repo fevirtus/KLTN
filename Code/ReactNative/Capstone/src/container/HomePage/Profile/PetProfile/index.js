@@ -90,10 +90,10 @@ const PetProfile = ({ navigation, route }) => {
                     : <View style={styles.container}>
                         <ImageBackground
                             style={styles.header}
-                            source={{ uri: avatar }}
+                            source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
                             blurRadius={0.6}
                         >
-                            <Image source={{ uri: avatar }} style={styles.img} />
+                            <Image source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')} style={styles.img} />
                             <TouchableOpacity
                                 style={styles.buttonDelete}
                                 onPress={_deletePet}

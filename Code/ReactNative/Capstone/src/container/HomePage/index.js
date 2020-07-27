@@ -90,7 +90,7 @@ const Home = () => {
             user2: user2
         }
         const token = await AsyncStorage.getItem("token")
-        axios.post(`${URL_BASE}common/match${id}`, pet_match, {
+        axios.post(`${URL_BASE}common/match${id1}`, pet_match, {
             headers: {
                 Authorization: token
             }
@@ -122,7 +122,7 @@ const Home = () => {
                                 name="star"
                                 size={34}
                                 color={color.BLUE}
-                                onPress={() => swiperRef.current.swipeTop()}
+                                onPress={() => matches(id1, id2,)}
                             />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.iconContainer}>
@@ -164,7 +164,7 @@ const Home = () => {
             <View style={styles.petImageWrapper}>
                 <TouchableOpacity onPress={() => petActive(item.id)}>
                     <Image
-                        source={{ uri: item.avatar }}
+                        source={item.avatar ? { uri: item.avatar } : require('../../../images/no-image.jpg')}
                         style={[styles.petImage,
                         item.is_active === 0
                             ? { borderColor: color.RED }

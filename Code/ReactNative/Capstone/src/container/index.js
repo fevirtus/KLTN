@@ -1,5 +1,4 @@
 import Login from './Login'
-import AccountSetting from './AccountSetting'
 import PetSetting from './PetSetting'
 import Home from './HomePage'
 import Profile from './HomePage/Profile'
@@ -13,7 +12,6 @@ import Feedback from './Setting/Feedback'
 
 export {
     Login,
-    AccountSetting,
     PetSetting,
     Home,
     Profile,

@@ -10,6 +10,9 @@ import {
     Dimensions
 } from 'react-native'
 import ImagePicker from 'react-native-image-picker';
+import AsyncStorage from '@react-native-community/async-storage';
+import mime from 'mime'
+import axios from 'axios'
 import { useDispatch } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -19,8 +22,7 @@ import RadioForm from 'react-native-simple-radio-button';
 import { color } from '../../utility'
 import { Container } from '../../components';
 import { newPetInfo } from '../../redux/actions/authActions';
-import { RequestApiAsyncPost } from '../../api/config'
-import mime from 'mime'
+import { URL_BASE } from '../../api/config'
 
 const PetSetting = ({ navigation }) => {
     const [info, setInfo] = useState({
@@ -95,7 +97,7 @@ const PetSetting = ({ navigation }) => {
         </View>
     )
 
-    const _postData = () => {
+    const _postData = async () => {
         const new_pet = {
             name: name,
             breed: breed,
@@ -105,7 +107,12 @@ const PetSetting = ({ navigation }) => {
             avatar: image
         }
         console.log(new_pet)
-        RequestApiAsyncPost('pets', 'POST', {}, new_pet)
+        const token = await AsyncStorage.getItem("token")
+        axios.post(`${URL_BASE}pets`, new_pet, {
+            headers: {
+                Authorization: token
+            }
+        })
             .then(res => {
                 console.log(res.data)
                 dispatch(newPetInfo(res.data.data))
