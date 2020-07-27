@@ -7,6 +7,9 @@ import { useDispatch } from 'react-redux';
 import { saveUserInfo } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
 import AsyncStorage from '@react-native-community/async-storage';
+import auth from '@react-native-firebase/auth';
+import { AddUser } from '../../network';
+import { setUniqueValue } from '../../utility/constants';
 
 const GoogleLogin = () => {
     const dispatch = useDispatch()
@@ -16,12 +19,19 @@ const GoogleLogin = () => {
     })
 
     const _signIn = async () => {
-        await GoogleSignin.hasPlayServices();
-        const userInfo = await GoogleSignin.signIn();
-        const new_user = {
-            email: userInfo.user.email
+        // Get the users ID token
+        const { idToken } = await GoogleSignin.signIn();
+        // Create a Google credential with the token
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        // Sign-in the user with the credential
+        const userInfo = await auth().signInWithCredential(googleCredential);
+        console.log(userInfo.user)
+        const { displayName, email, uid } = userInfo.user;
+        setUniqueValue(uid);
+        if (userInfo.additionalUserInfo.isNewUser) {
+            AddUser(displayName, email, uid, '');
         }
-        RequestApiAsyncPost('register', 'POST', {}, new_user)
+        RequestApiAsyncPost('register', 'POST', {}, { name: displayName, email: email, uid: uid })
             .then(async (res) => {
                 // Save to AsyncStorage
                 // Set token to AsyncStorage

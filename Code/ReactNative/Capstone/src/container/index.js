@@ -3,7 +3,7 @@ import AccountSetting from './AccountSetting'
 import PetSetting from './PetSetting'
 import Home from './HomePage'
 import Profile from './HomePage/Profile'
-import Chat from './HomePage/Chat'
+import ChatDashboard from './HomePage/ChatDashboard'
 import Filter from './HomePage/Filter'
 import PetProfile from './HomePage/Profile/PetProfile'
 import EditPetProfile from './HomePage/Profile/PetProfile/EditPetProfile'
@@ -19,7 +19,7 @@ export {
     Profile,
     Filter,
     PetProfile,
-    Chat,
+    ChatDashboard,
     Setting,
     Privacy,
     Feedback,

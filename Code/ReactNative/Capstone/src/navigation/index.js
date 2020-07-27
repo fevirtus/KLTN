@@ -17,20 +17,21 @@ import {
   Filter,
   Profile,
   PetProfile,
-  Chat,
+  ChatDashboard,
   Setting,
   Privacy,
   Feedback,
   EditPetProfile
 } from '../container';
 import { color } from '../utility';
+import Chat from '../container/Chat';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 const MainTabScreen = () => (
   <Tab.Navigator
-    initialRouteName="Home"
+    initialRouteName="Messages"
     activeColor={color.WHITE}
   >
     <Tab.Screen
@@ -46,7 +47,7 @@ const MainTabScreen = () => (
     />
     <Tab.Screen
       name="Messages"
-      component={Chat}
+      component={ChatDashboard}
       options={{
         tabBarLabel: 'Messages',
         tabBarColor: color.PINK,
@@ -110,7 +111,7 @@ const LoginStack = () => {
 const HomeStack = ({ userInfo }) => {
   return (
     <Stack.Navigator
-      initialRouteName={userInfo.phone === null ? 'AccountSetting' : 'Home'}
+      initialRouteName='Home'
       screenOptions={{
         headerShown: true,
         headerTitleAlign: 'center',
