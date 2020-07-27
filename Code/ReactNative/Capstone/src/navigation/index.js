@@ -24,6 +24,7 @@ import {
 } from '../container';
 import { color } from '../utility';
 import Chat from '../container/Chat';
+import { setUniqueValue } from '../utility/constants';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -134,8 +135,12 @@ const HomeStack = () => {
   )
 }
 
-function NavContainer() {
+const NavContainer = () => {
   const userInfo = useSelector(state => state.auth.userInfo)
+  if (!_.isEmpty(userInfo)) {
+    setUniqueValue(userInfo.uid)
+  }
+
 
   return (
     <NavigationContainer>
