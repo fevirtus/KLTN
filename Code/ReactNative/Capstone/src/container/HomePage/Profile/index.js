@@ -27,7 +27,7 @@ import { Container, Loading, DismissKeyboard } from '../../../components'
 import { URL_BASE, token } from '../../../api/config'
 import Axios from 'axios';
 import { RadioButton } from 'react-native-paper';
-import { UpdateUser, UpdateUserName } from '../../../network';
+import { UpdateUser, UpdateUserName, uploadImgToServer } from '../../../network';
 import { uuid } from '../../../utility/constants';
 
 const { width } = Dimensions.get('window')
@@ -120,27 +120,6 @@ const Profile = ({ navigation }) => {
             }
         });
     }
-    const uploadImgToServer = async () => {
-        try {
-            const formData = new FormData()
-            console.log(uploadImg.img)
-            formData.append('file', uploadImg.img)
-            formData.append("upload_preset", "PetDating")
-            formData.append("cloud_name", "anhtv4869")
-            const response = await fetch('https://api.cloudinary.com/v1_1/anhtv4869/image/upload', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            const res = await response.json();
-            return res.url;
-        } catch (error) {
-            console.error(error)
-        }
-    }
     const onUpdateUser = async () => {
 
         if (user.name != data.name) {
@@ -149,7 +128,7 @@ const Profile = ({ navigation }) => {
         }
 
         if (user.avatar != data.avatar) {
-            const newAvatar = await uploadImgToServer();
+            const newAvatar = await uploadImgToServer(uploadImg);
 
             //update user avatar on firebase
             UpdateUser(uuid, newAvatar)

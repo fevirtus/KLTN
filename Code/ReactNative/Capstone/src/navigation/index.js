@@ -32,7 +32,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 const MainTabScreen = () => (
   <Tab.Navigator
-    initialRouteName="Messages"
+    initialRouteName="Profile"
     activeColor={color.WHITE}
   >
     <Tab.Screen
@@ -124,7 +124,7 @@ const HomeStack = () => {
       }}>
       <Stack.Screen name="Home" component={MainTabScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Chat" component={Chat} />
-      <Stack.Screen name="PetSetting" component={PetSetting} />
+      <Stack.Screen name="PetSetting" component={PetSetting} options={{ title: 'New Pet' }} />
       <Stack.Screen name="Filter" component={Filter} options={{ title: 'Search' }} />
       <Stack.Screen name="Profile" component={Profile} options={{ title: 'Trang cá nhân' }} />
       <Stack.Screen name="PetProfile" component={PetProfile} options={{ title: 'Trang cá nhân pet' }} />

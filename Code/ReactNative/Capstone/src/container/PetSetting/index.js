@@ -1,46 +1,55 @@
-import React, { useState } from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    TouchableOpacity,
-    ScrollView,
-    Image,
-    TextInput,
-    Dimensions
-} from 'react-native'
-import ImagePicker from 'react-native-image-picker';
 import AsyncStorage from '@react-native-community/async-storage';
-import mime from 'mime'
-import axios from 'axios'
-import { useDispatch } from 'react-redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Axios from 'axios';
+import mime from 'mime';
+import React, { useEffect, useState } from 'react';
+import {
+    Dimensions, ScrollView, StyleSheet,
+    Text, Image,
+    TextInput, TouchableOpacity, View
+} from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
+import ImagePicker from 'react-native-image-picker';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { RadioButton } from 'react-native-paper';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import RadioForm from 'react-native-simple-radio-button';
-import { color } from '../../utility'
-import { Container } from '../../components';
-import { newPetInfo } from '../../redux/actions/authActions';
-import { URL_BASE } from '../../api/config'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch } from 'react-redux';
+import { token, URL_BASE } from '../../api/config';
+import { Container, Loading } from '../../components';
+import { color } from '../../utility';
+import { addPet } from '../../redux/actions/authActions';
+import _ from 'lodash'
+import { uploadImgToServer } from '../../network';
 
 const PetSetting = ({ navigation }) => {
     const [info, setInfo] = useState({
         name: '',
-        type: '',
-        breed: '',
-        gender: 0,
-        weight: '',
-        age: '',
+        breed: '-1',
+        gender: 1,
+        weight: null,
+        age: null,
         introduction: '',
-        image: ''
+        avatar: ''
     })
+    const [checked, setChecked] = React.useState('Male');
     const dispatch = useDispatch()
+    const [breeds, setBreeds] = useState([{ label: 'Choose breed of your pet', value: '-1' }]);
+    const [uploadImg, setUploadImg] = useState({
+        img: null
+    });
+    const [loading, setLoading] = useState(false)
 
-    var gender = [
-        { label: 'Male', value: 0 },
-        { label: 'Female', value: 1 }
-    ]
+    useEffect(() => {
+        Axios.get(`${URL_BASE}pets/breeds`, { headers: { Authorization: token } })
+            .then(res => {
+                console.log(res.data)
+                let listBreeds = res.data.map(item => ({ label: item.name, value: `${item.id}` }));
+                console.log(listBreeds)
+                setBreeds(listBreeds)
+            })
+            .catch(e => console.error(e))
+    }, [])
 
     const handleChangeInfo = (type, value) => {
         setInfo({ ...info, [type]: value })
@@ -66,112 +75,135 @@ const PetSetting = ({ navigation }) => {
                         response.fileName ||
                         response.uri.substr(response.uri.lastIndexOf('/') + 1)
                 }
-                const data = new FormData()
-                data.append('file', img)
-                data.append("upload_preset", "petDating")
-                data.append("cloud_name", "capstone98")
-                fetch("https://api.cloudinary.com/v1_1/capstone98/image/upload", {
-                    method: 'POST',
-                    body: data,
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }).then(res => res.json())
-                    .then(data => {
-                        setInfo({ image: data.url })
-                        console.log(data)
-                    }).catch(e => {
-                        alert(e.message)
-                    })
+                setUploadImg({ img: img });
+                setInfo({ ...info, avatar: img.uri })
             }
         });
     }
 
     const ImagePick = () => (
         <View style={styles.pictureWrapper}>
-            <Image source={{ uri: image }} style={styles.image} />
+            {/* <Image source={{ uri: image }} style={styles.image} /> */}
             <TouchableOpacity onPress={handlePicker} style={styles.add}>
                 <MaterialIcons name="add" size={25} color={color.WHITE} />
             </TouchableOpacity>
         </View>
     )
 
-    const _postData = async () => {
-        const new_pet = {
-            name: name,
-            breed: breed,
-            weight: weight,
-            age: age,
-            introduction: introduction,
-            avatar: image
+    const validatePet = () => {
+        if (_.isEmpty(info.name.trim())) {
+            alert('Name can not be empty')
+            return false;
         }
-        console.log(new_pet)
-        const token = await AsyncStorage.getItem("token")
-        axios.post(`${URL_BASE}pets`, new_pet, {
-            headers: {
-                Authorization: token
-            }
-        })
-            .then(res => {
-                console.log(res.data)
-                dispatch(newPetInfo(res.data.data))
-                console.log("Add new pet successful")
-                navigation.navigate('Profile')
-            }).catch((e) => {
-                console.log("Api call error")
-                alert(e.message)
-            })
+        if (info.breed === '-1') {
+            alert('Must choose breed of pet')
+            return false;
+        }
+        if (_.isEmpty(info.avatar)) {
+            alert('Pet avatar can not be empty')
+            return false;
+        }
+        return true;
+    }
+    const onCreateNewPet = async () => {
+        if (validatePet()) {
+            // setLoading(true)
+            let petAvatar = await uploadImgToServer(uploadImg);
+            Axios.post(`${URL_BASE}pets`, { ...info, avatar: petAvatar }, { headers: { Authorization: token } })
+                .then(res => {
+                    console.log(res.data)
+                    dispatch(addPet(res.data.data))
+                    navigation.navigate('Profile')
+                    // setLoading(false)
+                })
+                .catch(e => {
+                    console.error(e)
+                    // setLoading(false)
+                })
+        }
     }
 
-    const { name, breed, weight, age, introduction, image } = info
     return (
         <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
+            {/* {loading && <Loading />} */}
             <Container>
                 <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles.profilePicWrap}>
+                        <Image source={info.avatar ? { uri: info.avatar } : require('../../../images/avatar.jpg')} style={styles.profileImage} />
+                        <TouchableOpacity onPress={handlePicker} style={styles.camera}>
+                            <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.container}>
                         <View style={[styles.action, { marginTop: 30 }]}>
                             <FontAwesome name="user-o" color={color.GRAY} size={20} />
                             <TextInput
                                 placeholder="Name"
-                                value={name}
+                                value={info.name}
                                 placeholderTextColor={color.GRAY}
                                 onChangeText={(name) => handleChangeInfo('name', name)}
                                 style={styles.textInput}
                             />
                         </View>
-                        <View style={styles.action}>
-                            <MaterialIcons name="pets" color={color.GRAY} size={20} />
-                            <TextInput
-                                placeholder="Breed"
-                                value={breed}
-                                placeholderTextColor={color.GRAY}
-                                onChangeText={(breed) => handleChangeInfo('breed', breed)}
-                                style={styles.textInput}
+                        <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 20, }}>
+                            <MaterialIcons name="pets" color={color.GRAY} size={20} style={{ marginTop: 10 }} />
+                            <DropDownPicker
+                                items={breeds}
+                                defaultValue={info.breed}
+                                containerStyle={{ width: '87%', marginLeft: 10 }}
+                                style={{ backgroundColor: '#fafafa', marginLeft: 10 }}
+                                itemStyle={{
+                                    justifyContent: 'flex-start'
+                                }}
+                                dropDownStyle={{ backgroundColor: '#fafafa' }}
+                                onChangeItem={item => { handleChangeInfo('breed', item.value) }}
+                                searchable={true}
+                                searchablePlaceholder="Search for an item"
+                                searchablePlaceholderTextColor="gray"
+                                seachableStyle={{}}
+                                searchableError={() => <Text>Not Found</Text>}
+                                style={{}}
+                                zIndex={5000}
                             />
                         </View>
-                        <View style={styles.action}>
+                        <View style={[styles.action, {
+                            borderTopColor: '#f2f2f2',
+                            borderTopWidth: 1,
+                            borderTopEndRadius: 20,
+                            borderTopStartRadius: 20,
+                            paddingTop: 20
+                        }]}>
                             <FontAwesome name="transgender" color={color.GRAY} size={20} />
-                            <RadioForm
-                                style={styles.radioForm}
-                                radio_props={gender}
-                                initial={0}
-                                buttonSize={18}
-                                formHorizontal={true}
-                                labelColor={color.GRAY}
-                                selectedButtonColor={color.PINK}
-                                buttonColor={color.PINK}
-                                labelStyle={{ fontSize: 15 }}
-                                labelStyle={{ marginRight: 40 }}
-                                onPress={() => { }}
-                            />
+                            <View style={styles.radioContaier}>
+                                <View style={styles.radioBtn}>
+                                    <RadioButton
+                                        value="Male"
+                                        status={checked === 'Male' ? 'checked' : 'unchecked'}
+                                        onPress={() => {
+                                            setChecked('Male');
+                                            handleChangeInfo('gender', 1);
+                                        }}
+                                    />
+                                    <Text style={styles.radioText}>Male</Text>
+                                </View>
+                                <View style={styles.radioBtn}>
+                                    <RadioButton
+                                        value="Female"
+                                        status={checked === 'Female' ? 'checked' : 'unchecked'}
+                                        onPress={() => {
+                                            setChecked('Female');
+                                            handleChangeInfo('gender', 0);
+                                        }}
+                                    /><Text style={styles.radioText}>Female</Text>
+                                </View>
+                            </View>
                         </View>
                         <View style={styles.action}>
                             <MaterialCommunityIcons name="weight-kilogram" color={color.GRAY} size={20} />
                             <TextInput
                                 placeholder="Weight"
                                 keyboardType="numeric"
-                                value={weight}
+                                value={info.weight}
                                 placeholderTextColor={color.GRAY}
                                 onChangeText={(weight) => handleChangeInfo('weight', weight)}
                                 style={styles.textInput}
@@ -182,7 +214,7 @@ const PetSetting = ({ navigation }) => {
                             <TextInput
                                 placeholder="Age"
                                 keyboardType="numeric"
-                                value={age}
+                                value={info.age}
                                 placeholderTextColor={color.GRAY}
                                 onChangeText={(age) => handleChangeInfo('age', age)}
                                 style={styles.textInput}
@@ -192,18 +224,18 @@ const PetSetting = ({ navigation }) => {
                             <MaterialIcons name="description" color={color.GRAY} size={22} />
                             <TextInput
                                 placeholder="Introduction"
-                                value={introduction}
+                                value={info.introduction}
                                 placeholderTextColor={color.GRAY}
                                 onChangeText={(introduction) => handleChangeInfo('introduction', introduction)}
                                 style={styles.textInput}
                             />
                         </View>
-                        <View style={styles.imagePicker}>
-                            <ImagePick />
-                            <ImagePick />
-                            <ImagePick />
-                        </View>
-                        <TouchableOpacity style={styles.commandButton} onPress={_postData}>
+                        {/* <View style={styles.imagePicker}>
+                                <ImagePick />
+                                <ImagePick />
+                                <ImagePick />
+                            </View> */}
+                        <TouchableOpacity style={styles.commandButton} onPress={onCreateNewPet}>
                             <Text style={styles.panelButtonTitle}>Submit</Text>
                         </TouchableOpacity>
                     </View>
@@ -279,6 +311,49 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         color: color.WHITE,
+    },
+    radioContaier: {
+        flexDirection: 'row',
+        alignContent: 'space-between',
+        flex: 1,
+        marginTop: -5,
+        paddingLeft: 5,
+        paddingBottom: 5
+    },
+    radioBtn: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    radioText: {
+        marginTop: 10
+    },
+    profilePicWrap: {
+        width: 130,
+        height: 130,
+        borderRadius: 100,
+        alignSelf: 'center',
+        marginTop: 20,
+        marginBottom: 25
+    },
+    profileImage: {
+        width: 130,
+        height: 130,
+        borderRadius: 100,
+        borderWidth: 2,
+        borderColor: color.WHITE
+    },
+    camera: {
+        width: 34,
+        height: 34,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        top: 98,
+        left: 90,
+        backgroundColor: '#41444B',
+        borderWidth: 2,
+        borderColor: color.WHITE
     },
 })
 
