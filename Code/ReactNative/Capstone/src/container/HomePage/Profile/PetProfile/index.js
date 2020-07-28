@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import {
     View,
     StyleSheet,
@@ -15,10 +15,10 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../../../utility';
 import { Loading } from '../../../../components'
-import { URL_BASE } from '../../../../api/config'
+import { URL_BASE, token } from '../../../../api/config'
 
 const PetProfile = ({ navigation, route }) => {
-    const { itemId } = route.params;
+    const { petId } = route.params;
     const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState({
         name: '',
@@ -31,9 +31,9 @@ const PetProfile = ({ navigation, route }) => {
         is_active: ''
     })
 
-    const dataPet = async () => {
-        const token = await AsyncStorage.getItem("token")
-        axios.get(`${URL_BASE}pets/${itemId}`, {
+    const getPet = async () => {
+        // const token = await AsyncStorage.getItem("token")
+        axios.get(`${URL_BASE}pets/${petId}`, {
             headers: {
                 Authorization: token
             }
@@ -47,9 +47,8 @@ const PetProfile = ({ navigation, route }) => {
     }
 
     useEffect(() => {
-        dataPet()
+        getPet()
     }, [])
-
 
     const _delete = async () => {
         const token = await AsyncStorage.getItem("token")
@@ -108,16 +107,12 @@ const PetProfile = ({ navigation, route }) => {
                             </TouchableOpacity>
                         </ImageBackground>
                         <View style={styles.content}>
-                            <View style={styles.navbar}>
-                                <Text style={styles.titleNav}>PET</Text>
-                                <View style={styles.horizontalLine}></View>
+                            <View style={styles.petname}>
+                                {/* <Text style={styles.titleNav}>PET</Text> */}
+                                <Text style={styles.name}>{name}</Text>
                             </View>
                             <View style={styles.information}>
                                 <View style={styles.contentLeft}>
-                                    <View style={styles.item}>
-                                        <Text style={styles.subheading}>Name</Text>
-                                        <Text style={styles.text}>{name}</Text>
-                                    </View>
                                     <View style={styles.item}>
                                         <Text style={styles.subheading}>Breed</Text>
                                         <Text style={styles.text}>{breed}</Text>
@@ -126,10 +121,10 @@ const PetProfile = ({ navigation, route }) => {
                                         <Text style={styles.subheading}>Gender</Text>
                                         <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
                                     </View>
-                                    <View style={styles.item}>
+                                    {/* <View style={styles.item}>
                                         <Text style={styles.subheading}>Status</Text>
                                         <Text style={styles.text}>{is_active == 0 ? 'Inactive' : 'Active'}</Text>
-                                    </View>
+                                    </View> */}
                                 </View>
                                 <View style={styles.contentRight}>
                                     <View style={styles.item}>
@@ -140,12 +135,12 @@ const PetProfile = ({ navigation, route }) => {
                                         <Text style={styles.subheading}>Age</Text>
                                         <Text style={styles.text}>{age}</Text>
                                     </View>
-                                    <View style={styles.item}>
-                                        <Text style={styles.subheading}>Introduction</Text>
-                                        <Text style={styles.text}>{introduction}</Text>
-                                    </View>
                                 </View>
                             </View>
+                        </View>
+                        <View style={styles.introduction}>
+                            <Text style={styles.subheading}>Introduction</Text>
+                            <Text style={styles.text}>{introduction}</Text>
                         </View>
                     </View>
             }
@@ -196,7 +191,8 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     content: {
-        flex: 2,
+        flex: 1,
+        flexDirection: 'column'
     },
     navbar: {
         paddingTop: 75,
@@ -218,18 +214,19 @@ const styles = StyleSheet.create({
     information: {
         flex: 1,
         flexDirection: 'row',
-        paddingTop: 22
+        paddingTop: 22,
     },
     contentLeft: {
-        width: '50%',
-        paddingLeft: 45
+        flex: 1,
+        // paddingLeft: 45
     },
     contentRight: {
-        width: '50%',
-        paddingLeft: 20
+        flex: 1,
+        // paddingLeft: 20,
     },
     item: {
-        paddingBottom: 22
+        paddingBottom: 22,
+        alignItems: 'center',
     },
     subheading: {
         fontSize: 18,
@@ -238,6 +235,22 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 18,
         color: color.GRAY
+    },
+    petname: {
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: 40
+    },
+    name: {
+        fontSize: 30,
+        color: color.BLACK,
+        fontWeight: "bold",
+        textDecorationLine: 'underline'
+    },
+    introduction: {
+        alignItems: 'center',
+        flex: 1,
+        paddingTop: 20,
     }
 })
 

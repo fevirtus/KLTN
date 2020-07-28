@@ -165,7 +165,7 @@ const Profile = ({ navigation }) => {
     const renderList = ((item) => {
         return (
             <View style={styles.petImageWrapper}>
-                <TouchableOpacity onPress={() => navigation.navigate('PetProfile', { itemId: item.id })}>
+                <TouchableOpacity onPress={() => navigation.navigate('PetProfile', { petId: item.id })}>
                     <Image source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')} style={styles.petImage} />
                 </TouchableOpacity>
             </View>
