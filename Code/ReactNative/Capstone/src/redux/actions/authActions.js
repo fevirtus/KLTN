@@ -31,9 +31,9 @@ export const deletePet = (petId) => ({
     petId: petId
 })
 
-export const saveActivePet = (petId) => ({
+export const saveActivePet = (pet) => ({
     type: SAVE_ACTIVE_PET,
-    petId: petId
+    pet
 })
 
 export const saveToken = (token) => ({

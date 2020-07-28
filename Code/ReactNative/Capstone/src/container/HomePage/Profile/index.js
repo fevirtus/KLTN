@@ -13,7 +13,6 @@ import {
     YellowBox
 } from 'react-native'
 import mime from 'mime'
-import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
@@ -54,7 +53,7 @@ const Profile = ({ navigation }) => {
 
 
     //----
-    const [dataPet, setDataPet] = useState([])
+    // const [dataPet, setDataPet] = useState([])
     const dispatch = useDispatch()
 
     // Animated state
@@ -65,48 +64,27 @@ const Profile = ({ navigation }) => {
     const [translateY, setTranslateY] = useState(-1000)
 
 
-    const dataPets = async () => {
-        axios.get(`${URL_BASE}pets`, {
+    const loadPets = async () => {
+        console.log('get pets.........')
+        Axios.get(`${URL_BASE}pets`, {
             headers: {
                 Authorization: token
             }
         }).then(res => {
-            console.log(res.data)
-            dispatch(savePets(res.data))
-            // setDataPet(res.data)
-            // setLoading(false)
+            console.log('pets: ', res.data)
+            dispatch(savePets(res.data));
+            const activePet = res.data.filter(pet => pet.is_active == 1);
+            if (activePet.length == 1) {
+                dispatch(saveActivePet(activePet[0]))
+            }
         }).catch(e => {
             console.log("Api call error!", e)
         })
     }
 
     useEffect(() => {
-        dataPets()
+        loadPets()
     }, [])
-
-    // const _saveData = async () => {
-    //     const settings = {
-    //         updateFields: {
-    //             name: name,
-    //             phone: phone,
-    //             email: email,
-    //             avatar: avatar
-    //         }
-    //     }
-    //     console.log(settings)
-    //     const token = await AsyncStorage.getItem("token")
-    //     axios.put(`${URL_BASE}users`, settings, {
-    //         headers: {
-    //             Authorization: token
-    //         }
-    //     }).then((res) => {
-    //         dispatch(saveUserInfo(res.data.data))
-    //         alert('Save successful')
-    //     }).catch((e) => {
-    //         console.log("Api call error")
-    //         alert(e.message)
-    //     })
-    // }
 
     const handleChangeInfo = (field, value) => {
         setData({

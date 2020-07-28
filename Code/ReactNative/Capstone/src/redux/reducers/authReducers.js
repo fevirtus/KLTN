@@ -4,7 +4,7 @@ import { SAVE_USER, UPDATE_USER, SAVE_PETS, UPDATE_PET, DELETE_PET, SAVE_ACTIVE_
 const initialState = {
     user: {},
     pets: [],
-    pet_active: null,
+    pet_active: {},
     token: null
 }
 
@@ -56,7 +56,7 @@ const authReducer = (state = initialState, action) => {
         case SAVE_ACTIVE_PET:
             return {
                 ...state,
-                pet_active: action.petId
+                pet_active: action.pet
             }
         case SAVE_TOKEN:
             return {
@@ -67,7 +67,7 @@ const authReducer = (state = initialState, action) => {
             return {
                 user: {},
                 pets: [],
-                pet_active: null,
+                pet_active: {},
                 token: null
             }
         default:
