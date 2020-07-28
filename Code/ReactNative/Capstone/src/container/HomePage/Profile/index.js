@@ -16,28 +16,45 @@ import mime from 'mime'
 import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import _ from 'lodash'
 import { color } from '../../../utility'
-import { saveUserInfo } from '../../../redux/actions/authActions';
+import { updateUser, savePets } from '../../../redux/actions/authActions';
 import { Container, Loading, DismissKeyboard } from '../../../components'
-import { URL_BASE } from '../../../api/config'
+import { URL_BASE, token } from '../../../api/config'
+import Axios from 'axios';
+import { RadioButton } from 'react-native-paper';
+import { UpdateUser, UpdateUserName } from '../../../network';
+import { uuid } from '../../../utility/constants';
 
 const { width } = Dimensions.get('window')
 
 const Profile = ({ navigation }) => {
+    const user = useSelector(state => state.auth.user);
+    const pets = useSelector(state => state.auth.pets);
+
+    const [data, setData] = useState({
+        name: user.name,
+        gender: user.gender,
+        birth_date: user.birth_date,
+        phone: user.phone,
+        avatar: user.avatar
+    });
+    const [isChange, setIsChange] = useState(false);
+    const [uploadImg, setUploadImg] = useState({
+        img: null
+    });
+
+    const [checked, setChecked] = React.useState(user.gender === 1 ? 'Male' : 'Female');
+
+
+
+    //----
     const [dataPet, setDataPet] = useState([])
-    const [info, setInfo] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        avatar: ''
-    })
-    const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
 
     // Animated state
@@ -47,66 +64,56 @@ const Profile = ({ navigation }) => {
     const [translateXTabTwo, setTranslateXTabTwo] = useState(new Animated.Value(width))
     const [translateY, setTranslateY] = useState(-1000)
 
-    const dataUser = async () => {
-        const token = await AsyncStorage.getItem("token")
-        axios.get(`${URL_BASE}users/currentUser`, {
-            headers: {
-                Authorization: token
-            }
-        }).then(res => {
-            setInfo(res.data[0])
-            setLoading(false)
-        }).catch(e => {
-            console.log("Api call error!", e)
-        })
-    }
 
     const dataPets = async () => {
-        const token = await AsyncStorage.getItem("token")
         axios.get(`${URL_BASE}pets`, {
             headers: {
                 Authorization: token
             }
         }).then(res => {
             console.log(res.data)
-            setDataPet(res.data)
-            setLoading(false)
+            dispatch(savePets(res.data))
+            // setDataPet(res.data)
+            // setLoading(false)
         }).catch(e => {
             console.log("Api call error!", e)
         })
     }
 
     useEffect(() => {
-        dataUser()
         dataPets()
     }, [])
 
-    const _saveData = async () => {
-        const settings = {
-            updateFields: {
-                name: name,
-                phone: phone,
-                email: email,
-                avatar: avatar
-            }
-        }
-        console.log(settings)
-        const token = await AsyncStorage.getItem("token")
-        axios.put(`${URL_BASE}users`, settings, {
-            headers: {
-                Authorization: token
-            }
-        }).then((res) => {
-            dispatch(saveUserInfo(res.data.data))
-            alert('Save successful')
-        }).catch((e) => {
-            console.log("Api call error")
-            alert(e.message)
-        })
-    }
+    // const _saveData = async () => {
+    //     const settings = {
+    //         updateFields: {
+    //             name: name,
+    //             phone: phone,
+    //             email: email,
+    //             avatar: avatar
+    //         }
+    //     }
+    //     console.log(settings)
+    //     const token = await AsyncStorage.getItem("token")
+    //     axios.put(`${URL_BASE}users`, settings, {
+    //         headers: {
+    //             Authorization: token
+    //         }
+    //     }).then((res) => {
+    //         dispatch(saveUserInfo(res.data.data))
+    //         alert('Save successful')
+    //     }).catch((e) => {
+    //         console.log("Api call error")
+    //         alert(e.message)
+    //     })
+    // }
 
-    const handleChangeInfo = (type, value) => {
-        setInfo({ ...info, [type]: value })
+    const handleChangeInfo = (field, value) => {
+        setData({
+            ...data,
+            [field]: value
+        });
+        setIsChange(user[field] != value);
     }
 
     const handlePicker = () => {
@@ -129,26 +136,73 @@ const Profile = ({ navigation }) => {
                         response.fileName ||
                         response.uri.substr(response.uri.lastIndexOf('/') + 1)
                 }
-                const data = new FormData()
-                data.append('file', img)
-                data.append("upload_preset", "petDating")
-                data.append("cloud_name", "capstone98")
-                fetch("https://api.cloudinary.com/v1_1/capstone98/image/upload", {
-                    method: 'POST',
-                    body: data,
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }).then(res => res.json())
-                    .then(data => {
-                        setInfo({ avatar: data.url })
-                        console.log(data)
-                    }).catch(e => {
-                        alert(e.message)
-                    })
+                setUploadImg({ img: img });
+                setData({ ...data, avatar: img.uri })
+                setIsChange(true)
             }
         });
+    }
+    const uploadImgToServer = async () => {
+        try {
+            const formData = new FormData()
+            console.log(uploadImg.img)
+            formData.append('file', uploadImg.img)
+            formData.append("upload_preset", "PetDating")
+            formData.append("cloud_name", "anhtv4869")
+            const response = await fetch('https://api.cloudinary.com/v1_1/anhtv4869/image/upload', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            const res = await response.json();
+            return res.url;
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    const onUpdateUser = async () => {
+
+        if (user.name != data.name) {
+            //update user name on firebase
+            UpdateUserName(uuid, data.name)
+        }
+
+        if (user.avatar != data.avatar) {
+            const newAvatar = await uploadImgToServer();
+
+            //update user avatar on firebase
+            UpdateUser(uuid, newAvatar)
+            console.log('start', newAvatar)
+            Axios.put(`${URL_BASE}users`, {
+                updateFields: {
+                    ...data,
+                    avatar: newAvatar
+                }
+            }, { headers: { Authorization: token } })
+                .then(res => {
+                    console.log('cc:', res.data)
+                    dispatch(updateUser(res.data.data))
+                    setIsChange(false)
+                    // navigation.goBack();
+                })
+                .catch(error => console.error(error));
+        } else {
+            Axios.put(`${URL_BASE}users`, {
+                updateFields: {
+                    ...data
+                }
+            }, { headers: { Authorization: token } })
+                .then(res => {
+                    console.log(res.data)
+                    dispatch(updateUser(res.data.data))
+                    setIsChange(false)
+                    // navigation.goBack();
+                })
+                .catch(error => console.error(error));
+        }
     }
 
     const renderList = ((item) => {
@@ -195,146 +249,180 @@ const Profile = ({ navigation }) => {
         }
     }
 
-    const { name, email, phone, avatar } = info
+    // const { name, email, phone, avatar } = infoinfo
     return (
         <Container>
             <DismissKeyboard>
-                {
-                    loading ? <Loading />
-                        :
-                        <View style={styles.container}>
-                            <View style={styles.tabSliding}>
-                                <View style={styles.tabContent}>
-                                    <Animated.View
-                                        style={[styles.sliding, {
-                                            left: translateX.interpolate({
-                                                inputRange: [0, 1],
-                                                outputRange: ['0%', '50%'],
-                                                extrapolate: 'clamp'
-                                            })
-                                        }]}
-                                    />
-                                    <TouchableOpacity
-                                        style={styles.tabOne}
-                                        onPress={() => setActive(0)}
-                                    >
-                                        <Text style={{ color: active === 0 ? color.WHITE : color.BLUE }}>My Profile</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={styles.tabTwo}
-                                        onPress={() => setActive(1)}
-                                    >
-                                        <Text style={{ color: active === 1 ? color.WHITE : color.BLUE }}>My Pets</Text>
+                <View style={styles.container}>
+                    <View style={styles.tabSliding}>
+                        <View style={styles.tabContent}>
+                            <Animated.View
+                                style={[styles.sliding, {
+                                    left: translateX.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: ['0%', '50%'],
+                                        extrapolate: 'clamp'
+                                    })
+                                }]}
+                            />
+                            <TouchableOpacity
+                                style={styles.tabOne}
+                                onPress={() => setActive(0)}
+                            >
+                                <Text style={{ color: active === 0 ? color.WHITE : color.BLUE }}>My Profile</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.tabTwo}
+                                onPress={() => setActive(1)}
+                            >
+                                <Text style={{ color: active === 1 ? color.WHITE : color.BLUE }}>My Pets</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <Animated.View
+                                style={{
+                                    transform: [
+                                        {
+                                            translateX: translateXTabOne
+                                        }
+                                    ]
+                                }}
+                                onLayout={event => setTranslateY(event.nativeEvent.layout.height)}
+                            >
+                                <View style={styles.profilePicWrap}>
+                                    <Image source={data.avatar ? { uri: data.avatar } : require('../../../../images/avatar.jpg')} style={styles.profileImage} />
+                                    <TouchableOpacity onPress={handlePicker} style={styles.camera}>
+                                        <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
                                     </TouchableOpacity>
                                 </View>
-
-                                <ScrollView showsVerticalScrollIndicator={false}>
-                                    <Animated.View
-                                        style={{
-                                            transform: [
-                                                {
-                                                    translateX: translateXTabOne
-                                                }
-                                            ]
-                                        }}
-                                        onLayout={event => setTranslateY(event.nativeEvent.layout.height)}
-                                    >
-                                        <View style={styles.profilePicWrap}>
-                                            <Image source={avatar ? { uri: avatar } : require('../../../../images/avatar.jpg')} style={styles.profileImage} />
-                                            <TouchableOpacity onPress={handlePicker} style={styles.camera}>
-                                                <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View style={styles.inputInformation}>
-                                            <View style={styles.action}>
-                                                <FontAwesome name="user-o" color={color.GRAY} size={22} />
-                                                <TextInput
-                                                    placeholder="Name"
-                                                    value={name}
-                                                    placeholderTextColor={color.GRAY}
-                                                    onChangeText={(name) => handleChangeInfo('name', name)}
-                                                    style={styles.textInput}
+                                <View style={styles.inputInformation}>
+                                    <View style={styles.action}>
+                                        <FontAwesome name="user-o" color={color.GRAY} size={22} />
+                                        <TextInput
+                                            placeholder="Name"
+                                            value={data.name}
+                                            placeholderTextColor={color.GRAY}
+                                            onChangeText={(name) => handleChangeInfo('name', name)}
+                                            style={styles.textInput}
+                                        />
+                                    </View>
+                                    <View style={styles.action}>
+                                        <Fontisto name="email" color={color.GRAY} size={22} />
+                                        <TextInput
+                                            placeholder="Email"
+                                            value={user.email}
+                                            editable={false}
+                                            placeholderTextColor={color.GRAY}
+                                            style={[styles.textInput, { color: 'grey' }]}
+                                        />
+                                    </View>
+                                    <View style={styles.action}>
+                                        <FontAwesome name="transgender" color={color.GRAY} size={22} />
+                                        <View style={styles.radioContaier}>
+                                            <View style={styles.radioBtn}>
+                                                <RadioButton
+                                                    value="Male"
+                                                    status={checked === 'Male' ? 'checked' : 'unchecked'}
+                                                    onPress={() => {
+                                                        setChecked('Male');
+                                                        handleChangeInfo('gender', 1);
+                                                    }}
                                                 />
+                                                <Text style={styles.radioText}>Male</Text>
                                             </View>
-                                            <View style={styles.action}>
-                                                <Fontisto name="email" color={color.GRAY} size={22} />
-                                                <TextInput
-                                                    placeholder="Email"
-                                                    value={email}
-                                                    editable={false}
-                                                    placeholderTextColor={color.GRAY}
-                                                    style={[styles.textInput, { color: 'grey' }]}
-                                                />
-                                            </View>
-                                            <View style={styles.action}>
-                                                <Feather name="phone" color={color.GRAY} size={22} />
-                                                <TextInput
-                                                    placeholder="Phone"
-                                                    keyboardType="numeric"
-                                                    value={phone}
-                                                    placeholderTextColor={color.GRAY}
-                                                    onChangeText={(phone) => handleChangeInfo('phone', phone)}
-                                                    style={styles.textInput}
-                                                />
+                                            <View style={styles.radioBtn}>
+                                                <RadioButton
+                                                    value="Female"
+                                                    status={checked === 'Female' ? 'checked' : 'unchecked'}
+                                                    onPress={() => {
+                                                        setChecked('Female');
+                                                        handleChangeInfo('gender', 0);
+                                                    }}
+                                                /><Text style={styles.radioText}>Female</Text>
                                             </View>
                                         </View>
-                                        <TouchableOpacity style={styles.commandButton} onPress={_saveData}>
-                                            <Text style={styles.panelButtonTitle}>Save</Text>
-                                        </TouchableOpacity>
-                                    </Animated.View>
+                                    </View>
+                                    <View style={styles.action}>
+                                        <Feather name="phone" color={color.GRAY} size={22} />
+                                        <TextInput
+                                            placeholder="Phone"
+                                            keyboardType="numeric"
+                                            value={data.phone}
+                                            placeholderTextColor={color.GRAY}
+                                            onChangeText={(phone) => handleChangeInfo('phone', phone)}
+                                            style={styles.textInput}
+                                        />
+                                    </View>
+                                    <View style={styles.action}>
+                                        <FontAwesome name="birthday-cake" color={color.GRAY} size={22} />
+                                        <TextInput
+                                            placeholder="Birthday"
+                                            value={data.birth_date}
+                                            placeholderTextColor={color.GRAY}
+                                            onChangeText={(txt) => handleChangeInfo('bith_date', txt)}
+                                            style={styles.textInput}
+                                        />
+                                    </View>
+                                </View>
+                                {isChange &&
+                                    <TouchableOpacity style={styles.commandButton} onPress={onUpdateUser}>
+                                        <Text style={styles.panelButtonTitle}>Save</Text>
+                                    </TouchableOpacity>
+                                }
+                            </Animated.View>
 
-                                    <Animated.View
-                                        style={{
-                                            transform: [
-                                                {
-                                                    translateX: translateXTabTwo
-                                                },
-                                                {
-                                                    translateY: -translateY
-                                                }
-                                            ]
-                                        }}
-                                    >
+                            <Animated.View
+                                style={{
+                                    transform: [
                                         {
-                                            _.isEmpty(dataPet) ?
-                                                <View style={styles.listPetEmpty}>
-                                                    <View style={styles.emptyView}>
-                                                        <Image
-                                                            source={require('../../../../images/empty-pet.png')}
-                                                            style={styles.emptyImage}
-                                                        />
-                                                        <Text style={styles.emptyText}>Your Pet List is Empty</Text>
-                                                        <Text style={styles.emptyText2}>It Looks You Don't Have Any Pets.</Text>
-                                                    </View>
-                                                </View> :
-                                                <View style={styles.listPetWrapper}>
-                                                    <FlatList
-                                                        style={styles.flatList}
-                                                        horizontal={true}
-                                                        data={dataPet}
-                                                        renderItem={({ item }) => {
-                                                            return renderList(item)
-                                                        }}
-                                                        keyExtractor={(item, index) => index.toString()}
-                                                        refreshing={loading}
-                                                    />
-                                                </View>
+                                            translateX: translateXTabTwo
+                                        },
+                                        {
+                                            translateY: -translateY
                                         }
+                                    ]
+                                }}
+                            >
+                                {
+                                    _.isEmpty(pets) ?
+                                        <View style={styles.listPetEmpty}>
+                                            <View style={styles.emptyView}>
+                                                <Image
+                                                    source={require('../../../../images/empty-pet.png')}
+                                                    style={styles.emptyImage}
+                                                />
+                                                <Text style={styles.emptyText}>Your Pet List is Empty</Text>
+                                                <Text style={styles.emptyText2}>It Looks You Don't Have Any Pets.</Text>
+                                            </View>
+                                        </View> :
+                                        <View style={styles.listPetWrapper}>
+                                            <FlatList
+                                                style={styles.flatList}
+                                                horizontal={true}
+                                                data={pets}
+                                                renderItem={({ item }) => {
+                                                    return renderList(item)
+                                                }}
+                                                keyExtractor={(item, index) => index.toString()}
+                                                refreshing={true}
+                                            />
+                                        </View>
+                                }
 
-                                        <TouchableOpacity
-                                            style={styles.addButton}
-                                            onPress={() => navigation.navigate('PetSetting')}
-                                        >
-                                            <TouchableOpacity style={styles.add}>
-                                                <MaterialIcons name="add" size={20} color={color.WHITE} />
-                                            </TouchableOpacity>
-                                            <Text style={styles.addTitle}>Add a new pet</Text>
-                                        </TouchableOpacity>
-                                    </Animated.View>
-                                </ScrollView>
-                            </View>
-                        </View>
-                }
+                                <TouchableOpacity
+                                    style={styles.addButton}
+                                    onPress={() => navigation.navigate('PetSetting')}
+                                >
+                                    <TouchableOpacity style={styles.add}>
+                                        <MaterialIcons name="add" size={20} color={color.WHITE} />
+                                    </TouchableOpacity>
+                                    <Text style={styles.addTitle}>Add a new pet</Text>
+                                </TouchableOpacity>
+                            </Animated.View>
+                        </ScrollView>
+                    </View>
+                </View>
             </DismissKeyboard>
         </Container>
     )
@@ -429,7 +517,7 @@ const styles = StyleSheet.create({
     textInput: {
         flex: 1,
         marginTop: -12,
-        paddingLeft: 15,
+        paddingLeft: 25,
         color: '#05375a',
     },
     commandButton: {
@@ -518,6 +606,20 @@ const styles = StyleSheet.create({
     },
     flatList: {
         paddingLeft: 10
+    },
+    radioContaier: {
+        flexDirection: 'row',
+        alignContent: 'space-between',
+        flex: 1,
+        marginTop: -5,
+        paddingLeft: 25
+    },
+    radioBtn: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    radioText: {
+        marginTop: 10
     }
 })
 

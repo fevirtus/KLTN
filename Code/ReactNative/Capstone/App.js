@@ -7,7 +7,6 @@ import Nav from './src/navigation'
 import { persistStore, persistReducer } from 'redux-persist'
 import { createLogger } from 'redux-logger'
 import { PersistGate } from 'redux-persist/integration/react'
-import { ActivityIndicator, View } from 'react-native';
 import { Loading } from './src/components';
 
 const persistConfig = {

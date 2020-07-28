@@ -4,7 +4,7 @@ import { GoogleSignin } from '@react-native-community/google-signin'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
-import { saveUserInfo } from '../../redux/actions/authActions';
+import { saveUser, saveToken } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
 import AsyncStorage from '@react-native-community/async-storage';
 import auth from '@react-native-firebase/auth';
@@ -32,17 +32,18 @@ const GoogleLogin = () => {
             AddUser(displayName, email, uid, '');
         }
         RequestApiAsyncPost('register', 'POST', {}, { name: displayName, email: email, uid: uid })
-            .then(async (res) => {
+            .then((res) => {
                 // Save to AsyncStorage
                 // Set token to AsyncStorage
                 const { pd_token, data } = res.data
                 console.log(res.data.pd_token)
                 // Set token to Auth headers
                 // dispatch(saveToken(pd_token))
-                await AsyncStorage.setItem('token', pd_token)
+                // await AsyncStorage.setItem('token', pd_token)
                 setAuthToken(pd_token)
                 // Save user info
-                dispatch(saveUserInfo(data))
+                dispatch(saveUser(data))
+                dispatch(saveToken(pd_token))
             }).catch((error) => {
                 console.log("Api call error")
                 alert(error.message)

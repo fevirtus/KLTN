@@ -25,6 +25,7 @@ import {
 import { color } from '../utility';
 import Chat from '../container/Chat';
 import { setUniqueValue } from '../utility/constants';
+import { setAuthToken } from '../api/config';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -136,16 +137,20 @@ const HomeStack = () => {
 }
 
 const NavContainer = () => {
-  const userInfo = useSelector(state => state.auth.userInfo)
-  if (!_.isEmpty(userInfo)) {
-    setUniqueValue(userInfo.uid)
+  const user = useSelector(state => state.auth.user)
+  const token = useSelector(state => state.auth.token)
+  if (!_.isEmpty(user)) {
+    setUniqueValue(user.uid)
+  }
+  if (!_.isEmpty(token)) {
+    setAuthToken(token)
   }
 
 
   return (
     <NavigationContainer>
       {
-        _.isEmpty(userInfo) ? <LoginStack /> : <HomeStack />
+        _.isEmpty(token) ? <LoginStack /> : <HomeStack />
       }
     </NavigationContainer>
 

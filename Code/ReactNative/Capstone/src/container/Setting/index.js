@@ -6,7 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { useDispatch } from 'react-redux'
-import { clearUserInfo } from '../../redux/actions/authActions';
+import { clearAll } from '../../redux/actions/authActions';
 
 const Setting = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -26,7 +26,7 @@ const Setting = ({ navigation }) => {
                     </View>
                     <Text style={styles.text}>Feedback</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.item} onPress={() => dispatch(clearUserInfo())}>
+                <TouchableOpacity style={styles.item} onPress={() => dispatch(clearAll())}>
                     <View style={styles.iconWrapper}>
                         <MaterialCommunityIcons name="logout" size={26} color={color.WHITE} />
                     </View>

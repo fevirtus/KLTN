@@ -1,37 +1,74 @@
-import {
-    SAVE_USERINFO,
-    CLEAR_USERINFO,
-    NEW_PET
-} from '../actions/types'
+import { SAVE_USER, UPDATE_USER, SAVE_PETS, UPDATE_PET, DELETE_PET, SAVE_ACTIVE_PET, SAVE_TOKEN, ADD_PET, CLEAR_ALL } from "../actions/types";
+
 
 const initialState = {
-    userInfo: {},
-    petInfo: [],
+    user: {},
+    pets: [],
+    pet_active: null,
+    token: null
 }
 
 const authReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SAVE_USERINFO:
-            {
-                return {
-                    ...state,
-                    userInfo: action.userInfo
-                }
+        case SAVE_USER:
+            return {
+                ...state,
+                user: action.user
             }
-        case CLEAR_USERINFO:
-            {
-                return {
-                    ...state,
-                    userInfo: {},
-                    token: ''
-                }
+        case UPDATE_USER:
+            const newUser = { ...state.user, ...action.user };
+            return {
+                ...state,
+                user: newUser
             }
-        case NEW_PET:
-            {
-                return {
-                    ...state,
-                    petInfo: action.petInfo
+        case SAVE_PETS:
+            return {
+                ...state,
+                pets: action.pets
+            }
+        case ADD_PET:
+            const newPets = [...state.pets];
+            newPets.unshift(action.pet);
+            return {
+                ...state,
+                pets: newPets
+            }
+        case UPDATE_PET:
+            let updatePets = [...state.pets];
+            updatePets = updatePets.map(pet => {
+                if (pet.id == action.pet.id) {
+                    pet = { ...pet, ...action.pet }
                 }
+                return pet
+            })
+            console.log(updatePets)
+
+            return {
+                ...state,
+                pets: updatePets
+            }
+        case DELETE_PET:
+            const newPets3 = [...state.pets];
+            return {
+                ...state,
+                pets: newPets3.filter(pet => pet.id !== action.petId)
+            }
+        case SAVE_ACTIVE_PET:
+            return {
+                ...state,
+                pet_active: action.petId
+            }
+        case SAVE_TOKEN:
+            return {
+                ...state,
+                token: action.token
+            }
+        case CLEAR_ALL:
+            return {
+                user: {},
+                pets: [],
+                pet_active: null,
+                token: null
             }
         default:
             return state;

@@ -1,20 +1,48 @@
-import {
-    SAVE_USERINFO,
-    CLEAR_USERINFO,
-    NEW_PET
-} from './types'
+import { SAVE_USER, UPDATE_USER, ADD_PET, UPDATE_PET, SAVE_PETS, DELETE_PET, SAVE_ACTIVE_PET, SAVE_TOKEN, CLEAR_ALL } from './types'
 
-export const saveUserInfo = (userInfo) => ({
-    type: SAVE_USERINFO,
-    userInfo
-});
 
-export const clearUserInfo = () => ({
-    type: CLEAR_USERINFO
-});
+export const saveUser = (user) => ({
+    type: SAVE_USER,
+    user
+})
 
-/** actions for pet */
-export const newPetInfo = (petInfo) => ({
-    type: NEW_PET,
-    petInfo
-});
+export const updateUser = (user) => ({
+    type: UPDATE_USER,
+    user
+})
+
+export const addPet = (pet) => ({
+    type: ADD_PET,
+    pet
+})
+
+export const savePets = (pets) => ({
+    type: SAVE_PETS,
+    pets
+})
+
+export const updatePet = (pet) => ({
+    type: UPDATE_PET,
+    pet
+})
+
+export const deletePet = (petId) => ({
+    type: DELETE_PET,
+    petId: petId
+})
+
+export const saveActivePet = (petId) => ({
+    type: SAVE_ACTIVE_PET,
+    petId: petId
+})
+
+export const saveToken = (token) => ({
+    type: SAVE_TOKEN,
+    token
+})
+
+export const clearAll = () => ({
+    type: CLEAR_ALL
+})
+
+

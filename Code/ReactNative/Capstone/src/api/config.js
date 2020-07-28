@@ -2,15 +2,11 @@ import axios from "axios";
 
 export const URL_BASE = "https://pet-dating-server.herokuapp.com/api/";
 
-export const setAuthToken = token => {
-    if (token) {
-        // Apply authorization token to every request if logged in
-        axios.defaults.headers.common["Authorization"] = token
-    } else {
-        // Delete auth header
-        delete axios.defaults.headers.common["Authorization"]
-    }
-}
+export let token = "";
+
+export const setAuthToken = t => {
+    token = t;
+};
 
 export const RequestApiAsyncPost = (endpoint, method, headers = {}, body) => {
     const endPointUrl = URL_BASE.concat(endpoint);
@@ -31,7 +27,7 @@ export const RequestApiAsyncPost = (endpoint, method, headers = {}, body) => {
     }
 }
 
-export const RequestApiAsyncGet = async(endpoint, headers = {}, params = {}) => {
+export const RequestApiAsyncGet = async (endpoint, headers = {}, params = {}) => {
     const endPointUrl = URL_BASE.concat(endpoint);
     const requestParam = { params };
     return await axios({

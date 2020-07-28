@@ -1,5 +1,5 @@
 
-import { AddUser, UpdateUser } from "./user";
+import { AddUser, UpdateUser, UpdateUserName } from "./user";
 import { senderMsg, recieverMsg } from "./messeges";
 
 export {
@@ -7,4 +7,5 @@ export {
     UpdateUser,
     senderMsg,
     recieverMsg,
+    UpdateUserName
 }
