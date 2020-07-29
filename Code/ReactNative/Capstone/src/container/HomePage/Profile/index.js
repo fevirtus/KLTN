@@ -53,7 +53,6 @@ const Profile = ({ navigation }) => {
 
 
     //----
-    // const [dataPet, setDataPet] = useState([])
     const dispatch = useDispatch()
 
     // Animated state

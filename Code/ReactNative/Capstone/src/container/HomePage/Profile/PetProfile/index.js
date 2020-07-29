@@ -10,12 +10,13 @@ import {
     ImageBackground
 } from 'react-native'
 import axios from 'axios'
-import AsyncStorage from '@react-native-community/async-storage';
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../../../utility';
 import { Loading } from '../../../../components'
 import { URL_BASE, token } from '../../../../api/config'
+import { useDispatch } from 'react-redux';
+import { deletePet } from '../../../../redux/actions/authActions';
 
 const PetProfile = ({ navigation, route }) => {
     const { petId } = route.params;
@@ -30,6 +31,7 @@ const PetProfile = ({ navigation, route }) => {
         introduction: '',
         is_active: ''
     })
+    const dispatch = useDispatch()
 
     const getPet = async () => {
         // const token = await AsyncStorage.getItem("token")
@@ -47,19 +49,17 @@ const PetProfile = ({ navigation, route }) => {
     }
 
     useEffect(() => {
+        console.log('get pet by id ----------------')
         getPet()
     }, [])
 
     const _delete = async () => {
-        const token = await AsyncStorage.getItem("token")
-        axios.delete(`${URL_BASE}pets/${itemId}`, {
-            headers: {
-                Authorization: token
-            }
-        }).then(res => {
-            console.log(res.data)
-            navigation.navigate('Profile')
-        })
+        axios.delete(`${URL_BASE}pets/${petId}`, { headers: { Authorization: token } })
+            .then(res => {
+                dispatch(deletePet(petId))
+                navigation.goBack()
+            })
+            .catch(e => console.error(e))
     }
 
     const _deletePet = () => {
