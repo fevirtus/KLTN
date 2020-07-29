@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     StyleSheet,
     View,
     Text,
     TouchableOpacity,
     Image,
-    FlatList,
     ScrollView,
     TextInput,
     Animated,
@@ -13,7 +12,6 @@ import {
     YellowBox
 } from 'react-native'
 import mime from 'mime'
-import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import * as Animatable from 'react-native-animatable';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,9 +20,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import _ from 'lodash'
+import Carousel from 'react-native-snap-carousel';
 import { color } from '../../../utility'
-import { updateUser, savePets, saveActivePet } from '../../../redux/actions/authActions';
-import { Container, Loading, DismissKeyboard } from '../../../components'
+import { updateUser } from '../../../redux/actions/authActions';
+import { Container, DismissKeyboard } from '../../../components'
 import { URL_BASE, token } from '../../../api/config'
 import Axios from 'axios';
 import { RadioButton } from 'react-native-paper';
@@ -32,6 +31,9 @@ import { UpdateUser, UpdateUserName, uploadImgToServer } from '../../../network'
 import { uuid } from '../../../utility/constants';
 
 const { width } = Dimensions.get('window')
+const SLIDER_WIDTH = Dimensions.get('window').width;
+const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
+const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 3);
 
 const Profile = ({ navigation }) => {
     const user = useSelector(state => state.auth.user);
@@ -51,8 +53,7 @@ const Profile = ({ navigation }) => {
     });
 
     const [checked, setChecked] = React.useState(user.gender === 1 ? 'Male' : 'Female');
-
-
+    const carouselRef = useRef(null)
 
     //----
     const dispatch = useDispatch()
@@ -63,29 +64,6 @@ const Profile = ({ navigation }) => {
     const [translateXTabOne, setTranslateXTabOne] = useState(new Animated.Value(0))
     const [translateXTabTwo, setTranslateXTabTwo] = useState(new Animated.Value(width))
     const [translateY, setTranslateY] = useState(-1000)
-
-
-    // const loadPets = async () => {
-    //     console.log('get pets.........')
-    //     Axios.get(`${URL_BASE}pets`, {
-    //         headers: {
-    //             Authorization: token
-    //         }
-    //     }).then(res => {
-    //         console.log('pets: ', res.data)
-    //         dispatch(savePets(res.data));
-    //         const activePet = res.data.filter(pet => pet.is_active == 1);
-    //         if (activePet.length == 1) {
-    //             dispatch(saveActivePet(activePet[0]))
-    //         }
-    //     }).catch(e => {
-    //         console.log("Api call error!", e)
-    //     })
-    // }
-
-    // useEffect(() => {
-    //     loadPets()
-    // }, [])
 
     const handleChangeInfo = (field, value) => {
         setData({
@@ -123,12 +101,10 @@ const Profile = ({ navigation }) => {
     }
 
     const onUpdateUser = async () => {
-
         if (user.name != data.name) {
             //update user name on firebase
             UpdateUserName(uuid, data.name)
         }
-
         if (user.avatar != data.avatar) {
             try {
                 const newAvatar = await uploadImgToServer(uploadImg);
@@ -169,15 +145,19 @@ const Profile = ({ navigation }) => {
         }
     }
 
-    const renderList = ((item) => {
+    const _renderItem = ({ item }) => {
         return (
-            <View style={styles.petImageWrapper}>
-                <TouchableOpacity onPress={() => navigation.navigate('PetProfile', { petId: item.id })}>
-                    <Image source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')} style={styles.petImage} />
+            <View>
+                <TouchableOpacity style={styles.itemContainer} onPress={() => navigation.navigate('PetProfile', { petId: item.id })}>
+                    <Image
+                        style={styles.carouselImage}
+                        source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
+                    />
+                    <Text style={styles.title}>{item.name}</Text>
                 </TouchableOpacity>
             </View>
-        )
-    })
+        );
+    }
 
     useEffect(() => {
         handleSlide(active)
@@ -379,17 +359,19 @@ const Profile = ({ navigation }) => {
                                                 <Text style={styles.emptyText}>Your Pet List is Empty</Text>
                                                 <Text style={styles.emptyText2}>It Looks You Don't Have Any Pets.</Text>
                                             </View>
-                                        </View> :
-                                        <View style={styles.listPetWrapper}>
-                                            <FlatList
-                                                style={styles.flatList}
-                                                horizontal={true}
+                                        </View>
+                                        :
+                                        <View style={styles.carouselContainerView}>
+                                            <Carousel
+                                                containerCustomStyle={styles.carouselContainer}
+                                                ref={carouselRef}
                                                 data={pets}
-                                                renderItem={({ item }) => {
-                                                    return renderList(item)
-                                                }}
-                                                keyExtractor={(item, index) => index.toString()}
-                                                refreshing={true}
+                                                renderItem={_renderItem}
+                                                itemWidth={ITEM_WIDTH}
+                                                layout={'default'}
+                                                sliderWidth={SLIDER_WIDTH}
+                                                inactiveSlideShift={0}
+                                                useScrollView={true}
                                             />
                                         </View>
                                 }
@@ -610,6 +592,33 @@ const styles = StyleSheet.create({
     },
     radioText: {
         marginTop: 10
+    },
+    carouselContainerView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: ITEM_HEIGHT + 80
+    },
+    carouselImage: {
+        width: ITEM_WIDTH,
+        height: ITEM_HEIGHT - 48,
+        borderRadius: 10,
+        marginBottom: 12
+    },
+    itemContainer: {
+        width: ITEM_WIDTH,
+        height: ITEM_HEIGHT,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        backgroundColor: color.WHITE,
+        elevation: 4
+    },
+    carouselContainer: {
+        marginTop: 50,
+    },
+    title: {
+        fontSize: 20,
+        marginBottom: 15
     }
 })
 

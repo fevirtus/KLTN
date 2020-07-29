@@ -25,7 +25,7 @@ const App = () => {
     console.log(store.getState())
     return (
         <Provider store={store}>
-            <PersistGate persistor={persitedStore} loading={Loading()}>
+            <PersistGate persistor={persitedStore} loading={null}>
                 <Nav />
             </PersistGate>
         </Provider>
