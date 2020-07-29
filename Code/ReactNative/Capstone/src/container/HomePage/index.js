@@ -44,6 +44,7 @@ const Home = ({ navigation }) => {
     useEffect(() => {
         loadPets()
     }, [])
+
     return (
         <View><Text>Hello</Text></View>
     )
