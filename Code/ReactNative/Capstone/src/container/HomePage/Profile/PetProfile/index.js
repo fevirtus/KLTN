@@ -50,8 +50,11 @@ const PetProfile = ({ navigation, route }) => {
 
     useEffect(() => {
         console.log('get pet by id ----------------')
-        getPet()
-    }, [])
+        const unsubscribe = navigation.addListener('focus', () => {
+            getPet()
+        });
+        return unsubscribe;
+    }, [navigation, petId])
 
     const _delete = async () => {
         axios.delete(`${URL_BASE}pets/${petId}`, { headers: { Authorization: token } })
@@ -81,6 +84,10 @@ const PetProfile = ({ navigation, route }) => {
         )
     }
 
+    const onEditPet = () => {
+        navigation.navigate('EditPetProfile', { petInfo: info, petId: petId })
+    }
+
     const { name, breed, gender, weight, age, introduction, avatar, is_active } = info
     return (
         <>
@@ -101,7 +108,7 @@ const PetProfile = ({ navigation, route }) => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.buttonEdit}
-                                onPress={() => navigation.navigate('EditPetProfile', { petId: itemId })}
+                                onPress={onEditPet}
                             >
                                 <Entypo name="edit" size={25} color="white" />
                             </TouchableOpacity>
