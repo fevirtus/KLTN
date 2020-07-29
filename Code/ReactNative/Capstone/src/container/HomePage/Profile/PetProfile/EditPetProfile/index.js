@@ -102,23 +102,28 @@ const EditPetProfile = ({ navigation, route }) => {
         if (validatePet()) {
             // setLoading(true)
             if (petInfo.avatar != info.avatar) {
-                const newAvatar = await uploadImgToServer(uploadImg);
+                try {
+                    const newAvatar = await uploadImgToServer(uploadImg);
 
-                //update user avatar on firebase
-                console.log('start', newAvatar)
-                Axios.put(`${URL_BASE}pets/${petId}`, {
-                    updateFields: {
-                        ...info,
-                        avatar: newAvatar
-                    }
-                }, { headers: { Authorization: token } })
-                    .then(res => {
-                        console.log('cc:', res.data)
-                        dispatch(updatePet(res.data.data))
-                        setIsChange(false)
-                        navigation.goBack();
-                    })
-                    .catch(error => console.error(error));
+                    //update user avatar on firebase
+                    console.log('start', newAvatar)
+                    Axios.put(`${URL_BASE}pets/${petId}`, {
+                        updateFields: {
+                            ...info,
+                            avatar: newAvatar
+                        }
+                    }, { headers: { Authorization: token } })
+                        .then(res => {
+                            console.log('cc:', res.data)
+                            dispatch(updatePet(res.data.data))
+                            setIsChange(false)
+                            navigation.goBack();
+                        })
+                        .catch(error => console.error(error));
+                } catch (error) {
+                    alert(error)
+                }
+
             } else {
                 Axios.put(`${URL_BASE}pets/${petId}`, {
                     updateFields: {

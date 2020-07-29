@@ -26,13 +26,14 @@ import { color } from '../utility';
 import Chat from '../container/Chat';
 import { setUniqueValue } from '../utility/constants';
 import { setAuthToken } from '../api/config';
+import { Text, View, Image, StyleSheet } from 'react-native';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 const MainTabScreen = () => (
   <Tab.Navigator
-    initialRouteName="Profile"
+    initialRouteName="Home"
     activeColor={color.WHITE}
   >
     <Tab.Screen
@@ -109,7 +110,9 @@ const LoginStack = () => {
   )
 }
 
-const HomeStack = () => {
+const HomeStack = ({ navigation }) => {
+  const pet_active = useSelector(state => state.auth.pet_active)
+
   return (
     <Stack.Navigator
       initialRouteName='Home'
@@ -122,7 +125,26 @@ const HomeStack = () => {
         },
         headerTintColor: color.PINK
       }}>
-      <Stack.Screen name="Home" component={MainTabScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Home" component={MainTabScreen}
+        options={{
+          title: '',
+          headerLeft: () => (
+            <Ionicons.Button name='md-menu' size={25} backgroundColor='#fff' color={color.PINK}
+            // onPress={() => navigation.openDrawer()}
+            />
+          ),
+          headerRight: () => {
+            if (pet_active.name) {
+              return (
+                <View style={styles.headerRight}>
+                  <Text style={styles.petActiveName}>{pet_active.name}</Text>
+                  <Image source={pet_active.avatar ? { uri: pet_active.avatar } : require('../../images/avatar.jpg')} style={styles.petActiveImg} />
+                  <View style={styles.activeIcon}></View>
+                </View>
+              )
+            }
+          }
+        }} />
       <Stack.Screen name="Chat" component={Chat} />
       <Stack.Screen name="PetSetting" component={PetSetting} options={{ title: 'New Pet' }} />
       <Stack.Screen name="Filter" component={Filter} options={{ title: 'Search' }} />
@@ -157,4 +179,37 @@ const NavContainer = () => {
   );
 };
 
-export default NavContainer
+export default NavContainer;
+
+const styles = StyleSheet.create({
+  headerRight: {
+    flexDirection: 'row',
+    height: '100%',
+    paddingRight: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  petActiveName: {
+    paddingRight: 10,
+    fontSize: 17, color:
+      color.PINK,
+    fontWeight: "bold"
+  },
+  petActiveImg: {
+    width: 50,
+    height: 50,
+    borderRadius: 25
+  },
+  activeIcon: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: '#23da02',
+    position: 'absolute',
+    bottom: 2,
+    right: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  }
+
+})

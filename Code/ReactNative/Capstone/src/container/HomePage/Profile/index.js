@@ -63,27 +63,27 @@ const Profile = ({ navigation }) => {
     const [translateY, setTranslateY] = useState(-1000)
 
 
-    const loadPets = async () => {
-        console.log('get pets.........')
-        Axios.get(`${URL_BASE}pets`, {
-            headers: {
-                Authorization: token
-            }
-        }).then(res => {
-            console.log('pets: ', res.data)
-            dispatch(savePets(res.data));
-            const activePet = res.data.filter(pet => pet.is_active == 1);
-            if (activePet.length == 1) {
-                dispatch(saveActivePet(activePet[0]))
-            }
-        }).catch(e => {
-            console.log("Api call error!", e)
-        })
-    }
+    // const loadPets = async () => {
+    //     console.log('get pets.........')
+    //     Axios.get(`${URL_BASE}pets`, {
+    //         headers: {
+    //             Authorization: token
+    //         }
+    //     }).then(res => {
+    //         console.log('pets: ', res.data)
+    //         dispatch(savePets(res.data));
+    //         const activePet = res.data.filter(pet => pet.is_active == 1);
+    //         if (activePet.length == 1) {
+    //             dispatch(saveActivePet(activePet[0]))
+    //         }
+    //     }).catch(e => {
+    //         console.log("Api call error!", e)
+    //     })
+    // }
 
-    useEffect(() => {
-        loadPets()
-    }, [])
+    // useEffect(() => {
+    //     loadPets()
+    // }, [])
 
     const handleChangeInfo = (field, value) => {
         setData({
