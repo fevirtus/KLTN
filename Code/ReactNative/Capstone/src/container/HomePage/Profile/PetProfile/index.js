@@ -29,7 +29,8 @@ const PetProfile = ({ navigation, route }) => {
         age: '',
         avatar: '',
         introduction: '',
-        is_active: ''
+        is_active: '',
+        breed_name: '',
     })
     const dispatch = useDispatch()
 
@@ -88,7 +89,7 @@ const PetProfile = ({ navigation, route }) => {
         navigation.navigate('EditPetProfile', { petInfo: info, petId: petId })
     }
 
-    const { name, breed, gender, weight, age, introduction, avatar, is_active } = info
+    const { name, breed, gender, weight, age, introduction, avatar, breed_name } = info
     return (
         <>
             {
@@ -122,7 +123,7 @@ const PetProfile = ({ navigation, route }) => {
                                 <View style={styles.contentLeft}>
                                     <View style={styles.item}>
                                         <Text style={styles.subheading}>Breed</Text>
-                                        <Text style={styles.text}>{breed}</Text>
+                                        <Text style={styles.text}>{breed_name}</Text>
                                     </View>
                                     <View style={styles.item}>
                                         <Text style={styles.subheading}>Gender</Text>
