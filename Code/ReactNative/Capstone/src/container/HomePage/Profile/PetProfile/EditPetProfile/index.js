@@ -143,7 +143,6 @@ const EditPetProfile = ({ navigation, route }) => {
 
     return (
         <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
-            {/* {loading && <Loading />} */}
             <Container>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.profilePicWrap}>

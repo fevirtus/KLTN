@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     StyleSheet,
@@ -7,10 +7,11 @@ import {
     Text,
     Alert,
     YellowBox,
+    FlatList,
     ImageBackground
 } from 'react-native'
 import axios from 'axios'
-import Entypo from 'react-native-vector-icons/Entypo'
+import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../../../utility';
 import { Loading } from '../../../../components'
@@ -23,7 +24,6 @@ const PetProfile = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState({
         name: '',
-        breed: '',
         gender: '',
         weight: '',
         age: '',
@@ -35,7 +35,6 @@ const PetProfile = ({ navigation, route }) => {
     const dispatch = useDispatch()
 
     const getPet = async () => {
-        // const token = await AsyncStorage.getItem("token")
         axios.get(`${URL_BASE}pets/${petId}`, {
             headers: {
                 Authorization: token
@@ -50,7 +49,6 @@ const PetProfile = ({ navigation, route }) => {
     }
 
     useEffect(() => {
-        console.log('get pet by id ----------------')
         const unsubscribe = navigation.addListener('focus', () => {
             getPet()
         });
@@ -89,7 +87,18 @@ const PetProfile = ({ navigation, route }) => {
         navigation.navigate('EditPetProfile', { petInfo: info, petId: petId })
     }
 
-    const { name, breed, gender, weight, age, introduction, avatar, breed_name } = info
+    // const renderList = ((item) => {
+    //     return (
+    //         <View style={styles.petImageWrapper}>
+    //             <Image
+    //                 source={item.avatar ? { uri: item.avatar } : require('../../../../../images/no-image.jpg')}
+    //                 style={styles.petImage}
+    //             />
+    //         </View>
+    //     )
+    // })
+
+    const { name, gender, weight, age, introduction, avatar, breed_name } = info
     return (
         <>
             {
@@ -98,57 +107,54 @@ const PetProfile = ({ navigation, route }) => {
                         <ImageBackground
                             style={styles.header}
                             source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
-                            blurRadius={0.6}
                         >
-                            <Image source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')} style={styles.img} />
-                            <TouchableOpacity
-                                style={styles.buttonDelete}
-                                onPress={_deletePet}
-                            >
-                                <FontAwesome5 name="trash" size={24} color="white" />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.buttonEdit}
-                                onPress={onEditPet}
-                            >
-                                <Entypo name="edit" size={25} color="white" />
-                            </TouchableOpacity>
                         </ImageBackground>
                         <View style={styles.content}>
-                            <View style={styles.petname}>
-                                {/* <Text style={styles.titleNav}>PET</Text> */}
-                                <Text style={styles.name}>{name}</Text>
+                            <View style={styles.petName}>
+                                <View>
+                                    <Text style={styles.name}>{name}</Text>
+                                    <Text style={styles.text}>{breed_name}</Text>
+                                </View>
+                                <TouchableOpacity
+                                    style={styles.buttonDelete}
+                                    onPress={_deletePet}
+                                >
+                                    <FontAwesome5 name="trash" size={22} color="white" />
+                                </TouchableOpacity>
                             </View>
                             <View style={styles.information}>
-                                <View style={styles.contentLeft}>
-                                    <View style={styles.item}>
-                                        <Text style={styles.subheading}>Breed</Text>
-                                        <Text style={styles.text}>{breed_name}</Text>
-                                    </View>
-                                    <View style={styles.item}>
-                                        <Text style={styles.subheading}>Gender</Text>
-                                        <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
-                                    </View>
-                                    {/* <View style={styles.item}>
-                                        <Text style={styles.subheading}>Status</Text>
-                                        <Text style={styles.text}>{is_active == 0 ? 'Inactive' : 'Active'}</Text>
-                                    </View> */}
+                                <View style={styles.item}>
+                                    <Text style={styles.subheading}>Weight</Text>
+                                    <Text style={styles.text}>{weight} kg</Text>
                                 </View>
-                                <View style={styles.contentRight}>
-                                    <View style={styles.item}>
-                                        <Text style={styles.subheading}>Weight</Text>
-                                        <Text style={styles.text}>{weight} kg</Text>
-                                    </View>
-                                    <View style={styles.item}>
-                                        <Text style={styles.subheading}>Age</Text>
-                                        <Text style={styles.text}>{age}</Text>
-                                    </View>
+                                <View style={styles.itemCenter}>
+                                    <Text style={styles.subheading}>Sex</Text>
+                                    <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
+                                </View>
+                                <View style={styles.item}>
+                                    <Text style={styles.subheading}>Age</Text>
+                                    <Text style={styles.text}>{age}</Text>
                                 </View>
                             </View>
-                        </View>
-                        <View style={styles.introduction}>
-                            <Text style={styles.subheading}>Introduction</Text>
-                            <Text style={styles.text}>{introduction}</Text>
+                            <View style={styles.introduction}>
+                                <Text style={[styles.text, { color: color.BLACK }]}>{introduction}</Text>
+                            </View>
+                            <View style={styles.listImg}>
+                                {/* <FlatList
+                                    horizontal={true}
+                                    data={avatar}
+                                    renderItem={({ item }) => {
+                                        return renderList(item)
+                                    }}
+                                    keyExtractor={(item, index) => index.toString()}
+                                /> */}
+                                <Image style={styles.petImage}
+                                    source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
+                                />
+                            </View>
+                            <TouchableOpacity style={styles.commandButton} onPress={onEditPet}>
+                                <Text style={styles.panelButtonTitle}>Edit</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
             }
@@ -161,105 +167,103 @@ const styles = StyleSheet.create({
         flex: 1
     },
     header: {
-        flex: 1,
+        flex: 0.7,
         alignItems: 'center',
         justifyContent: 'center'
     },
-    img: {
-        width: 110,
-        height: 110,
-        borderRadius: 100,
-        borderWidth: 4,
-        borderColor: color.WHITE,
-        position: 'absolute',
-        top: 146
-    },
-    buttonEdit: {
-        position: 'absolute',
-        top: 180,
-        right: 54,
-        borderRadius: 50,
-        backgroundColor: color.ORANGE,
-        width: 38,
-        height: 38,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 5
-    },
-    buttonDelete: {
-        position: 'absolute',
-        top: 180,
-        left: 54,
-        borderRadius: 50,
-        backgroundColor: color.ORANGE,
-        width: 38,
-        height: 38,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 5
-    },
     content: {
-        flex: 1,
+        flex: 1.3,
         flexDirection: 'column'
     },
-    navbar: {
-        paddingTop: 75,
-        paddingLeft: 45,
-        flexDirection: 'row'
+    petName: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '82%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        paddingTop: 10
     },
-    titleNav: {
-        fontWeight: '700',
-        color: color.PINK,
-        fontSize: 22
-    },
-    horizontalLine: {
-        borderBottomColor: color.BLACK,
-        borderBottomWidth: 1,
-        width: '72%',
-        marginBottom: 5,
-        marginLeft: 12
+    name: {
+        fontSize: 28,
+        color: color.BLACK,
+        fontWeight: "bold"
     },
     information: {
-        flex: 1,
+        marginTop: 25,
+        width: '82%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        backgroundColor: color.PET_DESCRIPTION,
         flexDirection: 'row',
-        paddingTop: 22,
-    },
-    contentLeft: {
-        flex: 1,
-        // paddingLeft: 45
-    },
-    contentRight: {
-        flex: 1,
-        // paddingLeft: 20,
+        borderRadius: 30,
+        justifyContent: 'space-between',
+        paddingVertical: 15
     },
     item: {
-        paddingBottom: 22,
         alignItems: 'center',
+        width: '33.33%',
+    },
+    itemCenter: {
+        alignItems: 'center',
+        borderRightWidth: 1,
+        borderRightColor: color.GRAY,
+        borderLeftWidth: 1,
+        borderLeftColor: color.GRAY,
+        width: '35%'
     },
     subheading: {
         fontSize: 18,
-        color: color.PINK
+        color: color.PINK,
+        fontWeight: 'bold'
     },
     text: {
         fontSize: 18,
         color: color.GRAY
     },
-    petname: {
-        alignItems: "center",
-        justifyContent: "center",
-        paddingTop: 40
-    },
-    name: {
-        fontSize: 30,
-        color: color.BLACK,
-        fontWeight: "bold",
-        textDecorationLine: 'underline'
-    },
     introduction: {
         alignItems: 'center',
-        flex: 1,
         paddingTop: 20,
-    }
+    },
+    listImg: {
+        height: 100,
+        alignItems: 'center',
+        paddingTop: 10
+    },
+    petImageWrapper: {
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 15,
+        marginRight: 10,
+    },
+    petImage: {
+        height: 85,
+        width: 85,
+        borderRadius: 20,
+        borderWidth: 3,
+    },
+    buttonDelete: {
+        borderRadius: 50,
+        backgroundColor: color.PINK,
+        width: 38,
+        height: 38,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 5
+    },
+    commandButton: {
+        padding: 14,
+        borderRadius: 10,
+        backgroundColor: color.PINK,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '90%',
+        alignSelf: 'center'
+    },
+    panelButtonTitle: {
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: color.WHITE,
+    },
 })
 
 YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',

@@ -20,3 +20,4 @@ export const LIGHT_PINK = '#ffe8df';
 export const SEMI_TRANSPARENT = "rgba(0,0,0,0.5)";
 export const DARK_GRAY = "rgb(46, 46, 46)";
 export const SILVER = "rgb(192,192,192)";
+export const PET_DESCRIPTION = "#f7f7f7";
