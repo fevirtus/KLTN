@@ -1,5 +1,6 @@
 export const uploadImgToServer = async (uploadImg) => {
     try {
+        console.log(uploadImg)
         const formData = new FormData()
         formData.append('file', uploadImg.img)
         formData.append("upload_preset", "PetDating")
@@ -15,6 +16,6 @@ export const uploadImgToServer = async (uploadImg) => {
         const res = await response.json();
         return res.url;
     } catch (error) {
-        console.error(error)
+        throw new Error('Picture error')
     }
 }

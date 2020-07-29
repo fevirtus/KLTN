@@ -22,7 +22,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import _ from 'lodash'
 import { color } from '../../../utility'
-import { updateUser, savePets } from '../../../redux/actions/authActions';
+import { updateUser, savePets, saveActivePet } from '../../../redux/actions/authActions';
 import { Container, Loading, DismissKeyboard } from '../../../components'
 import { URL_BASE, token } from '../../../api/config'
 import Axios from 'axios';
@@ -119,6 +119,7 @@ const Profile = ({ navigation }) => {
             }
         });
     }
+
     const onUpdateUser = async () => {
 
         if (user.name != data.name) {
@@ -127,24 +128,29 @@ const Profile = ({ navigation }) => {
         }
 
         if (user.avatar != data.avatar) {
-            const newAvatar = await uploadImgToServer(uploadImg);
+            try {
+                const newAvatar = await uploadImgToServer(uploadImg);
 
-            //update user avatar on firebase
-            UpdateUser(uuid, newAvatar)
-            console.log('start', newAvatar)
-            Axios.put(`${URL_BASE}users`, {
-                updateFields: {
-                    ...data,
-                    avatar: newAvatar
-                }
-            }, { headers: { Authorization: token } })
-                .then(res => {
-                    console.log('cc:', res.data)
-                    dispatch(updateUser(res.data.data))
-                    setIsChange(false)
-                    // navigation.goBack();
-                })
-                .catch(error => console.error(error));
+                //update user avatar on firebase
+                UpdateUser(uuid, newAvatar)
+                console.log('start', newAvatar)
+                Axios.put(`${URL_BASE}users`, {
+                    updateFields: {
+                        ...data,
+                        avatar: newAvatar
+                    }
+                }, { headers: { Authorization: token } })
+                    .then(res => {
+                        console.log('cc:', res.data)
+                        dispatch(updateUser(res.data.data))
+                        setIsChange(false)
+                        // navigation.goBack();
+                    })
+                    .catch(error => console.error(error));
+            } catch (error) {
+                alert('Picture error!')
+            }
+
         } else {
             Axios.put(`${URL_BASE}users`, {
                 updateFields: {
