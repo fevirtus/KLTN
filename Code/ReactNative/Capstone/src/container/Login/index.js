@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text, ImageBackground } from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { GoogleLogin, FacebookLogin, TestComponent } from '../../components'
+import { GoogleLogin, FacebookLogin } from '../../components'
 import { color } from '../../utility';
 import * as Animatable from 'react-native-animatable';
 

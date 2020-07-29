@@ -15,6 +15,7 @@ import {
 import mime from 'mime'
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
+import * as Animatable from 'react-native-animatable';
 import { useDispatch, useSelector } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -41,7 +42,8 @@ const Profile = ({ navigation }) => {
         gender: user.gender,
         birth_date: user.birth_date,
         phone: user.phone,
-        avatar: user.avatar
+        avatar: user.avatar,
+        isValidPhone: true
     });
     const [isChange, setIsChange] = useState(false);
     const [uploadImg, setUploadImg] = useState({
@@ -211,7 +213,21 @@ const Profile = ({ navigation }) => {
         }
     }
 
-    // const { name, email, phone, avatar } = infoinfo
+    const handleValidPhone = (val) => {
+        if (val.length === 10) {
+            setData({
+                ...data,
+                isValidPhone: true
+            })
+        } else {
+            setData({
+                ...data,
+                isValidPhone: false
+            })
+        }
+    }
+
+    const { isValidPhone } = data
     return (
         <Container>
             <DismissKeyboard>
@@ -309,13 +325,19 @@ const Profile = ({ navigation }) => {
                                         <Feather name="phone" color={color.GRAY} size={22} />
                                         <TextInput
                                             placeholder="Phone"
+                                            style={styles.textInput}
                                             keyboardType="numeric"
                                             value={data.phone}
                                             placeholderTextColor={color.GRAY}
                                             onChangeText={(phone) => handleChangeInfo('phone', phone)}
-                                            style={styles.textInput}
+                                            onEndEditing={(e) => handleValidPhone(e.nativeEvent.text)}
                                         />
                                     </View>
+                                    {isValidPhone ? null :
+                                        <Animatable.View animation="fadeInLeft" duration={500}>
+                                            <Text style={styles.errorMsg}>Phone number must be 10 digits</Text>
+                                        </Animatable.View>
+                                    }
                                     <View style={styles.action}>
                                         <FontAwesome name="birthday-cake" color={color.GRAY} size={22} />
                                         <TextInput
@@ -437,7 +459,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0
     },
-    // CContent
+    // Content
     profilePicWrap: {
         width: 130,
         height: 130,
@@ -472,15 +494,21 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        paddingLeft: 20,
-        borderBottomEndRadius: 20,
-        borderBottomStartRadius: 20,
+        width: '92%',
+        marginLeft: 'auto',
+        marginRight: 'auto'
     },
     textInput: {
         flex: 1,
         marginTop: -12,
         paddingLeft: 25,
         color: '#05375a',
+    },
+    errorMsg: {
+        color: color.RED,
+        width: '92%',
+        marginLeft: 'auto',
+        marginRight: 'auto'
     },
     commandButton: {
         padding: 14,
