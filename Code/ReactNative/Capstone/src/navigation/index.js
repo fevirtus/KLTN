@@ -1,13 +1,13 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
-// import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash'
 import {
   Login,
@@ -25,74 +25,104 @@ import {
 import { color } from '../utility';
 import Chat from '../container/Chat';
 import { setUniqueValue } from '../utility/constants';
-import { setAuthToken } from '../api/config';
+import { setAuthToken, URL_BASE, token } from '../api/config';
 import { Text, View, Image, StyleSheet } from 'react-native';
+import Axios from 'axios';
+import { saveActivePet, savePets } from '../redux/actions/authActions';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
-const MainTabScreen = () => (
-  <Tab.Navigator
-    initialRouteName="Profile"
-    activeColor={color.WHITE}
-  >
-    <Tab.Screen
-      name="Home"
-      component={Home}
-      options={{
-        tabBarLabel: 'Home',
-        tabBarColor: color.PINK,
-        tabBarIcon: ({ color }) => (
-          <FontAwesome name="tags" color={color} size={26} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Messages"
-      component={ChatDashboard}
-      options={{
-        tabBarLabel: 'Messages',
-        tabBarColor: color.PINK,
-        tabBarIcon: ({ color }) => (
-          <Fontisto name="hipchat" color={color} size={22} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Profile"
-      component={Profile}
-      options={{
-        tabBarLabel: 'Profile',
-        tabBarColor: color.PINK,
-        tabBarIcon: ({ color }) => (
-          <Ionicons name="ios-person" color={color} size={27} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Filter"
-      component={Filter}
-      options={{
-        tabBarLabel: 'Search',
-        tabBarColor: color.PINK,
-        tabBarIcon: ({ color }) => (
-          <Ionicons name="ios-search" color={color} size={27} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Setting"
-      component={Setting}
-      options={{
-        tabBarLabel: 'Setting',
-        tabBarColor: color.PINK,
-        tabBarIcon: ({ color }) => (
-          <Ionicons name="ios-settings" color={color} size={27} />
-        ),
-      }}
-    />
-  </Tab.Navigator>
-)
+const MainTabScreen = () => {
+
+  const dispatch = useDispatch();
+
+  const loadPets = async () => {
+    console.log('get pets.........')
+    Axios.get(`${URL_BASE}pets`, {
+      headers: {
+        Authorization: token
+      }
+    }).then(res => {
+      console.log('pets: ', res.data)
+      dispatch(savePets(res.data));
+      const activePet = res.data.filter(pet => pet.is_active == 1);
+      if (activePet.length == 1) {
+        dispatch(saveActivePet(activePet[0]))
+      }
+    }).catch(e => {
+      console.log("Api call error!", e)
+    })
+  }
+
+  useEffect(() => {
+    loadPets()
+  }, [])
+
+
+  return (
+    <Tab.Navigator
+      initialRouteName="Profile"
+      activeColor={color.WHITE}
+    >
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarColor: color.PINK,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="tags" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Messages"
+        component={ChatDashboard}
+        options={{
+          tabBarLabel: 'Messages',
+          tabBarColor: color.PINK,
+          tabBarIcon: ({ color }) => (
+            <Fontisto name="hipchat" color={color} size={22} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarColor: color.PINK,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="ios-person" color={color} size={27} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Filter"
+        component={Filter}
+        options={{
+          tabBarLabel: 'Search',
+          tabBarColor: color.PINK,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="ios-search" color={color} size={27} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Setting"
+        component={Setting}
+        options={{
+          tabBarLabel: 'Setting',
+          tabBarColor: color.PINK,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="ios-settings" color={color} size={27} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  )
+}
 
 const LoginStack = () => {
   return (
@@ -172,7 +202,8 @@ const NavContainer = () => {
   return (
     <NavigationContainer>
       {
-        _.isEmpty(token) ? <LoginStack /> : <HomeStack />
+        _.isEmpty(token) ? <LoginStack /> :
+          <HomeStack />
       }
     </NavigationContainer>
 

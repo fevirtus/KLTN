@@ -21,27 +21,7 @@ const Home = ({ navigation }) => {
     const dispatch = useDispatch();
     const pet_active = useSelector(state => state.auth.pet_active)
 
-    const loadPets = async () => {
-        console.log('get pets.........')
-        Axios.get(`${URL_BASE}pets`, {
-            headers: {
-                Authorization: token
-            }
-        }).then(res => {
-            console.log('pets: ', res.data)
-            dispatch(savePets(res.data));
-            const activePet = res.data.filter(pet => pet.is_active == 1);
-            if (activePet.length == 1) {
-                dispatch(saveActivePet(activePet[0]))
-            }
-        }).catch(e => {
-            console.log("Api call error!", e)
-        })
-    }
 
-    useEffect(() => {
-        loadPets()
-    }, [])
 
     const [data, setData] = useState([])
     const [index, setIndex] = useState(0)
