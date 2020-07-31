@@ -31,6 +31,7 @@ const PetProfile = ({ navigation, route }) => {
         introduction: '',
         is_active: '',
         breed_name: '',
+        pictures: []
     })
     const dispatch = useDispatch()
 
@@ -41,7 +42,8 @@ const PetProfile = ({ navigation, route }) => {
             }
         }).then(res => {
             // Set info
-            setInfo(res.data[0])
+            setInfo(res.data)
+            console.log(res.data)
             setLoading(false)
         }).catch(e => {
             console.log("Api call error!", e)
@@ -87,18 +89,18 @@ const PetProfile = ({ navigation, route }) => {
         navigation.navigate('EditPetProfile', { petInfo: info, petId: petId })
     }
 
-    // const renderList = ((item) => {
-    //     return (
-    //         <View style={styles.petImageWrapper}>
-    //             <Image
-    //                 source={item.avatar ? { uri: item.avatar } : require('../../../../../images/no-image.jpg')}
-    //                 style={styles.petImage}
-    //             />
-    //         </View>
-    //     )
-    // })
+    const renderList = ((item) => {
+        return (
+            <View style={styles.petImageWrapper}>
+                <Image
+                    source={{ uri: item }}
+                    style={styles.petImage}
+                />
+            </View>
+        )
+    })
 
-    const { name, gender, weight, age, introduction, avatar, breed_name } = info
+    const { name, gender, weight, age, introduction, avatar, breed_name, pictures } = info
     return (
         <>
             {
@@ -140,16 +142,13 @@ const PetProfile = ({ navigation, route }) => {
                                 <Text style={[styles.text, { color: color.BLACK }]}>{introduction}</Text>
                             </View>
                             <View style={styles.listImg}>
-                                {/* <FlatList
+                                <FlatList
                                     horizontal={true}
-                                    data={avatar}
+                                    data={pictures}
                                     renderItem={({ item }) => {
                                         return renderList(item)
                                     }}
                                     keyExtractor={(item, index) => index.toString()}
-                                /> */}
-                                <Image style={styles.petImage}
-                                    source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
                                 />
                             </View>
                             <TouchableOpacity style={styles.commandButton} onPress={onEditPet}>
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
     listImg: {
         height: 100,
         alignItems: 'center',
-        paddingTop: 10
+        paddingHorizontal: 20
     },
     petImageWrapper: {
         marginTop: 10,
@@ -266,7 +265,7 @@ const styles = StyleSheet.create({
     },
 })
 
-YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
-    'Animated.event now requires a second argument for options']);
+// YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
+//     'Animated.event now requires a second argument for options']);
 
 export default PetProfile;

@@ -1,13 +1,13 @@
-import Axios from 'axios';
-import mime from 'mime';
 import React, { useEffect, useState } from 'react';
 import {
     Dimensions, Image, StyleSheet,
     Text,
-    TextInput,
+    TextInput, FlatList,
     TouchableOpacity, View
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import Axios from 'axios';
+import mime from 'mime';
 import { ScrollView } from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -19,9 +19,11 @@ import { useDispatch } from 'react-redux';
 import { URL_BASE, token } from '../../../../../api/config';
 import { Container } from '../../../../../components';
 import { color } from '../../../../../utility';
-import { uploadImgToServer } from '../../../../../network';
+import { uploadImgToServer, uploadPicturesToServer } from '../../../../../network';
 import _ from 'lodash'
 import { updatePet } from '../../../../../redux/actions/authActions';
+import ImageCropPicker from 'react-native-image-crop-picker';
+import { ActionSheet, Root } from 'native-base'
 
 const EditPetProfile = ({ navigation, route }) => {
     const { petInfo, petId } = route.params;
@@ -32,24 +34,22 @@ const EditPetProfile = ({ navigation, route }) => {
         weight: petInfo.weight,
         age: petInfo.age,
         introduction: petInfo.introduction,
-        avatar: petInfo.avatar
+        avatar: petInfo.avatar,
+        pictures: petInfo.pictures
     })
-    const [checked, setChecked] = React.useState(petInfo.gender == 1 ? 'Male' : 'Female');
+    const [checked, setChecked] = useState(petInfo.gender == 1 ? 'Male' : 'Female');
     const dispatch = useDispatch()
     const [breeds, setBreeds] = useState([]);
     const [uploadImg, setUploadImg] = useState({
         img: null
     });
-    const [loading, setLoading] = useState(false)
+    // const [fileList, setFileList] = useState([])
     const [isChange, setIsChange] = useState(false);
 
     useEffect(() => {
-        console.log('Get breed ----------')
         Axios.get(`${URL_BASE}pets/breeds`, { headers: { Authorization: token } })
             .then(res => {
-                console.log(res.data)
                 let listBreeds = res.data.map(item => ({ label: item.name, value: `${item.id}` }));
-                console.log(listBreeds)
                 setBreeds(listBreeds)
             })
             .catch(e => console.error(e))
@@ -58,6 +58,18 @@ const EditPetProfile = ({ navigation, route }) => {
     const handleChangeInfo = (type, value) => {
         setInfo({ ...info, [type]: value })
         setIsChange(petInfo[type] != value);
+    }
+
+    const validatePet = () => {
+        if (_.isEmpty(info.name.trim())) {
+            alert('Name can not be empty')
+            return false;
+        }
+        if (info.breed === '-1') {
+            alert('Must choose breed of pet')
+            return false;
+        }
+        return true;
     }
 
     const handlePicker = () => {
@@ -87,24 +99,96 @@ const EditPetProfile = ({ navigation, route }) => {
         });
     }
 
-    const validatePet = () => {
-        if (_.isEmpty(info.name.trim())) {
-            alert('Name can not be empty')
-            return false;
-        }
-        if (info.breed === '-1') {
-            alert('Must choose breed of pet')
-            return false;
-        }
-        return true;
+    const takePhotoFromCamera = () => {
+        ImageCropPicker.openCamera({
+            compressImageMaxWidth: 300,
+            compressImageMaxHeight: 300,
+            cropping: true,
+        }).then(image => {
+            console.log(image);
+            this.bs.current.snapTo(1)
+            // setUploadImg({ img: image });
+            // setInfo({ ...info, pictures: image.path })
+            // setIsChange(true)
+        });
     }
+
+    const choosePhotoFromLibrary = () => {
+        ImageCropPicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true,
+            multiple: true
+        }).then(images => {
+            let newFileList = images.map(item => {
+                return {
+                    uri: item.path,
+                    type: mime.getType(item.path),
+                    name: `${Date.now()}.jpg`
+                }
+            })
+            uploadPictures(newFileList)
+            // newFileList.push(...fileList)
+            // console.log('A:', newFileList)
+
+            // setFileList(newFileList);
+            // console.log('B', fileList)
+
+            // console.log(images)
+            // let newPictures = images.map(item => item.path);
+            // newPictures.push(...info.pictures);
+
+            // // console.log(info.pictures)
+            // console.log(newPictures)
+            // // setUploadImg({ img: images });
+
+            // setInfo({ ...info, pictures: newPictures })
+            // setIsChange(true)
+        }).catch(e => alert(e));
+    }
+
+    const addImage = () => {
+        const BUTTONS = ['Take Photo', 'Choose Photo Library', 'Cancel']
+        ActionSheet.show({ options: BUTTONS, cancelButtonIndex: 2, title: 'Select a Photo' },
+            buttonIndex => {
+                switch (buttonIndex) {
+                    case 0:
+                        takePhotoFromCamera()
+                        break;
+                    case 1:
+                        choosePhotoFromLibrary()
+                        break;
+                    default:
+                        break;
+                }
+            }
+        )
+    }
+
+    const uploadPictures = async (fileList) => {
+        if (fileList.length != 0) {
+            try {
+                const urlPics = await uploadPicturesToServer(fileList);
+                console.log(urlPics)
+                Axios.post(`${URL_BASE}pets/${petId}/pictures`, {
+                    pitures: urlPics
+                }, { headers: { Authorization: token } })
+                    .then(res => {
+                        console.log(res)
+                    })
+                    .catch(e => alert('ABC:' + e))
+            } catch (error) {
+                alert(error)
+            }
+        }
+        navigation.goBack()
+    }
+
     const onUpdatePet = async () => {
         if (validatePet()) {
-            // setLoading(true)
             if (petInfo.avatar != info.avatar) {
                 try {
                     const newAvatar = await uploadImgToServer(uploadImg);
-
                     //update user avatar on firebase
                     console.log('start', newAvatar)
                     Axios.put(`${URL_BASE}pets/${petId}`, {
@@ -114,7 +198,6 @@ const EditPetProfile = ({ navigation, route }) => {
                         }
                     }, { headers: { Authorization: token } })
                         .then(res => {
-                            console.log('cc:', res.data)
                             dispatch(updatePet(res.data.data))
                             setIsChange(false)
                             navigation.goBack();
@@ -140,6 +223,17 @@ const EditPetProfile = ({ navigation, route }) => {
             }
         }
     }
+
+    const renderList = ((item) => {
+        return (
+            <View style={styles.petImageWrapper}>
+                <Image
+                    source={item ? { uri: item } : require('../../../../../../images/avatar.jpg')}
+                    style={styles.petImage}
+                />
+            </View>
+        )
+    })
 
     return (
         <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
@@ -248,6 +342,23 @@ const EditPetProfile = ({ navigation, route }) => {
                                 style={styles.textInput}
                             />
                         </View>
+                        <View style={[styles.action, { justifyContent: 'space-between' }]}>
+                            <FontAwesome name="image" color={color.GRAY} size={20} />
+                            <Text>! - - - - - -  Add image here  - - - - - - !</Text>
+                            <TouchableOpacity style={styles.addPicture} onPress={addImage}>
+                                <Root>
+                                    <MaterialIcons name="library-add" color={color.PINK} size={26} />
+                                </Root>
+                            </TouchableOpacity>
+                        </View>
+                        <FlatList
+                            horizontal={true}
+                            data={info.pictures}
+                            renderItem={({ item }) => {
+                                return renderList(item)
+                            }}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
                         {isChange &&
                             <TouchableOpacity style={styles.commandButton} onPress={onUpdatePet}>
                                 <Text style={styles.panelButtonTitle}>Save</Text>
@@ -370,6 +481,21 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: color.WHITE
     },
+    petImageWrapper: {
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 15,
+        marginRight: 10,
+    },
+    petImage: {
+        height: 85,
+        width: 85,
+        borderRadius: 20,
+        borderWidth: 3,
+    },
+    addPicture: {
+        paddingRight: 20
+    }
 })
 
 export default EditPetProfile

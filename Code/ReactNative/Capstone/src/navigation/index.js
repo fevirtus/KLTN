@@ -62,7 +62,7 @@ const MainTabScreen = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Profile"
+      initialRouteName="Home"
       activeColor={color.WHITE}
     >
       <Tab.Screen

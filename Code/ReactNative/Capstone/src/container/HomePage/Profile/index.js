@@ -44,15 +44,15 @@ const Profile = ({ navigation }) => {
         gender: user.gender,
         birth_date: user.birth_date,
         phone: user.phone,
-        avatar: user.avatar,
-        isValidPhone: true
+        avatar: user.avatar
     });
+    const [isValidPhone, setValidPhone] = useState(true)
     const [isChange, setIsChange] = useState(false);
     const [uploadImg, setUploadImg] = useState({
         img: null
     });
 
-    const [checked, setChecked] = React.useState(user.gender === 1 ? 'Male' : 'Female');
+    const [checked, setChecked] = useState(user.gender === 1 ? 'Male' : 'Female');
     const carouselRef = useRef(null)
 
     //----
@@ -195,19 +195,12 @@ const Profile = ({ navigation }) => {
 
     const handleValidPhone = (val) => {
         if (val.length === 10) {
-            setData({
-                ...data,
-                isValidPhone: true
-            })
+            setValidPhone(true)
         } else {
-            setData({
-                ...data,
-                isValidPhone: false
-            })
+            setValidPhone(false)
         }
     }
 
-    const { isValidPhone } = data
     return (
         <Container>
             <DismissKeyboard>
