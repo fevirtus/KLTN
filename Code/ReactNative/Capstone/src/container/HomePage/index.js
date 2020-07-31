@@ -83,13 +83,12 @@ const Home = ({ navigation }) => {
         react('NOPE', petId);
     }
     const onSwipedTop = (cardIndex) => {
-        console.log('NOPE', data[cardIndex])
+        console.log('MATCH', data[cardIndex])
         let pet = data[cardIndex];
         match(pet);
     }
 
     const match = (pet) => {
-        console.log('MATCH', pet)
         let body = {
             pet_id1: pet_active.id,
             pet_id2: pet.id,

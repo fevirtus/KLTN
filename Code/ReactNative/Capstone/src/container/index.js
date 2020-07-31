@@ -9,6 +9,7 @@ import EditPetProfile from './HomePage/Profile/PetProfile/EditPetProfile'
 import Setting from './Setting'
 import Privacy from './Setting/Privacy'
 import Feedback from './Setting/Feedback'
+import Match from './Match'
 
 export {
     Login,
@@ -21,5 +22,6 @@ export {
     Setting,
     Privacy,
     Feedback,
-    EditPetProfile
+    EditPetProfile,
+    Match
 }
