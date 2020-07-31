@@ -106,10 +106,12 @@ const EditPetProfile = ({ navigation, route }) => {
             cropping: true,
         }).then(image => {
             console.log(image);
-            this.bs.current.snapTo(1)
-            // setUploadImg({ img: image });
-            // setInfo({ ...info, pictures: image.path })
-            // setIsChange(true)
+            let img = {
+                uri: image.path,
+                type: mime.getType(image.path),
+                name: `${Date.now()}.jpg`
+            }
+            uploadPictures([img])
         });
     }
 
@@ -128,22 +130,6 @@ const EditPetProfile = ({ navigation, route }) => {
                 }
             })
             uploadPictures(newFileList)
-            // newFileList.push(...fileList)
-            // console.log('A:', newFileList)
-
-            // setFileList(newFileList);
-            // console.log('B', fileList)
-
-            // console.log(images)
-            // let newPictures = images.map(item => item.path);
-            // newPictures.push(...info.pictures);
-
-            // // console.log(info.pictures)
-            // console.log(newPictures)
-            // // setUploadImg({ img: images });
-
-            // setInfo({ ...info, pictures: newPictures })
-            // setIsChange(true)
         }).catch(e => alert(e));
     }
 
@@ -171,7 +157,7 @@ const EditPetProfile = ({ navigation, route }) => {
                 const urlPics = await uploadPicturesToServer(fileList);
                 console.log(urlPics)
                 Axios.post(`${URL_BASE}pets/${petId}/pictures`, {
-                    pitures: urlPics
+                    pictures: urlPics
                 }, { headers: { Authorization: token } })
                     .then(res => {
                         console.log(res)

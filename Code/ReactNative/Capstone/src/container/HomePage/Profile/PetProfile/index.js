@@ -130,7 +130,7 @@ const PetProfile = ({ navigation, route }) => {
                                     <Text style={styles.text}>{weight} kg</Text>
                                 </View>
                                 <View style={styles.itemCenter}>
-                                    <Text style={styles.subheading}>Sex</Text>
+                                    <Text style={styles.subheading}>Gender</Text>
                                     <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
                                 </View>
                                 <View style={styles.item}>
