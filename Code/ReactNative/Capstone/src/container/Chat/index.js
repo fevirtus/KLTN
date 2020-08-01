@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import ImagePicker from "react-native-image-picker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { globalStyle, color, appStyle } from "../../utility";
 import styles from "./styles";
 import { InputField, ChatBox } from "../../components";
@@ -27,6 +28,12 @@ const Chat = ({ route, navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: <Text>{name}</Text>,
+      headerLeft: () => (
+        <Ionicons.Button
+          name='arrow-back' backgroundColor={color.WHITE} size={25} color={color.PINK}
+          onPress={() => navigation.navigate('ChatDashboard')}
+        />
+      )
     });
   }, [navigation]);
 

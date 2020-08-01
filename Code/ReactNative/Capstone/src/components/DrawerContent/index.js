@@ -103,7 +103,7 @@ const DrawerContent = (props) => {
                                 />
                             )}
                             label="Settings"
-                            onPress={() => { props.navigation.navigate('Setting') }}
+                            onPress={() => { props.navigation.navigate('SettingStackScreen') }}
                         />
                     </Drawer.Section>
                 </View>

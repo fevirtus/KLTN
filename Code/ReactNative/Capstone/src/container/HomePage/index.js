@@ -5,7 +5,8 @@ import {
     Image, StyleSheet,
     Text,
     TouchableOpacity, View,
-    YellowBox
+    YellowBox,
+    Alert
 } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -13,8 +14,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useDispatch, useSelector } from 'react-redux';
 import { token, URL_BASE } from '../../api/config';
 import { Container, Loading } from '../../components';
-import { saveActivePet, savePets } from '../../redux/actions/authActions';
 import { color } from '../../utility';
+import { uuid } from '../../utility/constants';
+import { saveMatch } from '../../network';
 
 const Home = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -86,16 +88,27 @@ const Home = ({ navigation }) => {
     }
 
     const match = (pet) => {
-        let body = {
-            pet_id1: pet_active.id,
-            pet_id2: pet.id,
-            user2: pet.user_id
+        if (pet_active.id) {
+            let body = {
+                pet_id1: pet_active.id,
+                pet_id2: pet.id,
+                user2: pet.user_id
+            }
+            Axios.post(`${URL_BASE}common/match`, body, { headers: { Authorization: token } })
+                .then(res => {
+                    if (res.data.result === 'ok') {
+                        console.log('OK', res.data.data)
+                        const { guestUid, guestName, guestPet } = res.data.data;
+                        saveMatch(uuid, guestUid);
+                        saveMatch(guestUid, uuid);
+
+                    }
+                })
+                .catch(e => console.error(e))
+        } else {
+            Alert.alert('Error', 'You have to choose pet active to do match')
         }
-        Axios.post(`${URL_BASE}common/match`, body, { headers: { Authorization: token } })
-            .then(res => {
-                console.log(res.data)
-            })
-            .catch(e => console.error(e))
+
     }
 
     const react = (reaction, petId) => {

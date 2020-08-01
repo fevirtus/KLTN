@@ -34,7 +34,12 @@ import { DrawerContent } from '../components'
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
-const Drawer = createDrawerNavigator()
+const Drawer = createDrawerNavigator();
+const ChatStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
+const FilterStack = createStackNavigator();
+const ChatboxStack = createStackNavigator();
+const SettingStack = createStackNavigator();
 
 const MainTabScreen = () => {
     const dispatch = useDispatch();
@@ -66,18 +71,18 @@ const MainTabScreen = () => {
         >
             <Tab.Screen
                 name="Home"
-                component={Home}
+                component={HomeStack}
                 options={{
                     tabBarLabel: 'Home',
                     tabBarColor: color.PINK,
                     tabBarIcon: ({ color }) => (
-                        <FontAwesome name="tags" color={color} size={26} />
+                        <Ionicons name="home" color={color} size={26} />
                     ),
                 }}
             />
             <Tab.Screen
                 name="Messages"
-                component={ChatDashboard}
+                component={ChatStackScreen}
                 options={{
                     tabBarLabel: 'Messages',
                     tabBarColor: color.PINK,
@@ -88,7 +93,7 @@ const MainTabScreen = () => {
             />
             <Tab.Screen
                 name="Profile"
-                component={Profile}
+                component={ProfileStackScreen}
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarColor: color.PINK,
@@ -99,9 +104,9 @@ const MainTabScreen = () => {
             />
             <Tab.Screen
                 name="Filter"
-                component={Filter}
+                component={FilterStackScreen}
                 options={{
-                    tabBarLabel: 'Search',
+                    tabBarLabel: 'Filter',
                     tabBarColor: color.PINK,
                     tabBarIcon: ({ color }) => (
                         <Ionicons name="ios-search" color={color} size={27} />
@@ -128,6 +133,124 @@ const LoginStack = () => {
     )
 }
 
+const ChatStackScreen = ({ navigation }) => {
+    return (
+        <ChatStack.Navigator
+            screenOptions={{
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 22
+                },
+                headerTintColor: color.PINK
+            }}>
+            <ChatStack.Screen name="ChatDashboard" component={ChatDashboard}
+                options={{
+                    title: 'Dashboard',
+                    headerLeft: () => (
+                        <Ionicons.Button name='md-menu' size={25} backgroundColor='#fff' color={color.PINK}
+                            onPress={() => navigation.openDrawer()}
+                        />
+                    ),
+                }}
+            />
+        </ChatStack.Navigator>
+    )
+}
+const ProfileStackScreen = ({ navigation }) => {
+    return (
+        <ProfileStack.Navigator
+            screenOptions={{
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 22
+                },
+                headerTintColor: color.PINK
+            }}>
+            <ProfileStack.Screen name="Profile" component={Profile}
+                options={{
+                    title: 'Profile',
+                    headerLeft: () => (
+                        <Ionicons.Button name='md-menu' size={25} backgroundColor='#fff' color={color.PINK}
+                            onPress={() => navigation.openDrawer()}
+                        />
+                    ),
+                }}
+            />
+            <ProfileStack.Screen name="PetSetting" component={PetSetting} options={{ title: 'New Pet' }} />
+            <ProfileStack.Screen name="PetProfile" component={PetProfile} options={{ title: 'Pet Profile' }} />
+            <ProfileStack.Screen name="EditPetProfile" component={EditPetProfile} options={{ title: 'Edit Pet' }} />
+        </ProfileStack.Navigator>
+    )
+}
+
+const FilterStackScreen = ({ navigation }) => {
+    return (
+        <FilterStack.Navigator
+            screenOptions={{
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 22
+                },
+                headerTintColor: color.PINK
+            }}>
+            <FilterStack.Screen name="Filter" component={Filter}
+                options={{
+                    title: 'Filter',
+                    headerLeft: () => (
+                        <Ionicons.Button name='md-menu' size={25} backgroundColor='#fff' color={color.PINK}
+                            onPress={() => navigation.openDrawer()}
+                        />
+                    ),
+                }}
+            />
+        </FilterStack.Navigator>
+    )
+}
+
+const ChatboxStackScreen = () => {
+    return (
+        <ChatboxStack.Navigator
+            screenOptions={{
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 22
+                },
+                headerTintColor: color.PINK
+            }}>
+            <ChatboxStack.Screen name="Chat" component={Chat} />
+        </ChatboxStack.Navigator>
+    )
+}
+const SettingStackScreen = ({ navigation }) => {
+    return (
+        <SettingStack.Navigator
+            screenOptions={{
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 22
+                },
+                headerTintColor: color.PINK
+            }}>
+            <SettingStack.Screen name="Setting" component={Setting} options={{
+                title: 'Settings',
+                headerLeft: () => (
+                    <Ionicons.Button
+                        name='arrow-back' backgroundColor={color.WHITE} size={25} color={color.PINK}
+                        onPress={() => navigation.navigate('Home')}
+                    />
+                )
+            }} />
+            <SettingStack.Screen name="Privacy" component={Privacy} />
+            <SettingStack.Screen name="Feedback" component={Feedback} />
+        </SettingStack.Navigator>
+    )
+}
+
 const HomeStack = ({ navigation }) => {
     const pet_active = useSelector(state => state.auth.pet_active)
 
@@ -143,7 +266,7 @@ const HomeStack = ({ navigation }) => {
                 },
                 headerTintColor: color.PINK
             }}>
-            <Stack.Screen name="Home" component={MainTabScreen}
+            <Stack.Screen name="Home" component={Home}
                 options={{
                     title: '',
                     headerLeft: () => (
@@ -164,15 +287,6 @@ const HomeStack = ({ navigation }) => {
                     }
                 }}
             />
-            <Stack.Screen name="Chat" component={Chat} />
-            <Stack.Screen name="PetSetting" component={PetSetting} options={{ title: 'New Pet' }} />
-            <Stack.Screen name="Filter" component={Filter} options={{ title: 'Search' }} />
-            <Stack.Screen name="Profile" component={Profile} options={{ title: 'Trang cá nhân' }} />
-            <Stack.Screen name="PetProfile" component={PetProfile} options={{ title: 'Trang cá nhân pet' }} />
-            <Stack.Screen name="EditPetProfile" component={EditPetProfile} options={{ title: 'Chỉnh sửa pet' }} />
-            <Stack.Screen name="Setting" component={Setting} options={{ title: 'Settings' }} />
-            <Stack.Screen name="Privacy" component={Privacy} />
-            <Stack.Screen name="Feedback" component={Feedback} />
             <Stack.Screen name="Match" component={Match} />
         </Stack.Navigator>
     )
@@ -195,9 +309,9 @@ const NavContainer = () => {
                 _.isEmpty(token)
                     ? <LoginStack />
                     : (<Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-                        <Drawer.Screen name="Home" component={HomeStack} />
-                        <Drawer.Screen name="Privacy" component={Privacy} />
-                        <Drawer.Screen name="Feedback" component={Feedback} />
+                        <Drawer.Screen name="MainTabScreen" component={MainTabScreen} />
+                        <Drawer.Screen name="ChatboxStackScreen" component={ChatboxStackScreen} />
+                        <Drawer.Screen name="SettingStackScreen" component={SettingStackScreen} />
                     </Drawer.Navigator>)
             }
         </NavigationContainer>

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { color } from '../../utility'
 
-const Match = () => {
+const Match = ({ navigation, route }) => {
     return (
         <View style={styles.container}>
             <Image style={styles.matches} source={require('../../../images/itsamatch.png')} />

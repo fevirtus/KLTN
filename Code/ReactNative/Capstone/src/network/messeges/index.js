@@ -1,9 +1,9 @@
-import firebase from '../../firebase/config';
+
+import database from '@react-native-firebase/database';
 
 export const senderMsg = async (msgValue, currentUserId, guestUserId, img) => {
   try {
-    return await firebase
-      .database()
+    return await database()
       .ref('messeges/' + currentUserId)
       .child(guestUserId)
       .push({
@@ -26,8 +26,7 @@ export const recieverMsg = async (
   img,
 ) => {
   try {
-    return await firebase
-      .database()
+    return await database()
       .ref('messeges/' + guestUserId)
       .child(currentUserId)
       .push({
