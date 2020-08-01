@@ -6,7 +6,6 @@ import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
 import { saveUser, saveToken } from '../../redux/actions/authActions';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
-import AsyncStorage from '@react-native-community/async-storage';
 import auth from '@react-native-firebase/auth';
 import { AddUser } from '../../network';
 import { setUniqueValue } from '../../utility/constants';
