@@ -63,7 +63,6 @@ const ChatDashboard = ({ navigation }) => {
                     guestUserId,
                     currentUserId: uuid,
                 }
-
             });
         } else {
             navigation.navigate("ChatboxStackScreen", {
@@ -74,7 +73,6 @@ const ChatDashboard = ({ navigation }) => {
                     guestUserId,
                     currentUserId: uuid,
                 }
-
             });
         }
     };

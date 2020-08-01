@@ -1,36 +1,57 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { color } from '../../utility'
+import { uuid } from '../../utility/constants';
 
 const Match = ({ navigation, route }) => {
+    const { myPet, myPetAvatar, myAvatar, yourPet, yourPetAvatar, yourAvatar, yourName, yourUid } = route.params;
     return (
         <View style={styles.container}>
             <Image style={styles.matches} source={require('../../../images/itsamatch.png')} />
-            <Text style={styles.matchText}>You and A have matched each other.</Text>
+            <Text style={styles.matchText}>
+                <Text style={styles.petName} >{myPet}</Text> and
+                <Text style={styles.petName} > {yourPet}</Text> have matched each other.
+            </Text>
             <View style={styles.avatarPets}>
                 <Image
-                    source={require('../../../images/avatar.jpg')}
+                    source={myPetAvatar ? { uri: myPetAvatar } : require('../../../images/empty-pet.png')}
                     style={styles.avatarPet}
                 />
                 <Image
-                    source={require('../../../images/empty-pet.png')}
+                    source={yourPetAvatar ? { uri: yourPetAvatar } : require('../../../images/empty-pet.png')}
                     style={styles.avatarPet}
                 />
             </View>
             <View style={styles.avatarUsers}>
                 <Image
-                    source={require('../../../images/avatar.jpg')}
+                    source={myAvatar ? { uri: myAvatar } : require('../../../images/avatar.jpg')}
                     style={styles.avatarUser}
                 />
                 <Image
-                    source={require('../../../images/empty-pet.png')}
+                    source={yourAvatar ? { uri: yourAvatar } : require('../../../images/avatar.jpg')}
                     style={styles.avatarUser}
                 />
             </View>
-            <TouchableOpacity style={styles.commandButton}>
-                <Text style={styles.panelButtonTitle}>Send Message</Text>
+            <TouchableOpacity style={styles.commandButton}
+                onPress={() => {
+                    navigation.navigate("ChatboxStackScreen", {
+                        screen: 'Chat',
+                        params: {
+                            name: yourName,
+                            img: yourAvatar,
+                            guestUserId: yourUid,
+                            currentUserId: uuid,
+                        }
+                    });
+                }}
+            >
+                <Text style={styles.panelButtonTitle}>Chat with {yourName}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.commandButton}>
+            <TouchableOpacity style={styles.commandButton}
+                onPress={() => {
+                    navigation.navigate('Home')
+                }}
+            >
                 <Text style={styles.panelButtonTitle}>Keep Swiping</Text>
             </TouchableOpacity>
         </View>
@@ -46,7 +67,7 @@ const styles = StyleSheet.create({
         marginBottom: 30
     },
     matchText: {
-        fontSize: 20
+        fontSize: 18,
     },
     avatarPets: {
         flexDirection: 'row',
@@ -84,6 +105,11 @@ const styles = StyleSheet.create({
     panelButtonTitle: {
         fontSize: 20,
         color: color.WHITE,
+    },
+    petName: {
+        color: color.PINK,
+        fontSize: 20,
+        fontWeight: 'bold'
     }
 })
 

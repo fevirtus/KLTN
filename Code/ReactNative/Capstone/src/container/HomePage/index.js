@@ -21,6 +21,7 @@ import { saveMatch } from '../../network';
 const Home = ({ navigation }) => {
     const dispatch = useDispatch();
     const pet_active = useSelector(state => state.auth.pet_active)
+    const user = useSelector(state => state.auth.user)
 
     const [data, setData] = useState([])
     const [index, setIndex] = useState(0)
@@ -98,10 +99,19 @@ const Home = ({ navigation }) => {
                 .then(res => {
                     if (res.data.result === 'ok') {
                         console.log('OK', res.data.data)
-                        const { guestUid, guestName, guestPet } = res.data.data;
+                        const { guestUid, guestAvatar, guestName } = res.data.data;
                         saveMatch(uuid, guestUid);
                         saveMatch(guestUid, uuid);
-
+                        navigation.navigate('Match', {
+                            myPet: pet_active.name,
+                            myPetAvatar: pet_active.avatar,
+                            myAvatar: user.avatar,
+                            yourPet: pet.name,
+                            yourPetAvatar: pet.avatar,
+                            yourAvatar: guestAvatar,
+                            yourName: guestName,
+                            yourUid: guestUid,
+                        })
                     }
                 })
                 .catch(e => console.error(e))

@@ -287,7 +287,6 @@ const HomeStack = ({ navigation }) => {
                     }
                 }}
             />
-            <Stack.Screen name="Match" component={Match} />
         </Stack.Navigator>
     )
 }
@@ -312,6 +311,7 @@ const NavContainer = () => {
                         <Drawer.Screen name="MainTabScreen" component={MainTabScreen} />
                         <Drawer.Screen name="ChatboxStackScreen" component={ChatboxStackScreen} />
                         <Drawer.Screen name="SettingStackScreen" component={SettingStackScreen} />
+                        <Drawer.Screen name="Match" component={Match} />
                     </Drawer.Navigator>)
             }
         </NavigationContainer>
