@@ -30,7 +30,7 @@ import { setAuthToken, URL_BASE, token } from '../api/config';
 import { Text, View, Image, StyleSheet } from 'react-native';
 import Axios from 'axios';
 import { saveActivePet, savePets } from '../redux/actions/authActions';
-import { SideBar } from '../components'
+import { DrawerContent } from '../components'
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -40,7 +40,6 @@ const MainTabScreen = () => {
     const dispatch = useDispatch();
 
     const loadPets = async () => {
-        console.log('get pets.........')
         Axios.get(`${URL_BASE}pets`, {
             headers: {
                 Authorization: token
@@ -63,7 +62,6 @@ const MainTabScreen = () => {
 
     return (
         <Tab.Navigator
-            initialRouteName="Home"
             activeColor={color.WHITE}
         >
             <Tab.Screen
@@ -110,17 +108,6 @@ const MainTabScreen = () => {
                     ),
                 }}
             />
-            <Tab.Screen
-                name="Setting"
-                component={Setting}
-                options={{
-                    tabBarLabel: 'Setting',
-                    tabBarColor: color.PINK,
-                    tabBarIcon: ({ color }) => (
-                        <Ionicons name="ios-settings" color={color} size={27} />
-                    ),
-                }}
-            />
         </Tab.Navigator>
     )
 }
@@ -146,7 +133,7 @@ const HomeStack = ({ navigation }) => {
 
     return (
         <Stack.Navigator
-            initialRouteName='Match'
+            initialRouteName='Home'
             screenOptions={{
                 headerShown: true,
                 headerTitleAlign: 'center',
@@ -175,7 +162,8 @@ const HomeStack = ({ navigation }) => {
                             )
                         }
                     }
-                }} />
+                }}
+            />
             <Stack.Screen name="Chat" component={Chat} />
             <Stack.Screen name="PetSetting" component={PetSetting} options={{ title: 'New Pet' }} />
             <Stack.Screen name="Filter" component={Filter} options={{ title: 'Search' }} />
@@ -206,7 +194,7 @@ const NavContainer = () => {
             {
                 _.isEmpty(token)
                     ? <LoginStack />
-                    : (<Drawer.Navigator initialRouteName="Home">
+                    : (<Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
                         <Drawer.Screen name="Home" component={HomeStack} />
                         <Drawer.Screen name="Privacy" component={Privacy} />
                         <Drawer.Screen name="Feedback" component={Feedback} />

@@ -6,7 +6,7 @@ import Loading from './Loading'
 import ChatBox from "./chatBox";
 import FieldInput from "./fieldInput";
 import InputField from "./input";
-import SideBar from './Sidebar'
+import DrawerContent from "./DrawerContent";
 
 export {
     GoogleLogin,
@@ -17,5 +17,5 @@ export {
     ChatBox,
     FieldInput,
     InputField,
-    SideBar
+    DrawerContent
 }

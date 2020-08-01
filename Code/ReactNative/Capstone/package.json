@@ -24,6 +24,7 @@
     "axios": "^0.19.2",
     "firebase": "^7.15.3",
     "lodash": "^4.17.17",
+    "lottie-react-native": "^3.5.0",
     "mime": "^2.4.6",
     "native-base": "^2.13.13",
     "react": "16.11.0",

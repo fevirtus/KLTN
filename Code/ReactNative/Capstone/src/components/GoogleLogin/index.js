@@ -65,7 +65,9 @@ const GoogleLogin = () => {
 const styles = StyleSheet.create({
     formLogin: {
         height: 45,
-        width: 340,
+        width: '100%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
         borderRadius: 20,
         flexDirection: 'row',
         alignItems: 'center',
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
     },
     google: {
         marginLeft: 10,
-        marginRight: 42,
+        marginRight: 25,
         marginTop: 1
     },
     text: {

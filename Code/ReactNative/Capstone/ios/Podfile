@@ -79,6 +79,8 @@ target 'Capstone' do
 
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
 
+  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
+
   target 'CapstoneTests' do
     inherit! :complete
     # Pods for testing

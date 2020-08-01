@@ -2,35 +2,26 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { color } from '../../utility'
 import { Container } from '../../components'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
-import { useDispatch } from 'react-redux'
-import { clearAll } from '../../redux/actions/authActions';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const Setting = ({ navigation }) => {
-    const dispatch = useDispatch()
 
     return (
         <View style={styles.container}>
             <Container>
                 <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Privacy')}>
                     <View style={styles.iconWrapper}>
-                        <FontAwesome name="lock" size={28} color={color.WHITE} />
+                        <Icon name="lock" size={28} color={color.WHITE} />
                     </View>
                     <Text style={styles.text}>Privacy</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Feedback')}>
                     <View style={styles.iconWrapper}>
-                        <FontAwesome name="lightbulb-o" size={28} color={color.WHITE} />
+                        <MaterialIcons name="feedback" size={28} color={color.WHITE} />
                     </View>
                     <Text style={styles.text}>Feedback</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.item} onPress={() => dispatch(clearAll())}>
-                    <View style={styles.iconWrapper}>
-                        <MaterialCommunityIcons name="logout" size={26} color={color.WHITE} />
-                    </View>
-                    <Text style={styles.text}>Sign Out</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item}>
                     <View style={styles.iconWrapper}>

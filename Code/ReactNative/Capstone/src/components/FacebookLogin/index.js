@@ -71,7 +71,9 @@ const styles = StyleSheet.create({
     formLogin: {
         marginTop: 15,
         height: 45,
-        width: 340,
+        width: '100%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
         backgroundColor: color.BLUE,
         borderRadius: 20,
         flexDirection: 'row',
@@ -79,7 +81,7 @@ const styles = StyleSheet.create({
     },
     facebook: {
         marginLeft: 10,
-        marginRight: 42,
+        marginRight: 25,
         marginTop: 1
     },
     text: {
