@@ -16,6 +16,9 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { useSelector, useDispatch } from 'react-redux'
 import { clearAll } from '../../redux/actions/authActions';
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-community/google-signin';
+import { LoginManager } from 'react-native-fbsdk';
 
 const DrawerContent = (props) => {
     const user = useSelector(state => state.auth.user)
@@ -118,7 +121,12 @@ const DrawerContent = (props) => {
                         />
                     )}
                     label="Sign Out"
-                    onPress={() => dispatch(clearAll())}
+                    onPress={() => {
+                        auth().signOut();
+                        GoogleSignin.signOut();
+                        LoginManager.logOut();
+                        dispatch(clearAll())
+                    }}
                 />
             </Drawer.Section>
         </View>

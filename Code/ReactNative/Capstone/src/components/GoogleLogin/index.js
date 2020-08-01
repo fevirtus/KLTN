@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { GoogleSignin } from '@react-native-community/google-signin'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
@@ -18,35 +18,53 @@ const GoogleLogin = () => {
     })
 
     const _signIn = async () => {
-        // Get the users ID token
-        const { idToken } = await GoogleSignin.signIn();
-        // Create a Google credential with the token
-        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-        // Sign-in the user with the credential
-        const userInfo = await auth().signInWithCredential(googleCredential);
-        console.log(userInfo.user)
-        const { displayName, email, uid } = userInfo.user;
-        setUniqueValue(uid);
-        if (userInfo.additionalUserInfo.isNewUser) {
-            AddUser(displayName, email, uid, '');
+        try {
+            // Get the users ID token
+            const { idToken } = await GoogleSignin.signIn();
+            // Create a Google credential with the token
+            const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+            // Sign-in the user with the credential
+            const userInfo = await auth().signInWithCredential(googleCredential);
+            console.log(userInfo.user)
+            const { displayName, email, uid } = userInfo.user;
+            setUniqueValue(uid);
+            if (userInfo.additionalUserInfo.isNewUser) {
+                AddUser(displayName, email, uid, '');
+            }
+            RequestApiAsyncPost('register', 'POST', {}, { name: displayName, email: email, uid: uid })
+                .then((res) => {
+                    // Save to AsyncStorage
+                    // Set token to AsyncStorage
+                    const { pd_token, data } = res.data
+                    console.log(res.data.pd_token)
+                    // Set token to Auth headers
+                    // dispatch(saveToken(pd_token))
+                    // await AsyncStorage.setItem('token', pd_token)
+                    setAuthToken(pd_token)
+                    // Save user info
+                    dispatch(saveUser(data))
+                    dispatch(saveToken(pd_token))
+                }).catch((error) => {
+                    console.log("Api call error")
+                    alert(error.message)
+                })
+        } catch (error) {
+            if (error.code === 'auth/email-already-in-use') {
+                Alert.alert('Error', 'That email address is already in use!')
+            }
+
+            if (error.code === 'auth/invalid-email') {
+                Alert.alert('Error', 'That email address is invalid!')
+            }
+
+            if (error.code === 'auth/weak-password') {
+                Alert.alert('Error', 'Password should be at least 6 characters ')
+            }
+
+            console.error(error);
         }
-        RequestApiAsyncPost('register', 'POST', {}, { name: displayName, email: email, uid: uid })
-            .then((res) => {
-                // Save to AsyncStorage
-                // Set token to AsyncStorage
-                const { pd_token, data } = res.data
-                console.log(res.data.pd_token)
-                // Set token to Auth headers
-                // dispatch(saveToken(pd_token))
-                // await AsyncStorage.setItem('token', pd_token)
-                setAuthToken(pd_token)
-                // Save user info
-                dispatch(saveUser(data))
-                dispatch(saveToken(pd_token))
-            }).catch((error) => {
-                console.log("Api call error")
-                alert(error.message)
-            })
+
+
     }
 
     return (

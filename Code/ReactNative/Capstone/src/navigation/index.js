@@ -68,6 +68,7 @@ const MainTabScreen = () => {
     return (
         <Tab.Navigator
             activeColor={color.WHITE}
+            initialRouteName='Home'
         >
             <Tab.Screen
                 name="Home"
@@ -307,7 +308,9 @@ const NavContainer = () => {
             {
                 _.isEmpty(token)
                     ? <LoginStack />
-                    : (<Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+                    : (<Drawer.Navigator drawerContent={props => <DrawerContent {...props}
+                        initialRouteName='Home'
+                    />}>
                         <Drawer.Screen name="MainTabScreen" component={MainTabScreen} />
                         <Drawer.Screen name="ChatboxStackScreen" component={ChatboxStackScreen} />
                         <Drawer.Screen name="SettingStackScreen" component={SettingStackScreen} />
