@@ -17,11 +17,8 @@ import { saveActivePet, savePets } from '../../redux/actions/authActions';
 import { color } from '../../utility';
 
 const Home = ({ navigation }) => {
-
     const dispatch = useDispatch();
     const pet_active = useSelector(state => state.auth.pet_active)
-
-
 
     const [data, setData] = useState([])
     const [index, setIndex] = useState(0)

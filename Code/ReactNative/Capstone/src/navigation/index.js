@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
+import { Text, View, Image, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -27,7 +28,6 @@ import { color } from '../utility';
 import Chat from '../container/Chat';
 import { setUniqueValue } from '../utility/constants';
 import { setAuthToken, URL_BASE, token } from '../api/config';
-import { Text, View, Image, StyleSheet } from 'react-native';
 import Axios from 'axios';
 import { saveActivePet, savePets } from '../redux/actions/authActions';
 import { DrawerContent } from '../components'
