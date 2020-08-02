@@ -17,6 +17,7 @@ import { Container, Loading } from '../../components';
 import { color } from '../../utility';
 import { uuid } from '../../utility/constants';
 import { saveMatch } from '../../network';
+import _ from 'lodash'
 
 const Home = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -34,10 +35,10 @@ const Home = ({ navigation }) => {
 
     const fetchData = () => {
         console.log('Fetch Data----------------')
-        Axios.get(`${URL_BASE}pets/others`, {
+        Axios.get(`${URL_BASE}pets/others?breed=${pet_active.breed}&gender=${pet_active.gender}&pet_active=${pet_active.id}`, {
             headers: {
                 Authorization: token
-            }
+            },
         }).then(res => {
             setData(res.data)
             setLoading(false)
@@ -210,7 +211,7 @@ const Home = ({ navigation }) => {
                     <View style={styles.container}>
                         <View style={styles.swiperContainer}>
                             {
-                                loading ? <Loading />
+                                loading && _.isEmpty(data) ? <Loading />
                                     : <Swiper
                                         cards={data}
                                         cardIndex={index}
@@ -286,19 +287,6 @@ const Home = ({ navigation }) => {
                             }
                         </View>
                         <View>
-                            {/* {
-                                loading ? <Loading />
-                                    :
-                                    <FlatList
-                                        horizontal={true}
-                                        data={pets}
-                                        renderItem={({ item }) => {
-                                            return renderList(item)
-                                        }}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        refreshing={loading}
-                                    />
-                            } */}
                         </View>
                     </View>
                 </Container>)
@@ -325,7 +313,7 @@ const styles = StyleSheet.create({
         resizeMode: 'cover'
     },
     swiperContainer: {
-        flex: 1
+        flex: 1,
     },
     cardDetails: {
         alignItems: 'center'

@@ -35,8 +35,8 @@ const EditPetProfile = ({ navigation, route }) => {
         age: petInfo.age,
         introduction: petInfo.introduction,
         avatar: petInfo.avatar,
-        pictures: petInfo.pictures
     })
+    const [pictures, setPictures] = useState(petInfo.pictures)
     const [checked, setChecked] = useState(petInfo.gender == 1 ? 'Male' : 'Female');
     const dispatch = useDispatch()
     const [breeds, setBreeds] = useState([]);
@@ -339,7 +339,7 @@ const EditPetProfile = ({ navigation, route }) => {
                         </View>
                         <FlatList
                             horizontal={true}
-                            data={info.pictures}
+                            data={pictures}
                             renderItem={({ item }) => {
                                 return renderList(item)
                             }}

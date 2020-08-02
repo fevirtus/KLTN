@@ -49,6 +49,7 @@ const GoogleLogin = () => {
                     alert(error.message)
                 })
         } catch (error) {
+            console.log(error)
             if (error.code === 'auth/email-already-in-use') {
                 Alert.alert('Error', 'That email address is already in use!')
             }
@@ -60,11 +61,7 @@ const GoogleLogin = () => {
             if (error.code === 'auth/weak-password') {
                 Alert.alert('Error', 'Password should be at least 6 characters ')
             }
-
-            console.error(error);
         }
-
-
     }
 
     return (
