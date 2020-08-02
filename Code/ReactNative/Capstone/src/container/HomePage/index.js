@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import Axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, createRef } from 'react';
 import {
     Image, StyleSheet,
     Text,
@@ -11,6 +11,9 @@ import {
 import Swiper from 'react-native-deck-swiper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Animated from 'react-native-reanimated'
+import BottomSheet from 'reanimated-bottom-sheet'
 import { useDispatch, useSelector } from 'react-redux';
 import { token, URL_BASE } from '../../api/config';
 import { Container, Loading } from '../../components';
@@ -33,8 +36,11 @@ const Home = ({ navigation }) => {
         setIndex((index + 1) % data.length)
     }
 
+    bs = createRef()
+    fall = new Animated.Value(1)
+
     const fetchData = () => {
-        console.log('Fetch Data----------------', `${URL_BASE}pets/others?breed=${pet_active.breed}&gender=${pet_active.gender}&pet_active=${pet_active.id}`)
+        console.log('Fetch Data----------------')
         if (pet_active.id) {
             Axios.get(`${URL_BASE}pets/others?breed=${pet_active.breed}&gender=${pet_active.gender}&pet_active=${pet_active.id}`, {
                 headers: {
@@ -48,9 +54,23 @@ const Home = ({ navigation }) => {
                 console.log("Api call error!", e)
             })
         } else {
-            // Alert.alert('Attention', `You haven't set active pet not yet. Please go to Profile`)
+            fetchDataAll()
         }
 
+    }
+
+    const fetchDataAll = () => {
+        Axios.get(`${URL_BASE}pets/allOthers`, {
+            headers: {
+                Authorization: token
+            },
+        }).then(res => {
+            console.log(res.data)
+            setData(res.data)
+            setLoading(false)
+        }).catch(e => {
+            console.log("Api call error!", e)
+        })
     }
 
 
@@ -139,23 +159,39 @@ const Home = ({ navigation }) => {
             .catch(e => console.error(e))
     }
 
-    const renderList = ((item) => {
-        console.log(item)
-        return (
-            <View style={styles.petImageWrapper}>
-                <TouchableOpacity onPress={() => petActive(item.id)}>
-                    <Image
-                        source={item.avatar ? { uri: item.avatar } : require('../../../images/no-image.jpg')}
-                        style={[styles.petImage,
-                        item.is_active === 0
-                            ? { borderColor: color.RED }
-                            : { borderColor: color.GREEN }
-                        ]}
-                    />
-                </TouchableOpacity>
+    // const renderList = ((item) => {
+    //     console.log(item)
+    //     return (
+    //         <View style={styles.petImageWrapper}>
+    //             <TouchableOpacity onPress={() => petActive(item.id)}>
+    //                 <Image
+    //                     source={item.avatar ? { uri: item.avatar } : require('../../../images/no-image.jpg')}
+    //                     style={[styles.petImage,
+    //                     item.is_active === 0
+    //                         ? { borderColor: color.RED }
+    //                         : { borderColor: color.GREEN }
+    //                     ]}
+    //                 />
+    //             </TouchableOpacity>
+    //         </View>
+    //     )
+    // })
+
+    const renderHeader = () => (
+        <View style={styles.header}>
+            <View style={styles.panelHeader}>
+                <View style={styles.panelHandle}>
+
+                </View>
             </View>
-        )
-    })
+        </View>
+    )
+
+    const renderInner = () => (
+        <View style={styles.panel}>
+            <Text>Hello</Text>
+        </View>
+    )
 
     const Card = (({ item }) => {
         return (
@@ -215,6 +251,15 @@ const Home = ({ navigation }) => {
                 </Container>) :
                 (<Container>
                     <View style={styles.container}>
+                        <BottomSheet
+                            ref={bs}
+                            snapPoints={[200, 0]}
+                            renderContent={renderInner}
+                            renderHeader={renderHeader}
+                            initialSnap={1}
+                            callbackNode={fall}
+                            enabledGestureInteraction={true}
+                        />
                         <View style={styles.swiperContainer}>
                             {
                                 loading ? <Loading /> : (_.isEmpty(data) ? null
@@ -294,6 +339,22 @@ const Home = ({ navigation }) => {
                             }
                         </View>
                         <View>
+                            <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
+                                <Ionicons name="ios-add-circle" size={28} color={color.PINK} />
+                            </TouchableOpacity>
+                            {/* {
+                                loading ? <Loading />
+                                    :
+                                    <FlatList
+                                        horizontal={true}
+                                        data={pets}
+                                        renderItem={({ item }) => {
+                                            return renderList(item)
+                                        }}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        refreshing={loading}
+                                    />
+                            } */}
                         </View>
                     </View>
                 </Container>)
@@ -376,6 +437,30 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: color.GRAY,
         paddingTop: 22
+    },
+    activePet: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    header: {
+        backgroundColor: '#fff',
+        elevation: 5,
+        paddingTop: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20
+    },
+    panelHeader: {
+        alignItems: 'center'
+    },
+    panelHandle: {
+        width: 40,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: '#00000040',
+        marginBottom: 10
+    },
+    panel: {
+        backgroundColor: color.WHITE
     }
 });
 
