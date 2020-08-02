@@ -8,6 +8,7 @@ import { persistStore, persistReducer } from 'redux-persist'
 import { createLogger } from 'redux-logger'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Loading } from './src/components';
+console.disableYellowBox = true;
 
 const persistConfig = {
     key: 'root',

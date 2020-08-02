@@ -34,23 +34,29 @@ const Home = ({ navigation }) => {
     }
 
     const fetchData = () => {
-        console.log('Fetch Data----------------')
-        Axios.get(`${URL_BASE}pets/others?breed=${pet_active.breed}&gender=${pet_active.gender}&pet_active=${pet_active.id}`, {
-            headers: {
-                Authorization: token
-            },
-        }).then(res => {
-            setData(res.data)
-            setLoading(false)
-        }).catch(e => {
-            console.log("Api call error!", e)
-        })
+        console.log('Fetch Data----------------', `${URL_BASE}pets/others?breed=${pet_active.breed}&gender=${pet_active.gender}&pet_active=${pet_active.id}`)
+        if (pet_active.id) {
+            Axios.get(`${URL_BASE}pets/others?breed=${pet_active.breed}&gender=${pet_active.gender}&pet_active=${pet_active.id}`, {
+                headers: {
+                    Authorization: token
+                },
+            }).then(res => {
+                console.log(res.data)
+                setData(res.data)
+                setLoading(false)
+            }).catch(e => {
+                console.log("Api call error!", e)
+            })
+        } else {
+            Alert.alert('Attention', `You haven't set active pet not yet. Please go to Profile`)
+        }
+
     }
 
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [pet_active])
 
 
     const petActive = async (petId) => {
@@ -211,7 +217,7 @@ const Home = ({ navigation }) => {
                     <View style={styles.container}>
                         <View style={styles.swiperContainer}>
                             {
-                                loading && _.isEmpty(data) ? <Loading />
+                                loading ? <Loading /> : (_.isEmpty(data) ? null
                                     : <Swiper
                                         cards={data}
                                         cardIndex={index}
@@ -284,6 +290,7 @@ const Home = ({ navigation }) => {
                                             }
                                         }}
                                     />
+                                )
                             }
                         </View>
                         <View>
