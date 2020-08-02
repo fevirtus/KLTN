@@ -24,6 +24,7 @@ import _ from 'lodash'
 import { updatePet } from '../../../../../redux/actions/authActions';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import { ActionSheet, Root } from 'native-base'
+import { startLoading, stopLoading } from '../../../../../redux/actions/loadingAction';
 
 const EditPetProfile = ({ navigation, route }) => {
     const { petInfo, petId } = route.params;
@@ -47,12 +48,17 @@ const EditPetProfile = ({ navigation, route }) => {
     const [isChange, setIsChange] = useState(false);
 
     useEffect(() => {
+        dispatch(startLoading())
         Axios.get(`${URL_BASE}pets/breeds`, { headers: { Authorization: token } })
             .then(res => {
                 let listBreeds = res.data.map(item => ({ label: item.name, value: `${item.id}` }));
                 setBreeds(listBreeds)
+                dispatch(stopLoading())
             })
-            .catch(e => console.error(e))
+            .catch(e => {
+                console.log(e)
+                dispatch(stopLoading())
+            })
     }, [])
 
     const handleChangeInfo = (type, value) => {
@@ -154,16 +160,21 @@ const EditPetProfile = ({ navigation, route }) => {
     const uploadPictures = async (fileList) => {
         if (fileList.length != 0) {
             try {
+                dispatch(startLoading())
                 const urlPics = await uploadPicturesToServer(fileList);
                 console.log(urlPics)
                 Axios.post(`${URL_BASE}pets/${petId}/pictures`, {
                     pictures: urlPics
                 }, { headers: { Authorization: token } })
                     .then(res => {
-                        console.log(res)
+                        dispatch(stopLoading())
                     })
-                    .catch(e => alert('ABC:' + e))
+                    .catch(e => {
+                        console.log(e)
+                        dispatch(stopLoading())
+                    })
             } catch (error) {
+                dispatch(stopLoading())
                 alert(error)
             }
         }
@@ -172,6 +183,7 @@ const EditPetProfile = ({ navigation, route }) => {
 
     const onUpdatePet = async () => {
         if (validatePet()) {
+            dispatch(startLoading())
             if (petInfo.avatar != info.avatar) {
                 try {
                     const newAvatar = await uploadImgToServer(uploadImg);
@@ -186,10 +198,15 @@ const EditPetProfile = ({ navigation, route }) => {
                         .then(res => {
                             dispatch(updatePet(res.data.data))
                             setIsChange(false)
+                            dispatch(stopLoading())
                             navigation.goBack();
                         })
-                        .catch(error => console.error(error));
+                        .catch(error => {
+                            console.log(error)
+                            dispatch(stopLoading())
+                        });
                 } catch (error) {
+                    dispatch(stopLoading())
                     alert(error)
                 }
 
@@ -203,9 +220,13 @@ const EditPetProfile = ({ navigation, route }) => {
                         console.log(res.data)
                         dispatch(updatePet(res.data.data))
                         setIsChange(false)
+                        dispatch(stopLoading())
                         navigation.goBack();
                     })
-                    .catch(error => console.error(error));
+                    .catch(error => {
+                        console.log(error)
+                        dispatch(stopLoading())
+                    });
             }
         }
     }

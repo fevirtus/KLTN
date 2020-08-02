@@ -3,15 +3,18 @@ import { StyleSheet, View, Text, SafeAreaView, FlatList } from 'react-native'
 import { ShowUsers, Loading } from '../../../components';
 import database from '@react-native-firebase/database';
 import { uuid } from '../../../utility/constants';
+import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
+import { useDispatch } from 'react-redux';
 
 const ChatDashboard = ({ navigation }) => {
 
     const [allUsers, setAllUsers] = useState([]);
-    const [isLoading, setLoading] = useState(true)
+    const dispatch = useDispatch()
 
     useEffect(() => {
 
         try {
+            dispatch(startLoading())
             database().ref('users').on('value', dataSnapshot => {
                 database().ref(`matches/${uuid}`)
                     .on('value', matchSnap => {
@@ -31,11 +34,12 @@ const ChatDashboard = ({ navigation }) => {
 
                         });
                         setAllUsers(users);
-                        setLoading(false)
+                        dispatch(stopLoading())
                     })
 
             })
         } catch (error) {
+            dispatch(stopLoading())
             alert(error)
         }
     }, [])
@@ -79,22 +83,19 @@ const ChatDashboard = ({ navigation }) => {
 
     return (
         <SafeAreaView style={{ flex: 1, }}>
-            {
-                isLoading ? <Loading /> :
-                    <FlatList
-                        alwaysBounceVertical={false}
-                        data={allUsers}
-                        keyExtractor={(_, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <ShowUsers
-                                name={item.name}
-                                img={item.profileImg}
-                                onImgTap={() => imgTap(item.profileImg, item.name)}
-                                onNameTap={() => nameTap(item.profileImg, item.name, item.id)}
-                            />
-                        )}
+            <FlatList
+                alwaysBounceVertical={false}
+                data={allUsers}
+                keyExtractor={(_, index) => index.toString()}
+                renderItem={({ item }) => (
+                    <ShowUsers
+                        name={item.name}
+                        img={item.profileImg}
+                        onImgTap={() => imgTap(item.profileImg, item.name)}
+                        onNameTap={() => nameTap(item.profileImg, item.name, item.id)}
                     />
-            }
+                )}
+            />
         </SafeAreaView>
 
     )

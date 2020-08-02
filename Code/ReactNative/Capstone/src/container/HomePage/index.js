@@ -48,7 +48,7 @@ const Home = ({ navigation }) => {
                 console.log("Api call error!", e)
             })
         } else {
-            Alert.alert('Attention', `You haven't set active pet not yet. Please go to Profile`)
+            // Alert.alert('Attention', `You haven't set active pet not yet. Please go to Profile`)
         }
 
     }

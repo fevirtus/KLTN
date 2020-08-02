@@ -26,3 +26,7 @@ export const HIDE_SWIPER = "HIDE_SWIPER";
 export const SAVE_TOKEN = "SAVE_TOKEN";
 
 export const CLEAR_ALL = "CLEAR_ALL";
+
+// for loading
+export const START_LOADING = "START_LOADING";
+export const STOP_LOADING = "STOP_LOADING";

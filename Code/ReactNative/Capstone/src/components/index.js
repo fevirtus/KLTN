@@ -8,6 +8,7 @@ import FieldInput from "./fieldInput";
 import InputField from "./input";
 import DrawerContent from "./DrawerContent";
 import ShowUsers from './ShowUsers'
+import Loader from './loader'
 
 export {
     GoogleLogin,
@@ -20,4 +21,5 @@ export {
     InputField,
     ShowUsers,
     DrawerContent,
+    Loader,
 }

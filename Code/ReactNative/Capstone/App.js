@@ -7,7 +7,7 @@ import Nav from './src/navigation'
 import { persistStore, persistReducer } from 'redux-persist'
 import { createLogger } from 'redux-logger'
 import { PersistGate } from 'redux-persist/integration/react'
-import { Loading } from './src/components';
+import { Loading, Loader } from './src/components';
 console.disableYellowBox = true;
 
 const persistConfig = {
@@ -28,6 +28,7 @@ const App = () => {
         <Provider store={store}>
             <PersistGate persistor={persitedStore} loading={null}>
                 <Nav />
+                <Loader />
             </PersistGate>
         </Provider>
     )

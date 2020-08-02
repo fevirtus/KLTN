@@ -5,6 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
 import { saveUser, saveToken } from '../../redux/actions/authActions';
+import { startLoading, stopLoading } from '../../redux/actions/loadingAction';
 import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
 import auth from '@react-native-firebase/auth';
 import { AddUser } from '../../network';
@@ -22,6 +23,8 @@ const GoogleLogin = () => {
             // Get the users ID token
             const { idToken } = await GoogleSignin.signIn();
             // Create a Google credential with the token
+
+            dispatch(startLoading())
             const googleCredential = auth.GoogleAuthProvider.credential(idToken);
             // Sign-in the user with the credential
             const userInfo = await auth().signInWithCredential(googleCredential);
@@ -44,8 +47,10 @@ const GoogleLogin = () => {
                     // Save user info
                     dispatch(saveUser(data))
                     dispatch(saveToken(pd_token))
+                    dispatch(stopLoading())
                 }).catch((error) => {
                     console.log("Api call error")
+                    dispatch(stopLoading())
                     alert(error.message)
                 })
         } catch (error) {
@@ -61,6 +66,7 @@ const GoogleLogin = () => {
             if (error.code === 'auth/weak-password') {
                 Alert.alert('Error', 'Password should be at least 6 characters ')
             }
+            dispatch(stopLoading())
         }
     }
 

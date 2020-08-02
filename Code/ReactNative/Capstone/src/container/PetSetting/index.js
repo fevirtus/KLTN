@@ -21,6 +21,7 @@ import { color } from '../../utility';
 import { addPet } from '../../redux/actions/authActions';
 import _ from 'lodash'
 import { uploadImgToServer } from '../../network';
+import { startLoading, stopLoading } from '../../redux/actions/loadingAction';
 
 const PetSetting = ({ navigation }) => {
     const [info, setInfo] = useState({
@@ -107,25 +108,24 @@ const PetSetting = ({ navigation }) => {
     }
     const onCreateNewPet = async () => {
         if (validatePet()) {
-            // setLoading(true)
+            dispatch(startLoading())
             let petAvatar = await uploadImgToServer(uploadImg);
             Axios.post(`${URL_BASE}pets`, { ...info, avatar: petAvatar }, { headers: { Authorization: token } })
                 .then(res => {
                     console.log(res.data)
                     dispatch(addPet(res.data.data))
                     navigation.navigate('Profile')
-                    // setLoading(false)
+                    dispatch(stopLoading())
                 })
                 .catch(e => {
                     console.error(e)
-                    // setLoading(false)
+                    dispatch(stopLoading())
                 })
         }
     }
 
     return (
         <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
-            {/* {loading && <Loading />} */}
             <Container>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.profilePicWrap}>

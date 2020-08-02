@@ -29,6 +29,7 @@ import Axios from 'axios';
 import { RadioButton } from 'react-native-paper';
 import { UpdateUser, UpdateUserName, uploadImgToServer } from '../../../network';
 import { uuid } from '../../../utility/constants';
+import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
 
 const { width } = Dimensions.get('window')
 const SLIDER_WIDTH = Dimensions.get('window').width;
@@ -101,6 +102,7 @@ const Profile = ({ navigation }) => {
     }
 
     const onUpdateUser = async () => {
+        dispatch(startLoading())
         if (user.name != data.name) {
             //update user name on firebase
             UpdateUserName(uuid, data.name)
@@ -123,9 +125,14 @@ const Profile = ({ navigation }) => {
                         dispatch(updateUser(res.data.data))
                         setIsChange(false)
                         // navigation.goBack();
+                        dispatch(stopLoading())
                     })
-                    .catch(error => console.error(error));
+                    .catch(error => {
+                        dispatch(stopLoading())
+                        console.log(error)
+                    });
             } catch (error) {
+                dispatch(stopLoading())
                 alert('Picture error!')
             }
 
@@ -140,8 +147,12 @@ const Profile = ({ navigation }) => {
                     dispatch(updateUser(res.data.data))
                     setIsChange(false)
                     // navigation.goBack();
+                    dispatch(stopLoading())
                 })
-                .catch(error => console.error(error));
+                .catch(error => {
+                    dispatch(stopLoading())
+                    console.log(error)
+                });
         }
     }
 

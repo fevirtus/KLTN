@@ -10,6 +10,7 @@ import auth from '@react-native-firebase/auth';
 import { AddUser } from '../../network';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import { setUniqueValue } from '../../utility/constants';
+import { stopLoading, startLoading } from '../../redux/actions/loadingAction';
 
 const FacebookLogin = () => {
     const dispatch = useDispatch()
@@ -20,6 +21,7 @@ const FacebookLogin = () => {
             if (result.isCancelled) {
                 throw 'User cancelled the login process';
             }
+            dispatch(startLoading())
             // Once signed in, get the users AccesToken
             const data = await AccessToken.getCurrentAccessToken();
             if (!data) {
@@ -49,8 +51,10 @@ const FacebookLogin = () => {
                     // Save user info
                     dispatch(saveUser(data))
                     dispatch(saveToken(pd_token))
+                    dispatch(stopLoading())
                 }).catch((error) => {
                     console.log("Api call error")
+                    dispatch(stopLoading())
                     alert(error.message)
                 })
         } catch (error) {
@@ -67,10 +71,8 @@ const FacebookLogin = () => {
             }
 
             console.error(error);
+            dispatch(stopLoading())
         }
-
-
-
     }
 
     return (
