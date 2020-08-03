@@ -268,7 +268,7 @@ const Home = ({ navigation }) => {
                                             cardIndex={index}
                                             renderCard={(item) => <Card item={item} />}
                                             ref={swiperRef}
-                                            // onSwiped={onSwiped}
+                                            onSwiped={onSwiped}
                                             onSwipedLeft={onSwipedLeft}
                                             onSwipedRight={onSwipedRight}
                                             onSwipedTop={onSwipedTop}

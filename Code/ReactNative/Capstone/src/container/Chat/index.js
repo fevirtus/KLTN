@@ -31,11 +31,11 @@ const Chat = ({ route, navigation }) => {
       headerLeft: () => (
         <Ionicons.Button
           name='arrow-back' backgroundColor={color.WHITE} size={25} color={color.PINK}
-          onPress={() => navigation.navigate('ChatDashboard')}
+          onPress={() => navigation.navigate('Messages')}
         />
       )
     });
-  }, [navigation]);
+  }, [navigation, route]);
 
   useEffect(() => {
     try {

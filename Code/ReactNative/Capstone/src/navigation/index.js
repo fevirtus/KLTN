@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Text, View, Image, StyleSheet } from 'react-native';
+import { Text, View, Image, StyleSheet, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -66,13 +66,32 @@ const MainTabScreen = () => {
         })
     }
 
-    const loadUser = () => {
+    const loadUser = async () => {
         console.log('load user:----------------- ')
-        Axios.get(`${URL_BASE}users/currentUser`, {
+        await Axios.get(`${URL_BASE}users/currentUser`, {
             headers: {
                 Authorization: token
             }
         }).then(res => {
+            // if(res.data[0].is_block == 1){
+            //     Alert.alert(
+            //         `YOU `,
+            //         `Are you sure to delete ${name}?`,
+            //         [
+            //             {
+            //                 text: 'Cancel',
+            //                 onPress: () => console.log('User cancel delete!'),
+            //                 style: 'cancel'
+            //             },
+            //             {
+            //                 text: 'OK',
+            //                 onPress: _delete
+            //             }
+            //         ],
+            //         { cancelable: false }
+            //     )
+            // }
+
             dispatch(saveUser(res.data[0]));
             setUniqueValue(res.data[0].uid)
         }).catch(e => {
@@ -82,7 +101,7 @@ const MainTabScreen = () => {
 
     const loadData = async () => {
         dispatch(startLoading())
-        if (!user.id) { loadUser() }
+        if (!user.id) { await loadUser() }
         await loadPets()
         dispatch(stopLoading())
         setDone(true)
@@ -332,7 +351,7 @@ const NavContainer = () => {
                 _.isEmpty(token)
                     ? <LoginStack />
                     : (<Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}
-                        initialRouteName="MainTabScreen"
+                        initialRouteName="Home"
                     >
                         <Drawer.Screen name="MainTabScreen" component={MainTabScreen} />
                         <Drawer.Screen name="ChatboxStackScreen" component={ChatboxStackScreen} />
