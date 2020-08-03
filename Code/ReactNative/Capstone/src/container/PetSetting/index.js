@@ -71,11 +71,12 @@ const PetSetting = ({ navigation }) => {
             } else {
                 const img = {
                     uri: response.uri,
-                    type: mime.getType(response.uri),
+                    type: mime.getType(response.fileName),
                     name:
                         response.fileName ||
                         response.uri.substr(response.uri.lastIndexOf('/') + 1)
                 }
+                console.log(img)
                 setUploadImg({ img: img });
                 setInfo({ ...info, avatar: img.uri })
             }
@@ -108,19 +109,25 @@ const PetSetting = ({ navigation }) => {
     }
     const onCreateNewPet = async () => {
         if (validatePet()) {
-            dispatch(startLoading())
-            let petAvatar = await uploadImgToServer(uploadImg);
-            Axios.post(`${URL_BASE}pets`, { ...info, avatar: petAvatar }, { headers: { Authorization: token } })
-                .then(res => {
-                    console.log(res.data)
-                    dispatch(addPet(res.data.data))
-                    navigation.navigate('Profile')
-                    dispatch(stopLoading())
-                })
-                .catch(e => {
-                    console.error(e)
-                    dispatch(stopLoading())
-                })
+            try {
+                dispatch(startLoading())
+                let petAvatar = await uploadImgToServer(uploadImg);
+                Axios.post(`${URL_BASE}pets`, { ...info, avatar: petAvatar }, { headers: { Authorization: token } })
+                    .then(res => {
+                        console.log(res.data)
+                        dispatch(addPet(res.data.data))
+                        navigation.navigate('Profile')
+                        dispatch(stopLoading())
+                    })
+                    .catch(e => {
+                        console.error(e)
+                        dispatch(stopLoading())
+                    })
+            } catch (error) {
+                dispatch(stopLoading())
+                alert(error)
+            }
+
         }
     }
 

@@ -4,13 +4,15 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
 import { saveUser, saveToken } from '../../redux/actions/authActions';
-import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
+import { RequestApiAsyncPost, setAuthToken, URL_BASE } from '../../api/config'
 import AsyncStorage from '@react-native-community/async-storage';
 import auth from '@react-native-firebase/auth';
 import { AddUser } from '../../network';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import { setUniqueValue } from '../../utility/constants';
 import { stopLoading, startLoading } from '../../redux/actions/loadingAction';
+import Axios from 'axios';
+// import moment from 'moment'
 
 const FacebookLogin = () => {
     const dispatch = useDispatch()
@@ -23,12 +25,12 @@ const FacebookLogin = () => {
             }
             dispatch(startLoading())
             // Once signed in, get the users AccesToken
-            const data = await AccessToken.getCurrentAccessToken();
-            if (!data) {
+            const data1 = await AccessToken.getCurrentAccessToken();
+            if (!data1) {
                 throw 'Something went wrong obtaining access token';
             }
             // Create a Firebase credential with the AccessToken
-            const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+            const facebookCredential = auth.FacebookAuthProvider.credential(data1.accessToken);
             // Sign-in the user with the credential
             const userInfo = await auth().signInWithCredential(facebookCredential);
             console.log(userInfo)
@@ -38,25 +40,21 @@ const FacebookLogin = () => {
             if (userInfo.additionalUserInfo.isNewUser) {
                 AddUser(displayName, email, uid, '');
             }
-            RequestApiAsyncPost('register', 'POST', {}, { name: displayName, email: email, uid: uid })
-                .then((res) => {
-                    // Save to AsyncStorage
-                    // Set token to AsyncStorage
-                    const { pd_token, data } = res.data
-                    console.log(res.data.pd_token)
-                    // Set token to Auth headers
-                    // dispatch(saveToken(pd_token))
-                    // await AsyncStorage.setItem('token', pd_token)
-                    setAuthToken(pd_token)
-                    // Save user info
-                    dispatch(saveUser(data))
-                    dispatch(saveToken(pd_token))
-                    dispatch(stopLoading())
-                }).catch((error) => {
-                    console.log("Api call error")
-                    dispatch(stopLoading())
-                    alert(error.message)
-                })
+
+            const res = await Axios.post(`${URL_BASE}register`, { name: displayName, email: email, uid: uid })
+            const { pd_token, data } = res.data
+            if (data.is_block == 1) {
+                const { block_deadline } = data;
+                let ms = new Date(block_deadline).getTime() - new Date().getTime();
+                console.log(ms, block_deadline)
+                let day = Math.floor(ms / (24 * 60 * 60 * 1000))
+                throw 'You bi block vi ngu nhu bo ' + ms
+            }
+
+            setAuthToken(pd_token)
+            dispatch(saveUser(data))
+            dispatch(saveToken(pd_token))
+            dispatch(stopLoading())
         } catch (error) {
             if (error.code === 'auth/email-already-in-use') {
                 Alert.alert('Error', 'That email address is already in use!')
@@ -70,8 +68,8 @@ const FacebookLogin = () => {
                 Alert.alert('Error', 'Password should be at least 6 characters ')
             }
 
-            console.error(error);
             dispatch(stopLoading())
+            Alert.alert('Error', error)
         }
     }
 

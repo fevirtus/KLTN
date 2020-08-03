@@ -6,10 +6,11 @@ import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
 import { saveUser, saveToken } from '../../redux/actions/authActions';
 import { startLoading, stopLoading } from '../../redux/actions/loadingAction';
-import { RequestApiAsyncPost, setAuthToken } from '../../api/config'
+import { RequestApiAsyncPost, setAuthToken, URL_BASE } from '../../api/config'
 import auth from '@react-native-firebase/auth';
 import { AddUser } from '../../network';
 import { setUniqueValue } from '../../utility/constants';
+import Axios from 'axios';
 
 const GoogleLogin = () => {
     const dispatch = useDispatch()
@@ -34,25 +35,13 @@ const GoogleLogin = () => {
             if (userInfo.additionalUserInfo.isNewUser) {
                 AddUser(displayName, email, uid, '');
             }
-            RequestApiAsyncPost('register', 'POST', {}, { name: displayName, email: email, uid: uid })
-                .then((res) => {
-                    // Save to AsyncStorage
-                    // Set token to AsyncStorage
-                    const { pd_token, data } = res.data
-                    console.log(res.data.pd_token)
-                    // Set token to Auth headers
-                    // dispatch(saveToken(pd_token))
-                    // await AsyncStorage.setItem('token', pd_token)
-                    setAuthToken(pd_token)
-                    // Save user info
-                    dispatch(saveUser(data))
-                    dispatch(saveToken(pd_token))
-                    dispatch(stopLoading())
-                }).catch((error) => {
-                    console.log("Api call error")
-                    dispatch(stopLoading())
-                    alert(error.message)
-                })
+
+            const res = await Axios.post(`${URL_BASE}register`, { name: displayName, email: email, uid: uid })
+            const { pd_token, data } = res.data
+            setAuthToken(pd_token)
+            dispatch(saveUser(data))
+            dispatch(saveToken(pd_token))
+            dispatch(stopLoading())
         } catch (error) {
             console.log(error)
             if (error.code === 'auth/email-already-in-use') {

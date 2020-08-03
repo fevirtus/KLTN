@@ -15,10 +15,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { globalStyle, color, appStyle } from "../../utility";
 import styles from "./styles";
 import { InputField, ChatBox } from "../../components";
-import firebase from "../../firebase/config";
 import { senderMsg, recieverMsg } from "../../network";
 import { deviceHeight } from "../../utility/styleHelper/appStyle";
 import { smallDeviceHeight } from "../../utility/constants";
+import database from '@react-native-firebase/database';
 
 const Chat = ({ route, navigation }) => {
   const { params } = route;
@@ -39,8 +39,7 @@ const Chat = ({ route, navigation }) => {
 
   useEffect(() => {
     try {
-      firebase
-        .database()
+      database()
         .ref("messeges")
         .child(currentUserId)
         .child(guestUserId)
