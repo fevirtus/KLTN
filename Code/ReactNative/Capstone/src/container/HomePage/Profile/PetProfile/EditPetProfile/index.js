@@ -15,7 +15,7 @@ import { RadioButton } from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { URL_BASE, token } from '../../../../../api/config';
 import { Container } from '../../../../../components';
 import { color } from '../../../../../utility';
@@ -27,6 +27,8 @@ import { ActionSheet, Root } from 'native-base'
 import { startLoading, stopLoading } from '../../../../../redux/actions/loadingAction';
 
 const EditPetProfile = ({ navigation, route }) => {
+    const pet_active = useSelector(state => state.auth.pet_active)
+
     const { petInfo, petId } = route.params;
     const [info, setInfo] = useState({
         name: petInfo.name,
@@ -197,7 +199,9 @@ const EditPetProfile = ({ navigation, route }) => {
                     }, { headers: { Authorization: token } })
                         .then(res => {
                             dispatch(updatePet(res.data.data))
-                            dispatch(updateActivePet(res.data.data))
+                            if (pet_active.id == petId) {
+                                dispatch(updateActivePet(res.data.data))
+                            }
                             setIsChange(false)
                             dispatch(stopLoading())
                             navigation.goBack();
