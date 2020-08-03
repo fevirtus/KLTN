@@ -4,13 +4,14 @@ import { GoogleSignin } from '@react-native-community/google-signin'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
-import { saveUser, saveToken } from '../../redux/actions/authActions';
+import { saveUser } from '../../redux/actions/authActions';
 import { startLoading, stopLoading } from '../../redux/actions/loadingAction';
 import { RequestApiAsyncPost, setAuthToken, URL_BASE } from '../../api/config'
 import auth from '@react-native-firebase/auth';
 import { AddUser } from '../../network';
 import { setUniqueValue } from '../../utility/constants';
 import Axios from 'axios';
+import { saveToken } from '../../redux/actions/tokenAction';
 
 const GoogleLogin = () => {
     const dispatch = useDispatch()

@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, Image, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -29,8 +29,9 @@ import Chat from '../container/Chat';
 import { setUniqueValue } from '../utility/constants';
 import { setAuthToken, URL_BASE, token } from '../api/config';
 import Axios from 'axios';
-import { saveActivePet, savePets } from '../redux/actions/authActions';
+import { saveActivePet, savePets, saveUser } from '../redux/actions/authActions';
 import { DrawerContent } from '../components'
+import { startLoading, stopLoading } from '../redux/actions/loadingAction';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -44,13 +45,17 @@ const SettingStack = createStackNavigator();
 const MainTabScreen = () => {
     const dispatch = useDispatch();
 
+    const [done, setDone] = useState(false)
+
+    const user = useSelector(state => state.auth.user)
+
     const loadPets = async () => {
-        Axios.get(`${URL_BASE}pets`, {
+        console.log('load pets: --------------')
+        await Axios.get(`${URL_BASE}pets`, {
             headers: {
                 Authorization: token
             }
         }).then(res => {
-            console.log('pets: ', res.data)
             dispatch(savePets(res.data));
             const activePet = res.data.filter(pet => pet.is_active == 1);
             if (activePet.length == 1) {
@@ -61,11 +66,33 @@ const MainTabScreen = () => {
         })
     }
 
+    const loadUser = () => {
+        console.log('load user:----------------- ')
+        Axios.get(`${URL_BASE}users/currentUser`, {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            dispatch(saveUser(res.data[0]));
+            setUniqueValue(res.data[0].uid)
+        }).catch(e => {
+            console.log("Api call error!", e)
+        })
+    }
+
+    const loadData = async () => {
+        dispatch(startLoading())
+        if (!user.id) { loadUser() }
+        await loadPets()
+        dispatch(stopLoading())
+        setDone(true)
+    }
+
     useEffect(() => {
-        loadPets()
+        loadData()
     }, [])
 
-    return (
+    return !done ? null : (
         <Tab.Navigator
             activeColor={color.WHITE}
             initialRouteName='Home'
@@ -293,11 +320,7 @@ const HomeStack = ({ navigation }) => {
 }
 
 const NavContainer = () => {
-    const user = useSelector(state => state.auth.user)
-    const token = useSelector(state => state.auth.token)
-    if (!_.isEmpty(user)) {
-        setUniqueValue(user.uid)
-    }
+    const token = useSelector(state => state.token.token)
     if (!_.isEmpty(token)) {
         setAuthToken(token)
     }
@@ -308,9 +331,9 @@ const NavContainer = () => {
             {
                 _.isEmpty(token)
                     ? <LoginStack />
-                    : (<Drawer.Navigator drawerContent={props => <DrawerContent {...props}
-                        initialRouteName='Home'
-                    />}>
+                    : (<Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}
+                        initialRouteName="MainTabScreen"
+                    >
                         <Drawer.Screen name="MainTabScreen" component={MainTabScreen} />
                         <Drawer.Screen name="ChatboxStackScreen" component={ChatboxStackScreen} />
                         <Drawer.Screen name="SettingStackScreen" component={SettingStackScreen} />

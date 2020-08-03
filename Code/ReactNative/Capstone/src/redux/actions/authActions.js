@@ -36,13 +36,13 @@ export const saveActivePet = (pet) => ({
     pet
 })
 
-export const saveToken = (token) => ({
-    type: SAVE_TOKEN,
-    token
-})
+// export const saveToken = (token) => ({
+//     type: SAVE_TOKEN,
+//     token
+// })
 
-export const clearAll = () => ({
-    type: CLEAR_ALL
-})
+// export const clearAll = () => ({
+//     type: CLEAR_ALL
+// })
 
 

@@ -3,15 +3,15 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { color } from '../../utility';
 import { useDispatch } from 'react-redux';
-import { saveUser, saveToken } from '../../redux/actions/authActions';
-import { RequestApiAsyncPost, setAuthToken, URL_BASE } from '../../api/config'
-import AsyncStorage from '@react-native-community/async-storage';
+import { saveUser } from '../../redux/actions/authActions';
+import { setAuthToken, URL_BASE } from '../../api/config'
 import auth from '@react-native-firebase/auth';
 import { AddUser } from '../../network';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import { setUniqueValue } from '../../utility/constants';
 import { stopLoading, startLoading } from '../../redux/actions/loadingAction';
 import Axios from 'axios';
+import { saveToken } from '../../redux/actions/tokenAction';
 // import moment from 'moment'
 
 const FacebookLogin = () => {
@@ -43,13 +43,13 @@ const FacebookLogin = () => {
 
             const res = await Axios.post(`${URL_BASE}register`, { name: displayName, email: email, uid: uid })
             const { pd_token, data } = res.data
-            if (data.is_block == 1) {
-                const { block_deadline } = data;
-                let ms = new Date(block_deadline).getTime() - new Date().getTime();
-                console.log(ms, block_deadline)
-                let day = Math.floor(ms / (24 * 60 * 60 * 1000))
-                throw 'You bi block vi ngu nhu bo ' + ms
-            }
+            // if (data.is_block == 1) {
+            //     const { block_deadline } = data;
+            //     let ms = new Date(block_deadline).getTime() - new Date().getTime();
+            //     console.log(ms, block_deadline)
+            //     let day = Math.floor(ms / (24 * 60 * 60 * 1000))
+            //     throw 'You bi block vi ngu nhu bo ' + ms
+            // }
 
             setAuthToken(pd_token)
             dispatch(saveUser(data))

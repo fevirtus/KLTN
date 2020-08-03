@@ -13,7 +13,7 @@ console.disableYellowBox = true;
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['auth', 'home']
+    whitelist: ['token']
 }
 
 const persitedReducer = persistReducer(persistConfig, rootReducer)

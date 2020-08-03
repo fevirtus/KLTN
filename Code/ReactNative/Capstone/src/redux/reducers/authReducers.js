@@ -1,11 +1,11 @@
-import { SAVE_USER, UPDATE_USER, SAVE_PETS, UPDATE_PET, DELETE_PET, SAVE_ACTIVE_PET, SAVE_TOKEN, ADD_PET, CLEAR_ALL } from "../actions/types";
+import { SAVE_USER, UPDATE_USER, SAVE_PETS, UPDATE_PET, DELETE_PET, SAVE_ACTIVE_PET, ADD_PET, } from "../actions/types";
 
 
 const initialState = {
     user: {},
     pets: [],
     pet_active: {},
-    token: null
+    // token: null
 }
 
 const authReducer = (state = initialState, action) => {
@@ -58,18 +58,18 @@ const authReducer = (state = initialState, action) => {
                 ...state,
                 pet_active: action.pet
             }
-        case SAVE_TOKEN:
-            return {
-                ...state,
-                token: action.token
-            }
-        case CLEAR_ALL:
-            return {
-                user: {},
-                pets: [],
-                pet_active: {},
-                token: null
-            }
+        // case SAVE_TOKEN:
+        //     return {
+        //         ...state,
+        //         token: action.token
+        //     }
+        // case CLEAR_ALL:
+        //     return {
+        //         user: {},
+        //         pets: [],
+        //         pet_active: {},
+        //         token: null
+        //     }
         default:
             return state;
     }
