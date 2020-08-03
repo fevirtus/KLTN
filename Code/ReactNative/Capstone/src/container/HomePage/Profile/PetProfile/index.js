@@ -6,7 +6,6 @@ import {
     TouchableOpacity,
     Text,
     Alert,
-    YellowBox,
     FlatList,
     ImageBackground
 } from 'react-native'
@@ -14,7 +13,6 @@ import axios from 'axios'
 import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../../../utility';
-import { Loading } from '../../../../components'
 import { URL_BASE, token } from '../../../../api/config'
 import { useDispatch } from 'react-redux';
 import { deletePet } from '../../../../redux/actions/authActions';
@@ -44,7 +42,6 @@ const PetProfile = ({ navigation, route }) => {
         }).then(res => {
             // Set info
             setInfo(res.data)
-            console.log(res.data)
             dispatch(stopLoading())
         }).catch(e => {
             console.log("Api call error!", e)
@@ -109,57 +106,59 @@ const PetProfile = ({ navigation, route }) => {
 
     const { name, gender, weight, age, introduction, avatar, breed_name, pictures } = info
     return (
-        <View style={styles.container}>
-            <ImageBackground
-                style={styles.header}
-                source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
-            >
-            </ImageBackground>
-            <View style={styles.content}>
-                <View style={styles.petName}>
-                    <View>
-                        <Text style={styles.name}>{name}</Text>
-                        <Text style={styles.text}>{breed_name}</Text>
+        <>
+            <View style={styles.container}>
+                <ImageBackground
+                    style={styles.header}
+                    source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
+                >
+                </ImageBackground>
+                <View style={styles.content}>
+                    <View style={styles.petName}>
+                        <View>
+                            <Text style={styles.name}>{name}</Text>
+                            <Text style={styles.text}>{breed_name}</Text>
+                        </View>
+                        <TouchableOpacity
+                            style={styles.buttonDelete}
+                            onPress={_deletePet}
+                        >
+                            <FontAwesome5 name="trash" size={22} color="white" />
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity
-                        style={styles.buttonDelete}
-                        onPress={_deletePet}
-                    >
-                        <FontAwesome5 name="trash" size={22} color="white" />
+                    <View style={styles.information}>
+                        <View style={styles.item}>
+                            <Text style={styles.subheading}>Weight</Text>
+                            <Text style={styles.text}>{weight} kg</Text>
+                        </View>
+                        <View style={styles.itemCenter}>
+                            <Text style={styles.subheading}>Gender</Text>
+                            <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
+                        </View>
+                        <View style={styles.item}>
+                            <Text style={styles.subheading}>Age</Text>
+                            <Text style={styles.text}>{age}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.introduction}>
+                        <Text style={[styles.text, { color: color.BLACK }]}>{introduction}</Text>
+                    </View>
+                    <View style={styles.listImg}>
+                        <FlatList
+                            horizontal={true}
+                            data={pictures}
+                            renderItem={({ item }) => {
+                                return renderList(item)
+                            }}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                    </View>
+                    <TouchableOpacity style={styles.commandButton} onPress={onEditPet}>
+                        <Text style={styles.panelButtonTitle}>Edit</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.information}>
-                    <View style={styles.item}>
-                        <Text style={styles.subheading}>Weight</Text>
-                        <Text style={styles.text}>{weight} kg</Text>
-                    </View>
-                    <View style={styles.itemCenter}>
-                        <Text style={styles.subheading}>Gender</Text>
-                        <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
-                    </View>
-                    <View style={styles.item}>
-                        <Text style={styles.subheading}>Age</Text>
-                        <Text style={styles.text}>{age}</Text>
-                    </View>
-                </View>
-                <View style={styles.introduction}>
-                    <Text style={[styles.text, { color: color.BLACK }]}>{introduction}</Text>
-                </View>
-                <View style={styles.listImg}>
-                    <FlatList
-                        horizontal={true}
-                        data={pictures}
-                        renderItem={({ item }) => {
-                            return renderList(item)
-                        }}
-                        keyExtractor={(item, index) => index.toString()}
-                    />
-                </View>
-                <TouchableOpacity style={styles.commandButton} onPress={onEditPet}>
-                    <Text style={styles.panelButtonTitle}>Edit</Text>
-                </TouchableOpacity>
             </View>
-        </View>
+        </>
     )
 }
 
@@ -264,10 +263,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         color: color.WHITE,
-    },
+    }
 })
-
-// YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
-//     'Animated.event now requires a second argument for options']);
 
 export default PetProfile;

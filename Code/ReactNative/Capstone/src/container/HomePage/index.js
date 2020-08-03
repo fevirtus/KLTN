@@ -1,31 +1,31 @@
-import AsyncStorage from '@react-native-community/async-storage';
-import Axios from 'axios';
-import React, { useEffect, useRef, useState, createRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Image, StyleSheet,
     Text,
     TouchableOpacity, View,
-    YellowBox,
+    YellowBox, FlatList,
     Alert
 } from 'react-native';
+import Axios from 'axios';
 import Swiper from 'react-native-deck-swiper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Animated from 'react-native-reanimated'
 import BottomSheet from 'reanimated-bottom-sheet'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { token, URL_BASE } from '../../api/config';
 import { Container, Loading } from '../../components';
 import { color } from '../../utility';
 import { uuid } from '../../utility/constants';
 import { saveMatch } from '../../network';
 import _ from 'lodash'
+import { saveActivePet } from '../../redux/actions/authActions';
 
 const Home = ({ navigation }) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     const pet_active = useSelector(state => state.auth.pet_active)
     const user = useSelector(state => state.auth.user)
+    const my_pets = useSelector(state => state.auth.pets)
 
     const [data, setData] = useState([])
     const [index, setIndex] = useState(0)
@@ -36,8 +36,7 @@ const Home = ({ navigation }) => {
         setIndex((index + 1) % data.length)
     }
 
-    bs = createRef()
-    fall = new Animated.Value(1)
+    const bs = useRef(null)
 
     const fetchData = () => {
         console.log('Fetch Data----------------')
@@ -73,27 +72,22 @@ const Home = ({ navigation }) => {
         })
     }
 
-
     useEffect(() => {
         fetchData()
     }, [pet_active])
 
-
-    const petActive = async (petId) => {
+    const petActive = async (pet) => {
         const edit_petId = {
-            pet_id: petId
+            pet_id: pet.id
         }
-        console.log(edit_petId)
-        const token = await AsyncStorage.getItem("token")
-        axios.put(`${URL_BASE}pets/setActive`, edit_petId, {
+        Axios.put(`${URL_BASE}pets/setActive`, edit_petId, {
             headers: {
                 Authorization: token
             }
         }).then(res => {
-            console.log(res.data)
             alert('Set active successful')
+            dispatch(saveActivePet(pet))
         }).catch((e) => {
-            console.log("Api call error")
             alert(e.message)
         })
     }
@@ -109,6 +103,7 @@ const Home = ({ navigation }) => {
         let petId = data[cardIndex].id;
         react('NOPE', petId);
     }
+
     const onSwipedTop = (cardIndex) => {
         console.log('MATCH', data[cardIndex])
         let pet = data[cardIndex];
@@ -143,7 +138,7 @@ const Home = ({ navigation }) => {
                 })
                 .catch(e => console.error(e))
         } else {
-            Alert.alert('Error', 'You have to choose pet active to do match')
+            Alert.alert('Error', 'You have to choose pet active below to do match')
         }
 
     }
@@ -159,37 +154,41 @@ const Home = ({ navigation }) => {
             .catch(e => console.error(e))
     }
 
-    // const renderList = ((item) => {
-    //     console.log(item)
-    //     return (
-    //         <View style={styles.petImageWrapper}>
-    //             <TouchableOpacity onPress={() => petActive(item.id)}>
-    //                 <Image
-    //                     source={item.avatar ? { uri: item.avatar } : require('../../../images/no-image.jpg')}
-    //                     style={[styles.petImage,
-    //                     item.is_active === 0
-    //                         ? { borderColor: color.RED }
-    //                         : { borderColor: color.GREEN }
-    //                     ]}
-    //                 />
-    //             </TouchableOpacity>
-    //         </View>
-    //     )
-    // })
+    const renderList = ((item) => {
+        return (
+            <View style={styles.petImageWrapper}>
+                <TouchableOpacity onPress={() => petActive(item)}>
+                    <Image
+                        source={item.avatar ? { uri: item.avatar } : require('../../../images/no-image.jpg')}
+                        style={[styles.petImage,
+                        item.id === pet_active.id
+                            ? { borderColor: color.GREEN }
+                            : { borderColor: color.RED }
+                        ]}
+                    />
+                </TouchableOpacity>
+            </View>
+        )
+    })
 
     const renderHeader = () => (
         <View style={styles.header}>
             <View style={styles.panelHeader}>
-                <View style={styles.panelHandle}>
-
-                </View>
+                <View style={styles.panelHandle}></View>
             </View>
         </View>
     )
 
     const renderInner = () => (
         <View style={styles.panel}>
-            <Text>Hello</Text>
+            <FlatList
+                horizontal={true}
+                data={my_pets}
+                renderItem={({ item }) => {
+                    return renderList(item)
+                }}
+                keyExtractor={(_, index) => index.toString()}
+            />
         </View>
     )
 
@@ -238,6 +237,7 @@ const Home = ({ navigation }) => {
             </View>
         )
     })
+
     return (
         <View style={styles.container}>
             {hide ?
@@ -253,109 +253,97 @@ const Home = ({ navigation }) => {
                     <View style={styles.container}>
                         <BottomSheet
                             ref={bs}
-                            snapPoints={[200, 0]}
+                            snapPoints={['17%', 0]}
                             renderContent={renderInner}
                             renderHeader={renderHeader}
                             initialSnap={1}
-                            callbackNode={fall}
                             enabledGestureInteraction={true}
                         />
-                        <View style={styles.swiperContainer}>
-                            {
-                                loading ? <Loading /> : (_.isEmpty(data) ? null
-                                    : <Swiper
-                                        cards={data}
-                                        cardIndex={index}
-                                        renderCard={(item) => <Card item={item} />}
-                                        ref={swiperRef}
-                                        onSwiped={onSwiped}
-                                        onSwipedLeft={onSwipedLeft}
-                                        onSwipedRight={onSwipedRight}
-                                        onSwipedTop={onSwipedTop}
-                                        stackSize={2}
-                                        disableBottomSwipe
-                                        infinite
-                                        backgroundColor={'transparent'}
-                                        overlayLabels={{
-                                            left: {
-                                                title: 'NOPE',
-                                                style: {
-                                                    label: {
-                                                        backgroundColor: 'transparent',
-                                                        color: color.RED,
-                                                        fontSize: 24,
-                                                        borderColor: color.RED,
-                                                        borderWidth: 3
-                                                    },
-                                                    wrapper: {
-                                                        flexDirection: 'column',
-                                                        alignItems: 'flex-end',
-                                                        justifyContent: 'flex-start',
-                                                        marginTop: -35,
-                                                        marginLeft: -20,
+                        {
+                            loading ? <Loading /> : (_.isEmpty(data) ? null
+                                : <>
+                                    <View style={styles.swiperContainer}>
+                                        <Swiper
+                                            cards={data}
+                                            cardIndex={index}
+                                            renderCard={(item) => <Card item={item} />}
+                                            ref={swiperRef}
+                                            onSwiped={onSwiped}
+                                            onSwipedLeft={onSwipedLeft}
+                                            onSwipedRight={onSwipedRight}
+                                            onSwipedTop={onSwipedTop}
+                                            stackSize={2}
+                                            disableBottomSwipe
+                                            infinite
+                                            backgroundColor={'transparent'}
+                                            overlayLabels={{
+                                                left: {
+                                                    title: 'NOPE',
+                                                    style: {
+                                                        label: {
+                                                            backgroundColor: 'transparent',
+                                                            color: color.RED,
+                                                            fontSize: 24,
+                                                            borderColor: color.RED,
+                                                            borderWidth: 3
+                                                        },
+                                                        wrapper: {
+                                                            flexDirection: 'column',
+                                                            alignItems: 'flex-end',
+                                                            justifyContent: 'flex-start',
+                                                            marginTop: -35,
+                                                            marginLeft: -20,
+                                                        }
+                                                    }
+                                                },
+                                                right: {
+                                                    title: 'LIKE',
+                                                    style: {
+                                                        label: {
+                                                            backgroundColor: 'transparent',
+                                                            color: color.GREEN,
+                                                            fontSize: 24,
+                                                            borderColor: color.GREEN,
+                                                            borderWidth: 3
+                                                        },
+                                                        wrapper: {
+                                                            flexDirection: 'column',
+                                                            alignItems: 'flex-start',
+                                                            justifyContent: 'flex-start',
+                                                            marginTop: -35,
+                                                            marginLeft: 20
+                                                        }
+                                                    }
+                                                },
+                                                top: {
+                                                    title: 'MATCH',
+                                                    style: {
+                                                        label: {
+                                                            backgroundColor: 'transparent',
+                                                            color: color.BLUE,
+                                                            fontSize: 24,
+                                                            borderColor: color.BLUE,
+                                                            borderWidth: 3
+                                                        },
+                                                        wrapper: {
+                                                            flexDirection: 'column',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            marginTop: -60
+                                                        }
                                                     }
                                                 }
-                                            },
-                                            right: {
-                                                title: 'LIKE',
-                                                style: {
-                                                    label: {
-                                                        backgroundColor: 'transparent',
-                                                        color: color.GREEN,
-                                                        fontSize: 24,
-                                                        borderColor: color.GREEN,
-                                                        borderWidth: 3
-                                                    },
-                                                    wrapper: {
-                                                        flexDirection: 'column',
-                                                        alignItems: 'flex-start',
-                                                        justifyContent: 'flex-start',
-                                                        marginTop: -35,
-                                                        marginLeft: 20
-                                                    }
-                                                }
-                                            },
-                                            top: {
-                                                title: 'MATCH',
-                                                style: {
-                                                    label: {
-                                                        backgroundColor: 'transparent',
-                                                        color: color.BLUE,
-                                                        fontSize: 24,
-                                                        borderColor: color.BLUE,
-                                                        borderWidth: 3
-                                                    },
-                                                    wrapper: {
-                                                        flexDirection: 'column',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        marginTop: -60
-                                                    }
-                                                }
-                                            }
-                                        }}
-                                    />
-                                )
-                            }
-                        </View>
-                        <View>
-                            <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
-                                <Ionicons name="ios-add-circle" size={28} color={color.PINK} />
-                            </TouchableOpacity>
-                            {/* {
-                                loading ? <Loading />
-                                    :
-                                    <FlatList
-                                        horizontal={true}
-                                        data={pets}
-                                        renderItem={({ item }) => {
-                                            return renderList(item)
-                                        }}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        refreshing={loading}
-                                    />
-                            } */}
-                        </View>
+                                            }}
+                                        />
+                                    </View>
+                                    <View>
+                                        <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
+                                            <Ionicons name="ios-add-circle" size={28} color={color.PINK} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </>
+                            )
+                        }
                     </View>
                 </Container>)
             }
@@ -443,9 +431,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     header: {
-        backgroundColor: '#fff',
-        elevation: 5,
-        paddingTop: 20,
+        backgroundColor: color.WHITE,
+        elevation: 4,
+        paddingTop: 12,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20
     },
