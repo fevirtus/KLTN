@@ -89,7 +89,7 @@ const Profile = ({ navigation }) => {
             } else {
                 const img = {
                     uri: response.uri,
-                    type: mime.getType(response.uri),
+                    type: 'image/jpeg',
                     name:
                         response.fileName ||
                         response.uri.substr(response.uri.lastIndexOf('/') + 1)

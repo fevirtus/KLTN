@@ -21,7 +21,7 @@ import { Container } from '../../../../../components';
 import { color } from '../../../../../utility';
 import { uploadImgToServer, uploadPicturesToServer } from '../../../../../network';
 import _ from 'lodash'
-import { updatePet } from '../../../../../redux/actions/authActions';
+import { updatePet, updateActivePet } from '../../../../../redux/actions/authActions';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import { ActionSheet, Root } from 'native-base'
 import { startLoading, stopLoading } from '../../../../../redux/actions/loadingAction';
@@ -93,7 +93,7 @@ const EditPetProfile = ({ navigation, route }) => {
             } else {
                 const img = {
                     uri: response.uri,
-                    type: mime.getType(response.uri),
+                    type: 'image/jpeg',
                     name:
                         response.fileName ||
                         response.uri.substr(response.uri.lastIndexOf('/') + 1)
@@ -114,7 +114,7 @@ const EditPetProfile = ({ navigation, route }) => {
             console.log(image);
             let img = {
                 uri: image.path,
-                type: mime.getType(image.path),
+                type: 'image/jpeg',
                 name: `${Date.now()}.jpg`
             }
             uploadPictures([img])
@@ -197,6 +197,7 @@ const EditPetProfile = ({ navigation, route }) => {
                     }, { headers: { Authorization: token } })
                         .then(res => {
                             dispatch(updatePet(res.data.data))
+                            dispatch(updateActivePet(res.data.data))
                             setIsChange(false)
                             dispatch(stopLoading())
                             navigation.goBack();

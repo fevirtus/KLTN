@@ -18,14 +18,11 @@ export const ADD_PET = 'ADD_PET';
 export const UPDATE_PET = 'UPDATE_PET';
 export const DELETE_PET = 'DELETE_PET';
 export const SAVE_ACTIVE_PET = 'SAVE_ACTIVE_PET';
+export const UPDATE_ACTIVE_PET = 'UPDATE_ACTIVE_PET';
+
 
 // for home
 export const HIDE_SWIPER = "HIDE_SWIPER";
-
-// for token
-// export const SAVE_TOKEN = "SAVE_TOKEN";
-
-// export const CLEAR_ALL = "CLEAR_ALL";
 
 // for loading
 export const START_LOADING = "START_LOADING";
