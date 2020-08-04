@@ -138,7 +138,7 @@ const EditPetProfile = ({ navigation, route }) => {
                 }
             })
             uploadPictures(newFileList)
-        }).catch(e => alert(e));
+        }).catch(e => console.log(e.message));
     }
 
     const addImage = () => {
@@ -190,7 +190,6 @@ const EditPetProfile = ({ navigation, route }) => {
                 try {
                     const newAvatar = await uploadImgToServer(uploadImg);
                     //update user avatar on firebase
-                    console.log('start', newAvatar)
                     Axios.put(`${URL_BASE}pets/${petId}`, {
                         updateFields: {
                             ...info,
@@ -363,14 +362,31 @@ const EditPetProfile = ({ navigation, route }) => {
                                 </Root>
                             </TouchableOpacity>
                         </View>
-                        <FlatList
-                            horizontal={true}
-                            data={pictures}
-                            renderItem={({ item }) => {
-                                return renderList(item)
-                            }}
-                            keyExtractor={(item, index) => index.toString()}
-                        />
+                        {
+                            _.isEmpty(pictures)
+                                ? <View style={styles.emptyPic}>
+                                    <Image
+                                        source={require('../../../../../../images/pic-empty.png')}
+                                        style={styles.petImage}
+                                    />
+                                    <Image
+                                        source={require('../../../../../../images/pic-empty.png')}
+                                        style={styles.petImage}
+                                    />
+                                    <Image
+                                        source={require('../../../../../../images/pic-empty.png')}
+                                        style={styles.petImage}
+                                    />
+                                </View>
+                                : <FlatList
+                                    horizontal={true}
+                                    data={pictures}
+                                    renderItem={({ item }) => {
+                                        return renderList(item)
+                                    }}
+                                    keyExtractor={(item, index) => index.toString()}
+                                />
+                        }
                         {isChange &&
                             <TouchableOpacity style={styles.commandButton} onPress={onUpdatePet}>
                                 <Text style={styles.panelButtonTitle}>Save</Text>
@@ -507,6 +523,11 @@ const styles = StyleSheet.create({
     },
     addPicture: {
         paddingRight: 20
+    },
+    emptyPic: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        paddingBottom: 10
     }
 })
 

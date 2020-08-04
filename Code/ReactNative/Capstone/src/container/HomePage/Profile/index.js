@@ -241,7 +241,7 @@ const Profile = ({ navigation }) => {
                             </TouchableOpacity>
                         </View>
 
-                        <ScrollView showsVerticalScrollIndicator={false}>
+                        <ScrollView>
                             <Animated.View
                                 style={{
                                     transform: [

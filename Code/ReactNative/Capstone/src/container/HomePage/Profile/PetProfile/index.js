@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import axios from 'axios'
 import { ScrollView } from 'react-native-gesture-handler';
+import _ from 'lodash'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../../../utility';
 import { URL_BASE, token } from '../../../../api/config'
@@ -106,8 +107,8 @@ const PetProfile = ({ navigation, route }) => {
 
     const { name, gender, weight, age, introduction, avatar, breed_name, pictures } = info
     return (
-        <>
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <ScrollView>
                 <ImageBackground
                     style={styles.header}
                     source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
@@ -143,22 +144,26 @@ const PetProfile = ({ navigation, route }) => {
                     <View style={styles.introduction}>
                         <Text style={[styles.text, { color: color.BLACK }]}>{introduction}</Text>
                     </View>
-                    <View style={styles.listImg}>
-                        <FlatList
-                            horizontal={true}
-                            data={pictures}
-                            renderItem={({ item }) => {
-                                return renderList(item)
-                            }}
-                            keyExtractor={(item, index) => index.toString()}
-                        />
-                    </View>
+                    {
+                        _.isEmpty(pictures)
+                            ? <View style={styles.emptyPic}></View>
+                            : <View style={styles.listImg}>
+                                <FlatList
+                                    horizontal={true}
+                                    data={pictures}
+                                    renderItem={({ item }) => {
+                                        return renderList(item)
+                                    }}
+                                    keyExtractor={(item, index) => index.toString()}
+                                />
+                            </View>
+                    }
                     <TouchableOpacity style={styles.commandButton} onPress={onEditPet}>
                         <Text style={styles.panelButtonTitle}>Edit</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
-        </>
+            </ScrollView>
+        </View>
     )
 }
 
@@ -167,12 +172,11 @@ const styles = StyleSheet.create({
         flex: 1
     },
     header: {
-        flex: 0.7,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        height: 225
     },
     content: {
-        flex: 1.3,
         flexDirection: 'column'
     },
     petName: {
@@ -229,6 +233,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 20
     },
+    emptyPic: {
+        height: 15
+    },
     petImageWrapper: {
         marginTop: 10,
         marginBottom: 10,
@@ -257,7 +264,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginVertical: 10
     },
     panelButtonTitle: {
         fontSize: 17,
