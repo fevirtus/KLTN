@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Image, StyleSheet,
-    Text,
+    Text, ScrollView,
     TouchableOpacity, View,
     YellowBox, FlatList,
     Alert
@@ -193,6 +193,8 @@ const Home = ({ navigation }) => {
     )
 
     const Card = (({ item }) => {
+        console.log('dds', item.pictures)
+        console.log('ava', item.avatar)
         return (
             <View style={styles.card}>
                 <View style={styles.cardDetails}>
@@ -200,7 +202,6 @@ const Home = ({ navigation }) => {
                         <Image source={{ uri: item.avatar }} style={styles.cardImage} />
                         <Text style={styles.title}>{item.name}</Text>
                     </View>
-                    {/* <Text style={styles.description}>{item.introduction}</Text> */}
                     <View style={styles.bottomButtonsContainer}>
                         <TouchableOpacity style={styles.iconContainer}>
                             <AntDesign
