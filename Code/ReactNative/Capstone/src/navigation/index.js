@@ -1,13 +1,13 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Text, View, Image, StyleSheet, Alert } from 'react-native';
+import { Text, View, Image, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Animated from 'react-native-reanimated'
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash'
 import {
@@ -44,9 +44,7 @@ const SettingStack = createStackNavigator();
 
 const MainTabScreen = () => {
     const dispatch = useDispatch();
-
     const [done, setDone] = useState(false)
-
     const user = useSelector(state => state.auth.user)
 
     const loadPets = async () => {
@@ -204,6 +202,7 @@ const ChatStackScreen = ({ navigation }) => {
         </ChatStack.Navigator>
     )
 }
+
 const ProfileStackScreen = ({ navigation }) => {
     return (
         <ProfileStack.Navigator
@@ -213,7 +212,9 @@ const ProfileStackScreen = ({ navigation }) => {
                     fontWeight: 'bold',
                     fontSize: 22
                 },
-                headerTintColor: color.PINK
+                headerTintColor: color.PINK,
+                // headerTitle: null,
+                // headerTransparent: true
             }}>
             <ProfileStack.Screen name="Profile" component={Profile}
                 options={{
@@ -272,6 +273,7 @@ const ChatboxStackScreen = () => {
         </ChatboxStack.Navigator>
     )
 }
+
 const SettingStackScreen = ({ navigation }) => {
     return (
         <SettingStack.Navigator
@@ -298,62 +300,90 @@ const SettingStackScreen = ({ navigation }) => {
     )
 }
 
-const HomeStack = ({ navigation }) => {
+const HomeStack = ({ navigation, style }) => {
     const pet_active = useSelector(state => state.auth.pet_active)
 
     return (
-        <Stack.Navigator
-            initialRouteName='Home'
-            screenOptions={{
-                headerShown: true,
-                headerTitleAlign: 'center',
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    fontSize: 22
-                },
-                headerTintColor: color.PINK
-            }}>
-            <Stack.Screen name="Home" component={Home}
-                options={{
-                    title: '',
-                    headerLeft: () => (
-                        <Ionicons.Button name='md-menu' size={25} backgroundColor='#fff' color={color.PINK}
-                            onPress={() => navigation.openDrawer()}
-                        />
-                    ),
-                    headerRight: () => {
-                        if (pet_active.name) {
-                            return (
-                                <View style={styles.headerRight}>
-                                    <Text style={styles.petActiveName}>{pet_active.name}</Text>
-                                    <Image source={pet_active.avatar ? { uri: pet_active.avatar } : require('../../images/avatar.jpg')} style={styles.petActiveImg} />
-                                    <View style={styles.activeIcon}></View>
-                                </View>
-                            )
+        <Animated.View style={[styles.stack, style]}>
+            <Stack.Navigator
+                initialRouteName='Home'
+                screenOptions={{
+                    headerShown: true,
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                        fontSize: 22
+                    },
+                    headerTintColor: color.PINK
+                }}>
+                <Stack.Screen name="Home" component={Home}
+                    options={{
+                        title: '',
+                        headerLeft: () => (
+                            <Ionicons.Button name='md-menu' size={25} backgroundColor='#fff' color={color.PINK}
+                                onPress={() => navigation.openDrawer()}
+                            />
+                        ),
+                        headerRight: () => {
+                            if (pet_active.name) {
+                                return (
+                                    <View style={styles.headerRight}>
+                                        <Text style={styles.petActiveName}>{pet_active.name}</Text>
+                                        <Image source={pet_active.avatar ? { uri: pet_active.avatar } : require('../../images/avatar.jpg')} style={styles.petActiveImg} />
+                                        <View style={styles.activeIcon}></View>
+                                    </View>
+                                )
+                            }
                         }
-                    }
-                }}
-            />
-        </Stack.Navigator>
+                    }}
+                />
+            </Stack.Navigator>
+        </Animated.View>
     )
 }
 
 const NavContainer = () => {
     const token = useSelector(state => state.token.token)
+    const [progress, setProgress] = useState(new Animated.Value(0))
     if (!_.isEmpty(token)) {
         setAuthToken(token)
     }
 
+    // Create animation for screen scale
+    const scale = Animated.interpolate(progress, {
+        inputRange: [0, 1],
+        outputRange: [1, 0.8]
+    })
+
+    const screenStyles = { transfrom: [{ scale }] }
 
     return (
         <NavigationContainer>
             {
                 _.isEmpty(token)
                     ? <LoginStack />
-                    : (<Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}
+                    : (<Drawer.Navigator
+                        drawerType="slide"
+                        overlayColor={color.TRANSPARENT}
+                        // drawerContentOptions={{
+                        //     activeBackgroundColor: color.TRANSPARENT,
+                        //     activeTintColor: color.GREEN,
+
+                        //     inactiveTintColor: color.GREEN
+                        // }}
+                        // // Set the scene background to transparent
+                        // sceneContainerStyle={{ backgroundColor: color.TRANSPARENT }}
+                        drawerContent={props => {
+                            setProgress(props.progress);
+                            return <DrawerContent {...props} />
+                        }}
                         initialRouteName="Home"
                     >
+
                         <Drawer.Screen name="MainTabScreen" component={MainTabScreen} />
+                        {/* <Drawer.Screen name="Home">
+                            {props => <HomeStack {...props} style={screenStyles}/>}
+                        </Drawer.Screen> */}
                         <Drawer.Screen name="ChatboxStackScreen" component={ChatboxStackScreen} />
                         <Drawer.Screen name="SettingStackScreen" component={SettingStackScreen} />
                         <Drawer.Screen name="Match" component={Match} />
@@ -393,8 +423,18 @@ const styles = StyleSheet.create({
         right: 10,
         borderWidth: 1,
         borderColor: '#fff'
-    }
-
+    },
+    stack: {
+        flex: 1,
+        // shadowColor: '#FFF',
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 8,
+        // },
+        // shadowOpacity: 0.44,
+        // shadowRadius: 10.32,
+        // elevation: 5,
+    },
 })
 
 export default NavContainer;

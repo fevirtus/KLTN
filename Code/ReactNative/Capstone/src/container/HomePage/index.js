@@ -4,13 +4,14 @@ import {
     Text, ScrollView,
     TouchableOpacity, View,
     YellowBox, FlatList,
-    Alert
+    Alert, ImageBackground
 } from 'react-native';
 import Axios from 'axios';
 import Swiper from 'react-native-deck-swiper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import BottomSheet from 'reanimated-bottom-sheet'
 import { useSelector, useDispatch } from 'react-redux';
 import { token, URL_BASE } from '../../api/config';
@@ -193,49 +194,54 @@ const Home = ({ navigation }) => {
     )
 
     const Card = (({ item }) => {
-        console.log('dds', item.pictures)
-        console.log('ava', item.avatar)
         return (
-            <View style={styles.card}>
-                <View style={styles.cardDetails}>
-                    <View style={{ justifyContent: 'center', alignItems: 'center', height: '90%' }}>
-                        <Image source={{ uri: item.avatar }} style={styles.cardImage} />
-                        <Text style={styles.title}>{item.name}</Text>
-                    </View>
-                    <View style={styles.bottomButtonsContainer}>
-                        <TouchableOpacity style={styles.iconContainer}>
-                            <AntDesign
-                                name="close"
-                                size={35}
-                                color={color.RED}
-                                onPress={() => {
-                                    swiperRef.current.swipeLeft()
-                                }}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.iconContainer}>
-                            <AntDesign
-                                name="heart"
-                                size={32}
-                                color={color.GREEN}
-                                onPress={() => {
-                                    swiperRef.current.swipeTop()
-                                }}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.iconContainer}>
-                            <AntDesign
-                                name="star"
-                                size={34}
-                                color={color.BLUE}
-                                onPress={() => {
-                                    swiperRef.current.swipeRight()
-                                }}
-                            />
-                        </TouchableOpacity>
-                    </View>
+            <ImageBackground
+                style={styles.card}
+                source={{ uri: item.avatar }}
+                imageStyle={{ borderRadius: 8 }}
+            >
+                <TouchableOpacity style={styles.infoBtn}>
+                    <SimpleLineIcons
+                        name="info"
+                        size={33}
+                        color={color.WHITE}
+                        onPress={() => { }}
+                    />
+                </TouchableOpacity>
+                <Text style={styles.title}>{item.name}</Text>
+                <View style={styles.bottomButtonsContainer}>
+                    <TouchableOpacity style={styles.iconContainer}>
+                        <AntDesign
+                            name="close"
+                            size={35}
+                            color={color.RED}
+                            onPress={() => {
+                                swiperRef.current.swipeLeft()
+                            }}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.iconContainer}>
+                        <AntDesign
+                            name="heart"
+                            size={32}
+                            color={color.GREEN}
+                            onPress={() => {
+                                swiperRef.current.swipeTop()
+                            }}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.iconContainer}>
+                        <AntDesign
+                            name="star"
+                            size={34}
+                            color={color.BLUE}
+                            onPress={() => {
+                                swiperRef.current.swipeRight()
+                            }}
+                        />
+                    </TouchableOpacity>
                 </View>
-            </View>
+            </ImageBackground>
         )
     })
 
@@ -262,89 +268,87 @@ const Home = ({ navigation }) => {
                         />
                         {
                             loading ? <Loading /> : (_.isEmpty(data) ? null
-                                : <>
-                                    <View style={styles.swiperContainer}>
-                                        <Swiper
-                                            cards={data}
-                                            cardIndex={index}
-                                            renderCard={(item) => <Card item={item} />}
-                                            ref={swiperRef}
-                                            onSwiped={onSwiped}
-                                            onSwipedLeft={onSwipedLeft}
-                                            onSwipedRight={onSwipedRight}
-                                            onSwipedTop={onSwipedTop}
-                                            stackSize={2}
-                                            disableBottomSwipe
-                                            infinite
-                                            backgroundColor={'transparent'}
-                                            overlayLabels={{
-                                                left: {
-                                                    title: 'NOPE',
-                                                    style: {
-                                                        label: {
-                                                            backgroundColor: 'transparent',
-                                                            color: color.RED,
-                                                            fontSize: 24,
-                                                            borderColor: color.RED,
-                                                            borderWidth: 3
-                                                        },
-                                                        wrapper: {
-                                                            flexDirection: 'column',
-                                                            alignItems: 'flex-end',
-                                                            justifyContent: 'flex-start',
-                                                            marginTop: -35,
-                                                            marginLeft: -20,
-                                                        }
-                                                    }
-                                                },
-                                                right: {
-                                                    title: 'LIKE',
-                                                    style: {
-                                                        label: {
-                                                            backgroundColor: 'transparent',
-                                                            color: color.GREEN,
-                                                            fontSize: 24,
-                                                            borderColor: color.GREEN,
-                                                            borderWidth: 3
-                                                        },
-                                                        wrapper: {
-                                                            flexDirection: 'column',
-                                                            alignItems: 'flex-start',
-                                                            justifyContent: 'flex-start',
-                                                            marginTop: -35,
-                                                            marginLeft: 20
-                                                        }
-                                                    }
-                                                },
-                                                top: {
-                                                    title: 'MATCH',
-                                                    style: {
-                                                        label: {
-                                                            backgroundColor: 'transparent',
-                                                            color: color.BLUE,
-                                                            fontSize: 24,
-                                                            borderColor: color.BLUE,
-                                                            borderWidth: 3
-                                                        },
-                                                        wrapper: {
-                                                            flexDirection: 'column',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            marginTop: -60
-                                                        }
+                                : <View style={styles.swiperContainer}>
+                                    <Swiper
+                                        cards={data}
+                                        cardIndex={index}
+                                        renderCard={(item) => <Card item={item} />}
+                                        ref={swiperRef}
+                                        onSwiped={onSwiped}
+                                        onSwipedLeft={onSwipedLeft}
+                                        onSwipedRight={onSwipedRight}
+                                        onSwipedTop={onSwipedTop}
+                                        stackSize={2}
+                                        disableBottomSwipe
+                                        infinite
+                                        backgroundColor={'transparent'}
+                                        overlayLabels={{
+                                            left: {
+                                                title: 'NOPE',
+                                                style: {
+                                                    label: {
+                                                        backgroundColor: 'transparent',
+                                                        color: color.RED,
+                                                        fontSize: 24,
+                                                        borderColor: color.RED,
+                                                        borderWidth: 3
+                                                    },
+                                                    wrapper: {
+                                                        flexDirection: 'column',
+                                                        alignItems: 'flex-end',
+                                                        justifyContent: 'flex-start',
+                                                        marginTop: 15,
+                                                        marginLeft: -20,
                                                     }
                                                 }
-                                            }}
-                                        />
-                                    </View>
-                                    <View>
-                                        <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
-                                            <Ionicons name="ios-add-circle" size={28} color={color.PINK} />
-                                        </TouchableOpacity>
-                                    </View>
-                                </>
+                                            },
+                                            right: {
+                                                title: 'LIKE',
+                                                style: {
+                                                    label: {
+                                                        backgroundColor: 'transparent',
+                                                        color: color.GREEN,
+                                                        fontSize: 24,
+                                                        borderColor: color.GREEN,
+                                                        borderWidth: 3
+                                                    },
+                                                    wrapper: {
+                                                        flexDirection: 'column',
+                                                        alignItems: 'flex-start',
+                                                        justifyContent: 'flex-start',
+                                                        marginTop: 15,
+                                                        marginLeft: 20
+                                                    }
+                                                }
+                                            },
+                                            top: {
+                                                title: 'MATCH',
+                                                style: {
+                                                    label: {
+                                                        backgroundColor: 'transparent',
+                                                        color: color.BLUE,
+                                                        fontSize: 24,
+                                                        borderColor: color.BLUE,
+                                                        borderWidth: 3
+                                                    },
+                                                    wrapper: {
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        marginTop: -60
+                                                    }
+                                                }
+                                            }
+                                        }}
+                                    />
+                                </View>
                             )
                         }
+                        <View>
+                            <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
+                                <Ionicons name="ios-add-circle" size={30} color={color.PINK} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </Container>)
             }
@@ -356,38 +360,33 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    card: {
-        borderRadius: 5,
-        flex: 0.8,
-        elevation: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: color.WHITE
-    },
-    cardImage: {
-        width: 273,
-        flex: 1,
-        resizeMode: 'cover'
-    },
+    // Swiper styles
     swiperContainer: {
-        flex: 1,
+        flex: 1
     },
-    cardDetails: {
-        alignItems: 'center'
+    card: {
+        flex: 0.8
+    },
+    infoBtn: {
+        flex: 4,
+        position: 'relative',
+        top: 8,
+        right: 12,
+        alignItems: 'flex-end'
     },
     title: {
-        fontSize: 26,
-        color: color.BLACK
-    },
-    description: {
-        color: color.GRAY,
-        fontSize: 22
+        flex: 1,
+        fontSize: 28,
+        color: color.WHITE,
+        alignSelf: 'center',
+        position: 'relative',
+        top: 20,
     },
     bottomButtonsContainer: {
-        flex: 0.2,
         flexDirection: 'row',
         width: 400,
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        flex: 1
     },
     iconContainer: {
         borderRadius: 50,
@@ -442,10 +441,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     panelHandle: {
-        width: 40,
-        height: 8,
+        width: 70,
+        height: 6,
         borderRadius: 4,
-        backgroundColor: '#00000040',
+        backgroundColor: color.LIGHT_GRAY,
         marginBottom: 10
     },
     panel: {

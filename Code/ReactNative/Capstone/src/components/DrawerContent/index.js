@@ -15,10 +15,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { useSelector, useDispatch } from 'react-redux'
-import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-community/google-signin';
 import { LoginManager } from 'react-native-fbsdk';
 import { clearToken } from '../../redux/actions/tokenAction';
+import { color } from '../../utility'
 
 const DrawerContent = (props) => {
     const user = useSelector(state => state.auth.user)
@@ -32,7 +32,7 @@ const DrawerContent = (props) => {
                         <View style={styles.userInfo}>
                             <Avatar.Image
                                 source={user.avatar ? { uri: user.avatar } : require('../../../images/no-image.jpg')}
-                                size={50}
+                                size={55}
                             />
                             <View style={styles.userInfoText}>
                                 <Title style={styles.title}>{user.name}</Title>
@@ -146,7 +146,9 @@ const styles = StyleSheet.create({
     },
     userInfoText: {
         flexDirection: 'column',
-        marginLeft: 12
+        marginLeft: 12,
+        borderBottomWidth: 0.6,
+        borderBottomColor: color.LIGHT_GRAY
     },
     title: {
         fontSize: 16,
