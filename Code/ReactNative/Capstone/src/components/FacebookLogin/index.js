@@ -42,18 +42,14 @@ const FacebookLogin = () => {
             }
 
             const res = await Axios.post(`${URL_BASE}register`, { name: displayName, email: email, uid: uid })
-            const { pd_token, data } = res.data
-            // if (data.is_block == 1) {
-            //     const { block_deadline } = data;
-            //     let ms = new Date(block_deadline).getTime() - new Date().getTime();
-            //     console.log(ms, block_deadline)
-            //     let day = Math.floor(ms / (24 * 60 * 60 * 1000))
-            //     throw 'You bi block vi ngu nhu bo ' + ms
-            // }
-
-            setAuthToken(pd_token)
-            dispatch(saveUser(data))
-            dispatch(saveToken(pd_token))
+            if (res.data.data.is_block == 1) {
+                Alert.alert('Error!', `Your account has been locked, the remaining time is ${res.data.data.remainTime}`)
+            } else {
+                const { pd_token, data } = res.data
+                setAuthToken(pd_token)
+                dispatch(saveUser(data))
+                dispatch(saveToken(pd_token))
+            }
             dispatch(stopLoading())
         } catch (error) {
             if (error.code === 'auth/email-already-in-use') {

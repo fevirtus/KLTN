@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Text, View, Image, StyleSheet } from 'react-native';
+import { Text, View, Image, StyleSheet, Alert, BackHandler } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -32,6 +32,7 @@ import Axios from 'axios';
 import { saveActivePet, savePets, saveUser } from '../redux/actions/authActions';
 import { DrawerContent } from '../components'
 import { startLoading, stopLoading } from '../redux/actions/loadingAction';
+import { saveToken } from '../redux/actions/tokenAction';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -42,67 +43,83 @@ const FilterStack = createStackNavigator();
 const ChatboxStack = createStackNavigator();
 const SettingStack = createStackNavigator();
 
-const MainTabScreen = () => {
+const MainTabScreen = ({ navigation }) => {
     const dispatch = useDispatch();
     const [done, setDone] = useState(false)
     const user = useSelector(state => state.auth.user)
 
     const loadPets = async () => {
-        console.log('load pets: --------------')
-        await Axios.get(`${URL_BASE}pets`, {
-            headers: {
-                Authorization: token
-            }
-        }).then(res => {
+        try {
+            console.log('load pets: --------------')
+            const res = await Axios.get(`${URL_BASE}pets`, {
+                headers: {
+                    Authorization: token
+                }
+            })
             dispatch(savePets(res.data));
             const activePet = res.data.filter(pet => pet.is_active == 1);
             if (activePet.length == 1) {
                 dispatch(saveActivePet(activePet[0]))
             }
-        }).catch(e => {
-            console.log("Api call error!", e)
-        })
+        } catch (error) {
+            throw error
+        }
+
+
     }
 
     const loadUser = async () => {
-        console.log('load user:----------------- ')
-        await Axios.get(`${URL_BASE}users/currentUser`, {
-            headers: {
-                Authorization: token
-            }
-        }).then(res => {
-            // if(res.data[0].is_block == 1){
-            //     Alert.alert(
-            //         `YOU `,
-            //         `Are you sure to delete ${name}?`,
-            //         [
-            //             {
-            //                 text: 'Cancel',
-            //                 onPress: () => console.log('User cancel delete!'),
-            //                 style: 'cancel'
-            //             },
-            //             {
-            //                 text: 'OK',
-            //                 onPress: _delete
-            //             }
-            //         ],
-            //         { cancelable: false }
-            //     )
-            // }
+        try {
+            console.log('load user:----------------- ')
 
-            dispatch(saveUser(res.data[0]));
-            setUniqueValue(res.data[0].uid)
-        }).catch(e => {
-            console.log("Api call error!", e)
-        })
+            const res = await Axios.get(`${URL_BASE}users/currentUser`, {
+                headers: {
+                    Authorization: token
+                }
+            });
+
+            if (res.data.is_block == 1) {
+                throw `Your account has been locked, the remaining time is ${res.data.remainTime}`
+            } else {
+                dispatch(saveUser(res.data));
+                setUniqueValue(res.data.uid)
+            }
+        } catch (error) {
+            throw error
+        }
+
+
     }
 
     const loadData = async () => {
-        dispatch(startLoading())
-        if (!user.id) { await loadUser() }
-        await loadPets()
-        dispatch(stopLoading())
-        setDone(true)
+        try {
+            dispatch(startLoading())
+            if (!user.id) {
+                await loadUser()
+                await loadPets()
+            }
+            else {
+                await loadPets()
+            }
+            dispatch(stopLoading())
+            setDone(true)
+        } catch (error) {
+            dispatch(stopLoading())
+            Alert.alert(
+                `Error!`,
+                `${error}`,
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            dispatch(saveToken(''))
+                        }
+                    }
+                ],
+                { cancelable: false }
+            )
+        }
+
     }
 
     useEffect(() => {
@@ -377,7 +394,7 @@ const NavContainer = () => {
                             setProgress(props.progress);
                             return <DrawerContent {...props} />
                         }}
-                        initialRouteName="Home"
+                        initialRouteName="MainTabScreen"
                     >
 
                         <Drawer.Screen name="MainTabScreen" component={MainTabScreen} />
