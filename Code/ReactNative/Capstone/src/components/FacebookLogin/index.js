@@ -96,11 +96,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     facebook: {
+        width: '15%',
         marginLeft: 10,
         marginTop: 1
     },
     textWrapper: {
-        width: '68%',
+        width: '85%',
         marginLeft: 'auto',
         marginRight: 'auto',
     },

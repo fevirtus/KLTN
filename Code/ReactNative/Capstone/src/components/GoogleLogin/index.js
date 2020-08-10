@@ -96,11 +96,12 @@ const styles = StyleSheet.create({
         backgroundColor: color.RED
     },
     google: {
+        width: '18%',
         marginLeft: 10,
         marginTop: 1
     },
     textWrapper: {
-        width: '62%',
+        width: '82%',
         marginLeft: 'auto',
         marginRight: 'auto',
     },
