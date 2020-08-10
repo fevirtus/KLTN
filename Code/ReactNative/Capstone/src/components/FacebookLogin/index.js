@@ -73,9 +73,11 @@ const FacebookLogin = () => {
         <View>
             <TouchableOpacity style={styles.formLogin} onPress={_signIn}>
                 <Entypo name="facebook" size={18} color='white' style={styles.facebook} />
-                <Text style={styles.text}>
-                    LOG IN WITH FACEBOOK
+                <View style={styles.textWrapper}>
+                    <Text style={styles.text}>
+                        LOG IN WITH FACEBOOK
                     </Text>
+                </View>
             </TouchableOpacity>
         </View>
     )
@@ -95,8 +97,12 @@ const styles = StyleSheet.create({
     },
     facebook: {
         marginLeft: 10,
-        marginRight: 25,
         marginTop: 1
+    },
+    textWrapper: {
+        width: '68%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     text: {
         fontSize: 18,

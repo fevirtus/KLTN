@@ -386,7 +386,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: 400,
         justifyContent: 'space-around',
-        flex: 1
+        flex: 1,
+        alignSelf: 'center'
     },
     iconContainer: {
         borderRadius: 50,

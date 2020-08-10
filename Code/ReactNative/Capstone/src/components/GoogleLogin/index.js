@@ -39,14 +39,18 @@ const GoogleLogin = () => {
 
             const res = await Axios.post(`${URL_BASE}register`, { name: displayName, email: email, uid: uid })
 
-            if (res.data.data.is_block == 1) {
-                Alert.alert('Error!', `Your account has been locked, the remaining time is ${res.data.data.remainTime}`)
-            } else {
-                const { pd_token, data } = res.data
-                setAuthToken(pd_token)
-                dispatch(saveUser(data))
-                dispatch(saveToken(pd_token))
-            }
+            // if (res.data.data.is_block == 1) {
+            //     Alert.alert('Error!', `Your account has been locked, the remaining time is ${res.data.data.remainTime}`)
+            // } else {
+            //     const { pd_token, data } = res.data
+            //     setAuthToken(pd_token)
+            //     dispatch(saveUser(data))
+            //     dispatch(saveToken(pd_token))
+            // }
+            const { pd_token, data } = res.data
+            setAuthToken(pd_token)
+            dispatch(saveUser(data))
+            dispatch(saveToken(pd_token))
             dispatch(stopLoading())
 
         } catch (error) {
@@ -70,9 +74,11 @@ const GoogleLogin = () => {
         <View>
             <TouchableOpacity style={styles.formLogin} onPress={_signIn}>
                 <FontAwesome5 name="google" size={18} color="white" style={styles.google} />
-                <Text style={styles.text}>
-                    LOG IN WITH GOOGLE
-                </Text>
+                <View style={styles.textWrapper}>
+                    <Text style={styles.text}>
+                        LOG IN WITH GOOGLE
+                    </Text>
+                </View>
             </TouchableOpacity>
         </View>
     )
@@ -91,8 +97,12 @@ const styles = StyleSheet.create({
     },
     google: {
         marginLeft: 10,
-        marginRight: 25,
         marginTop: 1
+    },
+    textWrapper: {
+        width: '62%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     text: {
         fontSize: 18,
