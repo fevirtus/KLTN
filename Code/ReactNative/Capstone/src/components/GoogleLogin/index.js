@@ -38,6 +38,7 @@ const GoogleLogin = () => {
             }
 
             const res = await Axios.post(`${URL_BASE}register`, { name: displayName, email: email, uid: uid })
+            console.log(res.data)
 
             // if (res.data.data.is_block == 1) {
             //     Alert.alert('Error!', `Your account has been locked, the remaining time is ${res.data.data.remainTime}`)

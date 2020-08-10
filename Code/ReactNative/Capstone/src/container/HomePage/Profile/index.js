@@ -30,6 +30,8 @@ import { RadioButton } from 'react-native-paper';
 import { UpdateUser, UpdateUserName, uploadImgToServer } from '../../../network';
 import { uuid } from '../../../utility/constants';
 import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
 
 const { width } = Dimensions.get('window')
 const SLIDER_WIDTH = Dimensions.get('window').width;
@@ -52,6 +54,8 @@ const Profile = ({ navigation }) => {
     const [uploadImg, setUploadImg] = useState({
         img: null
     });
+
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
     const [checked, setChecked] = useState(user.gender === 1 ? 'Male' : 'Female');
     const carouselRef = useRef(null)
@@ -169,6 +173,13 @@ const Profile = ({ navigation }) => {
             </View>
         );
     }
+
+    const onDatePicker = (event, selectedDate) => {
+        setShowDatePicker(false)
+        if (selectedDate) {
+            handleChangeInfo('birth_date', moment(selectedDate).format('YYYY-MM-DD'))
+        }
+    };
 
     useEffect(() => {
         handleSlide(active)
@@ -324,14 +335,29 @@ const Profile = ({ navigation }) => {
                                     }
                                     <View style={styles.action}>
                                         <FontAwesome name="birthday-cake" color={color.GRAY} size={22} />
-                                        <TextInput
-                                            placeholder="Birthday"
-                                            value={data.birth_date}
-                                            placeholderTextColor={color.GRAY}
-                                            onChangeText={(txt) => handleChangeInfo('bith_date', txt)}
-                                            style={styles.textInput}
-                                        />
+                                        <TouchableOpacity
+                                            onPress={() => setShowDatePicker(true)}
+                                        >
+                                            <TextInput
+                                                placeholder="Birthday"
+                                                value={data.birth_date}
+                                                placeholderTextColor={color.GRAY}
+                                                editable={false}
+                                                // onChangeText={(txt) => handleChangeInfo('bith_date', txt)}
+                                                style={styles.textInput}
+                                            />
+                                        </TouchableOpacity>
                                     </View>
+                                    {showDatePicker &&
+                                        <DateTimePicker
+                                            testID="dateTimePicker"
+                                            value={data.birth_date ? new Date(data.birth_date) : new Date()}
+                                            mode='date'
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={onDatePicker}
+                                        />
+                                    }
                                 </View>
                                 {isChange &&
                                     <TouchableOpacity style={styles.commandButton} onPress={onUpdateUser}>

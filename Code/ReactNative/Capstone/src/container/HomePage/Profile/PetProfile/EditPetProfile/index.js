@@ -221,7 +221,9 @@ const EditPetProfile = ({ navigation, route }) => {
                     }
                 }, { headers: { Authorization: token } })
                     .then(res => {
-                        console.log(res.data)
+                        if (pet_active.id == petId) {
+                            dispatch(updateActivePet(res.data.data))
+                        }
                         dispatch(updatePet(res.data.data))
                         setIsChange(false)
                         dispatch(stopLoading())

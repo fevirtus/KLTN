@@ -11,6 +11,8 @@
     },
     "dependencies": {
         "@react-native-community/async-storage": "^1.11.0",
+        "@react-native-community/datetimepicker": "^2.6.1",
+        "@react-native-community/geolocation": "^2.0.2",
         "@react-native-community/google-signin": "^4.0.3",
         "@react-native-community/masked-view": "^0.1.10",
         "@react-native-community/toolbar-android": "0.1.0-rc.2",
@@ -26,6 +28,7 @@
         "lodash": "^4.17.17",
         "lottie-react-native": "^3.5.0",
         "mime": "^2.4.6",
+        "moment": "^2.27.0",
         "native-base": "^2.13.13",
         "react": "16.11.0",
         "react-native": "0.62.2",
