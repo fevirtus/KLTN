@@ -16,15 +16,15 @@ const Filter = ({ navigation }) => {
     return (
         <Container>
             <View style={styles.form}>
-                <RadioForm 
+                <RadioForm
                     style={styles.radioForm}
                     radio_props={gender}
                     initial={0}
                     buttonSize={24}
                     selectedButtonColor={color.PINK}
                     buttonColor={color.PINK}
-                    labelStyle={{fontSize: 17}}
-                    onPress={(value) => {}}
+                    labelStyle={{ fontSize: 17 }}
+                    onPress={(value) => { }}
                 />
                 <Text style={styles.textDistance}>Distance ({distance} KM) </Text>
                 <Slider
@@ -32,7 +32,7 @@ const Filter = ({ navigation }) => {
                     maximumValue={100}
                     step={1}
                     value={distance}
-                    onValueChange={(val) => {setDistance(val)}}
+                    onValueChange={(val) => { setDistance(val) }}
                 />
                 <TouchableOpacity style={styles.submit} onPress={() => navigation.navigate('Home')}>
                     <Text style={styles.textSubmit}>Submit</Text>
@@ -44,13 +44,7 @@ const Filter = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     form: {
-        paddingRight: 20,
-        paddingLeft: 20,
-        marginTop: 30,
-        marginLeft: 15,
-        marginRight: 15,
-        backgroundColor: color.LIGHT_GRAY,
-        borderRadius: 5
+        paddingHorizontal: 32
     },
     radioForm: {
         paddingTop: 25,

@@ -194,7 +194,67 @@ const Home = ({ navigation }) => {
     )
 
     const Card = (({ item }) => {
+        var images = _.concat(item.avatar, item.pictures)
+        console.log('images', images)
+
         return (
+            // <View style={{ flex: 0.8}}>
+            //     <ScrollView horizontal pagingEnabled>
+            //         {
+            //             images.map((image, index) => (
+            //                 <ImageBackground
+            //                     key={index}
+            //                     style={styles.card}
+            //                     source={{ uri: image }}
+            //                     imageStyle={{ borderRadius: 8 }}
+            //                 >
+            //                     <TouchableOpacity style={styles.infoBtn}>
+            //                         <SimpleLineIcons
+            //                             name="info"
+            //                             size={32}
+            //                             color={color.WHITE}
+            //                             onPress={() => { }}
+            //                         />
+            //                     </TouchableOpacity>
+            //                     <Text style={styles.title}>{item.name}</Text>
+            //                     <View style={styles.bottomButtonsContainer}>
+            //                         <TouchableOpacity style={styles.iconContainer}>
+            //                             <AntDesign
+            //                                 name="close"
+            //                                 size={35}
+            //                                 color={color.RED}
+            //                                 onPress={() => {
+            //                                     swiperRef.current.swipeLeft()
+            //                                 }}
+            //                             />
+            //                         </TouchableOpacity>
+            //                         <TouchableOpacity style={styles.iconContainer}>
+            //                             <AntDesign
+            //                                 name="heart"
+            //                                 size={32}
+            //                                 color={color.GREEN}
+            //                                 onPress={() => {
+            //                                     swiperRef.current.swipeTop()
+            //                                 }}
+            //                             />
+            //                         </TouchableOpacity>
+            //                         <TouchableOpacity style={styles.iconContainer}>
+            //                             <AntDesign
+            //                                 name="star"
+            //                                 size={34}
+            //                                 color={color.BLUE}
+            //                                 onPress={() => {
+            //                                     swiperRef.current.swipeRight()
+            //                                 }}
+            //                             />
+            //                         </TouchableOpacity>
+            //                     </View>
+            //                 </ImageBackground>
+            //             ))
+            //         }
+            //     </ScrollView>
+            // </View>
+
             <ImageBackground
                 style={styles.card}
                 source={{ uri: item.avatar }}
@@ -203,7 +263,7 @@ const Home = ({ navigation }) => {
                 <TouchableOpacity style={styles.infoBtn}>
                     <SimpleLineIcons
                         name="info"
-                        size={33}
+                        size={32}
                         color={color.WHITE}
                         onPress={() => { }}
                     />
@@ -383,10 +443,10 @@ const styles = StyleSheet.create({
         top: 20,
     },
     bottomButtonsContainer: {
-        flexDirection: 'row',
-        width: 400,
-        justifyContent: 'space-around',
         flex: 1,
+        width: 400,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
         alignSelf: 'center'
     },
     iconContainer: {
@@ -395,7 +455,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: 54,
-        height: 54
+        height: 54,
+        backgroundColor: color.WHITE
     },
     petImageWrapper: {
         marginTop: 10,
@@ -409,6 +470,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         borderWidth: 3,
     },
+    // Hide mode
     hideMode: {
         flex: 1,
         justifyContent: 'center',
@@ -427,6 +489,7 @@ const styles = StyleSheet.create({
         color: color.GRAY,
         paddingTop: 22
     },
+    // Pet active
     activePet: {
         justifyContent: 'center',
         alignItems: 'center'
