@@ -13,7 +13,25 @@
 /api/users/currentUser
 	+ GET: - headers:{Authorization: token}
 	=> get current user
+	
+/api/users/:id
+	+ GET: {headers:{Authorization: token}}
+	=> get an user by user_id
 
+/api/users/filter?distance=2&latitude=20.3333&longitude=0.3333
+	+ GET: {headers:{Authorization: token}}
+	=> get all users distance <= given distance
+
+/api/users/toPremium
+	+ POST: 
+		- headers:{Authorization: token},
+		- body:{
+			"confirm_img": required
+		}
+		
+	=> upgrade current user to Premium
+	
+	
 /api/users/
 	+ PUT: {
 		headers:{Authorization: token},
@@ -25,10 +43,7 @@
 		}
 	}
 	=>update current user
-	
-/api/users/:id
-	+ GET: {headers:{Authorization: token}}
-	=> get an user by user_id
+
 
 ------------- pet -----------------	
 
