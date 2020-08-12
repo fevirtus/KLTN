@@ -4,14 +4,17 @@ import {
     Text, ScrollView,
     TouchableOpacity, View,
     YellowBox, FlatList,
-    Alert, ImageBackground
+    Alert, ImageBackground,
+    Modal
 } from 'react-native';
 import Axios from 'axios';
 import Swiper from 'react-native-deck-swiper';
+import LinearGradient from 'react-native-linear-gradient'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BottomSheet from 'reanimated-bottom-sheet'
 import { useSelector, useDispatch } from 'react-redux';
 import { token, URL_BASE } from '../../api/config';
@@ -36,6 +39,7 @@ const Home = ({ navigation }) => {
     const onSwiped = () => {
         setIndex((index + 1) % data.length)
     }
+    const [modalOpen, setModalOpen] = useState(false)
 
     const bs = useRef(null)
 
@@ -195,7 +199,6 @@ const Home = ({ navigation }) => {
 
     const Card = (({ item }) => {
         var images = _.concat(item.avatar, item.pictures)
-        console.log('images', images)
 
         return (
             // <View style={{ flex: 0.8}}>
@@ -307,6 +310,31 @@ const Home = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            {/* Modal */}
+            <Modal visible={modalOpen} animationType='fade' transparent={true}>
+                <View style={styles.modalContent}>
+                    <LinearGradient colors={[color.YELLOW, color.WHITE, color.WHITE]} style={styles.modal}>
+                        <Text style={styles.textPre}>Đăng ký Premium</Text>
+                        <TouchableOpacity style={styles.btnReturnAds}>
+                            <MaterialCommunityIcons
+                                name="reload"
+                                size={30}
+                                color={color.ORANGE}
+                            />
+                        </TouchableOpacity>
+                        <Text style={styles.textPre2}>Bạn có thể Quay lại bao nhiêu lần tùy ý</Text>
+                        <Text style={styles.textPre3}>Nếu lỡ vuốt nhầm cũng chớ lo, bạn có thể sửa chữa ngay và luôn</Text>
+                        <View style={styles.price}>
+                            <Text style={styles.textPrice}>Chỉ 59.000 đ/3 tháng</Text>
+                        </View>
+                        <TouchableOpacity style={styles.commandButton} onPress={() => navigation.navigate('Payment')}>
+                            <Text style={styles.panelButtonTitle}>Đăng ký Premium</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Không phải bây giờ, cảm ơn</Text>
+                    </LinearGradient>
+                </View>
+            </Modal>
+
             {hide ?
                 (<Container>
                     <View style={styles.container}>
@@ -340,7 +368,7 @@ const Home = ({ navigation }) => {
                                         onSwipedTop={onSwipedTop}
                                         stackSize={2}
                                         disableBottomSwipe
-                                        infinite
+                                        // infinite
                                         backgroundColor={'transparent'}
                                         overlayLabels={{
                                             left: {
@@ -367,9 +395,9 @@ const Home = ({ navigation }) => {
                                                 style: {
                                                     label: {
                                                         backgroundColor: 'transparent',
-                                                        color: color.GREEN,
+                                                        color: color.BLUE,
                                                         fontSize: 24,
-                                                        borderColor: color.GREEN,
+                                                        borderColor: color.BLUE,
                                                         borderWidth: 3
                                                     },
                                                     wrapper: {
@@ -386,9 +414,9 @@ const Home = ({ navigation }) => {
                                                 style: {
                                                     label: {
                                                         backgroundColor: 'transparent',
-                                                        color: color.BLUE,
+                                                        color: color.GREEN,
                                                         fontSize: 24,
-                                                        borderColor: color.BLUE,
+                                                        borderColor: color.GREEN,
                                                         borderWidth: 3
                                                     },
                                                     wrapper: {
@@ -404,10 +432,32 @@ const Home = ({ navigation }) => {
                                 </View>
                             )
                         }
-                        <View>
+                        <View style={styles.bottom}>
                             <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
                                 <Ionicons name="ios-add-circle" size={30} color={color.PINK} />
                             </TouchableOpacity>
+                            {
+                                user.is_vip === 1
+                                    ? <TouchableOpacity style={styles.btnReturn}>
+                                        <MaterialCommunityIcons
+                                            name="reload"
+                                            size={25}
+                                            color={color.ORANGE}
+                                            onPress={() => {
+                                                swiperRef.current.swipeBack()
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+                                    : <TouchableOpacity style={[styles.btnReturn, { backgroundColor: color.LIGHT_LIGHT_GRAY }]}>
+                                        <MaterialCommunityIcons
+                                            name="reload"
+                                            size={25}
+                                            color={color.ORANGE}
+                                            onPress={() => setModalOpen(true)}
+                                        />
+                                    </TouchableOpacity>
+                            }
+
                         </View>
                     </View>
                 </Container>)
@@ -418,14 +468,14 @@ const Home = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
     // Swiper styles
     swiperContainer: {
         flex: 1
     },
     card: {
-        flex: 0.8
+        flex: 0.82
     },
     infoBtn: {
         flex: 4,
@@ -451,7 +501,6 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         borderRadius: 50,
-        elevation: 2,
         justifyContent: 'center',
         alignItems: 'center',
         width: 54,
@@ -469,6 +518,21 @@ const styles = StyleSheet.create({
         width: 70,
         borderRadius: 50,
         borderWidth: 3,
+    },
+    bottom: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingVertical: 16
+    },
+    btnReturn: {
+        borderRadius: 25,
+        elevation: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 35,
+        height: 35,
+        backgroundColor: color.WHITE,
+        marginHorizontal: 20
     },
     // Hide mode
     hideMode: {
@@ -513,10 +577,87 @@ const styles = StyleSheet.create({
     },
     panel: {
         backgroundColor: color.WHITE
+    },
+    // Modal 
+    commandButton: {
+        padding: 10,
+        borderRadius: 25,
+        backgroundColor: color.PINK,
+        alignItems: 'center',
+        marginTop: 15,
+        width: '90%'
+    },
+    panelButtonTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: color.WHITE,
+    },
+    modalContent: {
+        flex: 1,
+        backgroundColor: '#000000aa'
+    },
+    modal: {
+        backgroundColor: color.WHITE,
+        marginHorizontal: 40,
+        marginVertical: 70,
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 10,
+        borderRadius: 6,
+        alignItems: 'center'
+    },
+    textPre: {
+        color: color.WHITE,
+        fontWeight: 'bold',
+        fontSize: 18
+    },
+    btnReturnAds: {
+        borderRadius: 25,
+        elevation: 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 48,
+        height: 48,
+        backgroundColor: color.WHITE,
+        marginTop: 10,
+        marginBottom: 18
+    },
+    textPre2: {
+        fontWeight: '700',
+        textAlign: 'center',
+        paddingBottom: 5,
+        fontSize: 16,
+        lineHeight: 22
+    },
+    textPre3: {
+        textAlign: 'center',
+        color: color.DARK_GRAY,
+        lineHeight: 20,
+        fontSize: 13
+    },
+    price: {
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: color.LIGHT_PINK,
+        alignItems: 'center',
+        marginTop: 15,
+        width: '70%',
+        elevation: 3
+    },
+    textPrice: {
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        fontSize: 15
+    },
+    textPre4: {
+        color: color.LIGHT_GRAY,
+        fontSize: 15,
+        fontWeight: 'bold',
+        paddingTop: 18
     }
 });
 
-YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
-    'Animated.event now requires a second argument for options']);
+// YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
+//     'Animated.event now requires a second argument for options']);
 
 export default Home;

@@ -8,6 +8,7 @@ export const GRAY = "grey";
 export const BLUE = "#035AA6";
 export const LIGHT_BLUE = '#0099ff';
 export const RED = "#d92027";
+export const YELLOW = "#ffcd3c";
 
 export const TRANSPARENT = "transparent";
 

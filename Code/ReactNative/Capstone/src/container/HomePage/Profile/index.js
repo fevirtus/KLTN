@@ -11,7 +11,6 @@ import {
     Dimensions,
     YellowBox
 } from 'react-native'
-import mime from 'mime'
 import ImagePicker from 'react-native-image-picker';
 import * as Animatable from 'react-native-animatable';
 import { useDispatch, useSelector } from 'react-redux';
@@ -114,10 +113,8 @@ const Profile = ({ navigation }) => {
         if (user.avatar != data.avatar) {
             try {
                 const newAvatar = await uploadImgToServer(uploadImg);
-
                 //update user avatar on firebase
                 UpdateUser(uuid, newAvatar)
-                console.log('start', newAvatar)
                 Axios.put(`${URL_BASE}users`, {
                     updateFields: {
                         ...data,
@@ -125,10 +122,8 @@ const Profile = ({ navigation }) => {
                     }
                 }, { headers: { Authorization: token } })
                     .then(res => {
-                        console.log('cc:', res.data)
                         dispatch(updateUser(res.data.data))
                         setIsChange(false)
-                        // navigation.goBack();
                         dispatch(stopLoading())
                     })
                     .catch(error => {
@@ -252,7 +247,7 @@ const Profile = ({ navigation }) => {
                             </TouchableOpacity>
                         </View>
 
-                        <ScrollView>
+                        <ScrollView showsVerticalScrollIndicator={false}>
                             <Animated.View
                                 style={{
                                     transform: [
@@ -336,6 +331,7 @@ const Profile = ({ navigation }) => {
                                     <View style={styles.action}>
                                         <FontAwesome name="birthday-cake" color={color.GRAY} size={22} />
                                         <TouchableOpacity
+                                            style={styles.calendar}
                                             onPress={() => setShowDatePicker(true)}
                                         >
                                             <TextInput
@@ -343,9 +339,11 @@ const Profile = ({ navigation }) => {
                                                 value={data.birth_date}
                                                 placeholderTextColor={color.GRAY}
                                                 editable={false}
-                                                // onChangeText={(txt) => handleChangeInfo('bith_date', txt)}
-                                                style={styles.textInput}
+                                                style={[styles.textInput, { width: '40%' }]}
                                             />
+                                            <View style={styles.iconCal}>
+                                                <FontAwesome name="calendar" color={color.GRAY} size={22} />
+                                            </View>
                                         </TouchableOpacity>
                                     </View>
                                     {showDatePicker &&
@@ -405,7 +403,6 @@ const Profile = ({ navigation }) => {
                                             />
                                         </View>
                                 }
-
                                 <TouchableOpacity
                                     style={styles.addButton}
                                     onPress={() => navigation.navigate('PetSetting')}
@@ -430,7 +427,7 @@ const styles = StyleSheet.create({
     },
     // Tab sliding
     tabSliding: {
-        width: '90%',
+        width: '80%',
         marginLeft: 'auto',
         marginRight: 'auto'
     },
@@ -477,8 +474,8 @@ const styles = StyleSheet.create({
         height: 130,
         borderRadius: 100,
         alignSelf: 'center',
-        marginTop: 20,
-        marginBottom: 25
+        marginTop: 12,
+        marginBottom: 22
     },
     profileImage: {
         width: 130,
@@ -502,11 +499,11 @@ const styles = StyleSheet.create({
     },
     action: {
         flexDirection: 'row',
-        marginTop: 18,
-        marginBottom: 12,
+        marginTop: 15,
+        marginBottom: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        width: '92%',
+        width: '100%',
         marginLeft: 'auto',
         marginRight: 'auto'
     },
@@ -514,13 +511,20 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: -12,
         paddingLeft: 25,
-        color: '#05375a',
+        color: '#05375a'
     },
     errorMsg: {
         color: color.RED,
-        width: '92%',
+        width: '100%',
         marginLeft: 'auto',
         marginRight: 'auto'
+    },
+    calendar: {
+        flexDirection: 'row'
+    },
+    iconCal: {
+        width: '60%',
+        alignItems: 'flex-end'
     },
     commandButton: {
         padding: 14,
