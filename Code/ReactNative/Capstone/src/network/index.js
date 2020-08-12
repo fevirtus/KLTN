@@ -1,7 +1,7 @@
 import { AddUser, UpdateUser, UpdateUserName } from "./user";
 import { senderMsg, recieverMsg } from "./messeges";
 import { uploadImgToServer, uploadImgToServer2, uploadPicturesToServer } from "./upload";
-import { saveMatch } from './match'
+import { saveMatch, seenMatch } from './match'
 
 export {
     AddUser,
@@ -13,4 +13,5 @@ export {
     uploadImgToServer2,
     uploadPicturesToServer,
     saveMatch,
+    seenMatch,
 }

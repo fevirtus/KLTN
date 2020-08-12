@@ -15,7 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { globalStyle, color, appStyle } from "../../utility";
 import styles from "./styles";
 import { InputField, ChatBox } from "../../components";
-import { senderMsg, recieverMsg } from "../../network";
+import { senderMsg, recieverMsg, seenMatch } from "../../network";
 import { deviceHeight } from "../../utility/styleHelper/appStyle";
 import { smallDeviceHeight } from "../../utility/constants";
 import database from '@react-native-firebase/database';
@@ -55,6 +55,9 @@ const Chat = ({ route, navigation }) => {
           });
           setMesseges(msgs.reverse());
         });
+
+      //update seen
+      seenMatch(currentUserId, guestUserId)
     } catch (error) {
       alert(error);
     }

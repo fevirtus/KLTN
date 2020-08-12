@@ -1,9 +1,9 @@
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
-import { Card, CardItem, Left, Body, Thumbnail } from "native-base";
+import { Card, CardItem, Left, Body, Thumbnail, Right } from "native-base";
 import styles from "./styles";
 
-const ShowUsers = ({ name, img, onImgTap, onNameTap }) => {
+const ShowUsers = ({ name, img, onImgTap, onNameTap, seen }) => {
     return (
         <Card style={styles.cardStyle}>
             <CardItem style={styles.cardItemStyle}>
@@ -22,6 +22,9 @@ const ShowUsers = ({ name, img, onImgTap, onNameTap }) => {
                         </Text>
                     </Body>
                 </Left>
+                <Right>
+                    {seen ? null : <Text style={styles.newMatch}>New Match</Text>}
+                </Right>
             </CardItem>
         </Card>
     );

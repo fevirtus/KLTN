@@ -18,17 +18,19 @@ const ChatDashboard = ({ navigation }) => {
             database().ref('users').on('value', dataSnapshot => {
                 database().ref(`matches/${uuid}`)
                     .on('value', matchSnap => {
-                        let matchedUser = [];
+                        let matchedUsers = [];
                         matchSnap.forEach((child) => {
-                            matchedUser.unshift(child.val().guest);
+                            matchedUsers.unshift(child.val());
                         });
                         let users = []
                         dataSnapshot.forEach((child) => {
-                            if (matchedUser.includes(child.val().uuid)) {
+                            const has = matchedUsers.filter(mu => mu.guest == child.val().uuid);
+                            if (has.length > 0) {//exist in matchedUsers
                                 users.push({
                                     id: child.val().uuid,
                                     name: child.val().name,
                                     profileImg: child.val().profileImg,
+                                    seen: has[0].seen
                                 });
                             }
 
@@ -91,6 +93,7 @@ const ChatDashboard = ({ navigation }) => {
                     <ShowUsers
                         name={item.name}
                         img={item.profileImg}
+                        seen={item.seen}
                         onImgTap={() => imgTap(item.profileImg, item.name)}
                         onNameTap={() => nameTap(item.profileImg, item.name, item.id)}
                     />

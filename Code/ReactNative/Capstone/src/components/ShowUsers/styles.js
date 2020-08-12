@@ -21,6 +21,25 @@ export default StyleSheet.create({
     justifyContent: "center",
     backgroundColor: color.PINK,
   },
-  thumbnailName: { fontSize: 30, color: color.WHITE, fontWeight: "bold" },
-  profileName: { fontSize: 20, color: color.BLACK, fontWeight: "bold" },
+  thumbnailName: {
+    fontSize: 30,
+    color: color.WHITE,
+    fontWeight: "bold"
+  },
+  profileName: {
+    fontSize: 20,
+    color: color.BLACK,
+    fontWeight: "bold"
+  },
+  newMatch: {
+    color: color.RED,
+    fontWeight: 'bold',
+    fontSize: 15,
+    transform: [{ rotate: '-30deg' }],
+    // width: 20,
+    borderColor: color.RED,
+    borderWidth: 1,
+    padding: 3,
+
+  }
 });
