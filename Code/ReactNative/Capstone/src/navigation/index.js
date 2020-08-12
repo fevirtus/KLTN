@@ -237,18 +237,22 @@ const ProfileStackScreen = ({ navigation }) => {
     return (
         <ProfileStack.Navigator
             screenOptions={{
-                headerTitle: null,
-                headerTransparent: true
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 22
+                },
+                headerTintColor: color.PINK
             }}>
             <ProfileStack.Screen name="Profile" component={Profile}
-            // options={{
-            //     title: 'Profile',
-            //     headerLeft: () => (
-            //         <Ionicons.Button name='md-menu' size={28} backgroundColor={color.TRANSPARENT} color={color.PINK}
-            //             onPress={() => navigation.openDrawer()}
-            //         />
-            //     ),
-            // }}
+                options={{
+                    title: 'Profile',
+                    headerLeft: () => (
+                        <Ionicons.Button name='md-menu' size={28} backgroundColor={color.TRANSPARENT} color={color.PINK}
+                            onPress={() => navigation.openDrawer()}
+                        />
+                    ),
+                }}
             />
             <ProfileStack.Screen name="PetSetting" component={PetSetting} options={{ title: 'New Pet' }} />
             <ProfileStack.Screen name="PetProfile" component={PetProfile} options={{ title: 'Pet Profile' }} />
