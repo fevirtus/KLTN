@@ -30,13 +30,14 @@ import {
 } from '../container';
 import { color } from '../utility';
 import Chat from '../container/Chat';
-import { setUniqueValue } from '../utility/constants';
+import { setUniqueValue, uuid } from '../utility/constants';
 import { setAuthToken, URL_BASE, token } from '../api/config';
 import Axios from 'axios';
 import { saveActivePet, savePets, saveUser } from '../redux/actions/authActions';
 import { DrawerContent } from '../components'
 import { startLoading, stopLoading } from '../redux/actions/loadingAction';
 import { saveToken } from '../redux/actions/tokenAction';
+import database from '@react-native-firebase/database';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -52,6 +53,7 @@ const MainTabScreen = ({ navigation }) => {
     const dispatch = useDispatch();
     const [done, setDone] = useState(false)
     const user = useSelector(state => state.auth.user)
+    const [match, setMatch] = useState(0);
 
     const loadPets = async () => {
         try {
@@ -104,6 +106,7 @@ const MainTabScreen = ({ navigation }) => {
             else {
                 await loadPets()
             }
+            loadNewMatch()
             dispatch(stopLoading())
             setDone(true)
         } catch (error) {
@@ -121,6 +124,25 @@ const MainTabScreen = ({ navigation }) => {
                 ],
                 { cancelable: false }
             )
+        }
+    }
+
+    const loadNewMatch = async () => {
+        try {
+            console.log('loadNewMatch ..............')
+            await database()
+                .ref('matches/' + uuid)
+                .on('value', snapshot => {
+                    let newMatch = 0;
+                    snapshot.forEach(child => {
+                        if (!child.val().seen) {
+                            newMatch++;
+                        }
+                    })
+                    setMatch(newMatch)
+                })
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -151,7 +173,11 @@ const MainTabScreen = ({ navigation }) => {
                     tabBarLabel: 'Messages',
                     tabBarColor: color.PINK,
                     tabBarIcon: ({ color }) => (
-                        <Fontisto name="hipchat" color={color} size={22} />
+                        <View>
+                            <Fontisto name="hipchat" color={color} size={22} />
+                            {match > 0 ? <Text style={styles.numOfMatch}>{match}</Text> : null}
+                        </View>
+
                     ),
                 }}
             />
@@ -492,6 +518,23 @@ const styles = StyleSheet.create({
         // shadowRadius: 10.32,
         // elevation: 5,
     },
+    numOfMatch: {
+        position: 'absolute',
+        top: 5,
+        right: -5,
+        backgroundColor: '#ff0000',
+        marginTop: -10,
+        color: color.WHITE,
+        fontWeight: 'bold',
+        borderRadius: 7,
+        minWidth: 14,
+        height: 14,
+        fontSize: 10,
+        alignSelf: 'center',
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        padding: 1,
+    }
 })
 
 export default NavContainer;
