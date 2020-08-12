@@ -1,5 +1,5 @@
 import { AddUser, UpdateUser, UpdateUserName } from "./user";
-import { senderMsg, recieverMsg } from "./messeges";
+import { senderMsg, recieverMsg, systemMsg } from "./messeges";
 import { uploadImgToServer, uploadImgToServer2, uploadPicturesToServer } from "./upload";
 import { saveMatch, seenMatch } from './match'
 
@@ -14,4 +14,5 @@ export {
     uploadPicturesToServer,
     saveMatch,
     seenMatch,
+    systemMsg,
 }

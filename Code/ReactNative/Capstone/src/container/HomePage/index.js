@@ -21,7 +21,7 @@ import { token, URL_BASE } from '../../api/config';
 import { Container, Loading } from '../../components';
 import { color } from '../../utility';
 import { uuid } from '../../utility/constants';
-import { saveMatch } from '../../network';
+import { saveMatch, senderMsg, recieverMsg, systemMsg } from '../../network';
 import _ from 'lodash'
 import { saveActivePet } from '../../redux/actions/authActions';
 
@@ -129,6 +129,16 @@ const Home = ({ navigation }) => {
                         const { guestUid, guestAvatar, guestName } = res.data.data;
                         saveMatch(uuid, guestUid);
                         saveMatch(guestUid, uuid);
+
+                        //send msg to currentUser
+                        let msg = `NOTIFICATION: ${pet_active.name} and ${pet.name} have matched each other!`
+                        systemMsg(msg, uuid, guestUid, '')
+
+                        //send msg to guest
+                        let msg2 = `NOTIFICATION: ${pet.name} and ${pet_active.name} have matched each other!`
+                        systemMsg(msg2, guestUid, uuid, '')
+
+
                         navigation.navigate('Match', {
                             myPet: pet_active.name,
                             myPetAvatar: pet_active.avatar,

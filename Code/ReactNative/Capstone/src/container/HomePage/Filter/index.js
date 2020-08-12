@@ -74,6 +74,7 @@ const Filter = ({ navigation }) => {
             dispatch(stopLoading())
             Alert.alert('Location Access Required:', 'Turn on GPS to Access your location')
         }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 });
+
     }
 
     useEffect(() => {

@@ -9,12 +9,13 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ChatBox = ({ userId, msg, img, onImgTap }) => {
   let isCurrentUser = userId === uuid ? true : false;
+  let isAdmin = userId === 'ADMIN';
   return (
     <Card
       transparent
       style={{
-        maxWidth: deviceWidth / 2 + 10,
-        alignSelf: isCurrentUser ? "flex-end" : "flex-start",
+        maxWidth: isAdmin ? deviceWidth : deviceWidth / 2 + 10,
+        alignSelf: isCurrentUser ? "flex-end" : (isAdmin ? 'center' : "flex-start"),
       }}
     >
       <View
@@ -23,6 +24,9 @@ const ChatBox = ({ userId, msg, img, onImgTap }) => {
           isCurrentUser && {
             backgroundColor: color.LIGHT_BLUE,
           },
+          isAdmin && {
+            backgroundColor: color.WHITE,
+          }
         ]}
       >
         {img ? (
@@ -37,7 +41,7 @@ const ChatBox = ({ userId, msg, img, onImgTap }) => {
           </CardItem>
         ) : (
             <Text
-              style={[styles.chatTxt, isCurrentUser && { color: color.WHITE }]}
+              style={[styles.chatTxt, isCurrentUser && { color: color.WHITE }, isAdmin && { color: color.RED, fontSize: 15 }]}
             >
               {msg}
             </Text>

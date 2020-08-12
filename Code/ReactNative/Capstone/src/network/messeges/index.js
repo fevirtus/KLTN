@@ -41,3 +41,21 @@ export const recieverMsg = async (
     return error;
   }
 };
+
+export const systemMsg = async (msgValue, currentUserId, guestUserId, img) => {
+  try {
+    return await database()
+      .ref('messeges/' + currentUserId)
+      .child(guestUserId)
+      .push({
+        messege: {
+          sender: 'ADMIN',
+          reciever: guestUserId,
+          msg: msgValue,
+          img: img,
+        },
+      });
+  } catch (error) {
+    return error;
+  }
+};
