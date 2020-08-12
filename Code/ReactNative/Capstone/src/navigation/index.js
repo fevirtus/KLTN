@@ -1,12 +1,13 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Text, View, Image, StyleSheet, Alert, BackHandler } from 'react-native';
+import { Text, View, Image, StyleSheet, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Animated from 'react-native-reanimated'
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash'
@@ -22,7 +23,10 @@ import {
     Privacy,
     Feedback,
     EditPetProfile,
-    Match
+    Match,
+    Premium,
+    Payment,
+    Banking
 } from '../container';
 import { color } from '../utility';
 import Chat from '../container/Chat';
@@ -42,6 +46,7 @@ const ProfileStack = createStackNavigator();
 const FilterStack = createStackNavigator();
 const ChatboxStack = createStackNavigator();
 const SettingStack = createStackNavigator();
+const PremiumStack = createStackNavigator();
 
 const MainTabScreen = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -87,8 +92,6 @@ const MainTabScreen = ({ navigation }) => {
         } catch (error) {
             throw error
         }
-
-
     }
 
     const loadData = async () => {
@@ -119,7 +122,6 @@ const MainTabScreen = ({ navigation }) => {
                 { cancelable: false }
             )
         }
-
     }
 
     useEffect(() => {
@@ -161,6 +163,17 @@ const MainTabScreen = ({ navigation }) => {
                     tabBarColor: color.PINK,
                     tabBarIcon: ({ color }) => (
                         <Ionicons name="ios-person" color={color} size={27} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Premium"
+                component={PremiumStackScreen}
+                options={{
+                    tabBarLabel: 'Premium',
+                    tabBarColor: color.PINK,
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome name="diamond" color={color} size={22} />
                     ),
                 }}
             />
@@ -224,24 +237,18 @@ const ProfileStackScreen = ({ navigation }) => {
     return (
         <ProfileStack.Navigator
             screenOptions={{
-                headerTitleAlign: 'center',
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    fontSize: 22
-                },
-                headerTintColor: color.PINK,
-                // headerTitle: null,
-                // headerTransparent: true
+                headerTitle: null,
+                headerTransparent: true
             }}>
             <ProfileStack.Screen name="Profile" component={Profile}
-                options={{
-                    title: 'Profile',
-                    headerLeft: () => (
-                        <Ionicons.Button name='md-menu' size={25} backgroundColor='#fff' color={color.PINK}
-                            onPress={() => navigation.openDrawer()}
-                        />
-                    ),
-                }}
+            // options={{
+            //     title: 'Profile',
+            //     headerLeft: () => (
+            //         <Ionicons.Button name='md-menu' size={28} backgroundColor={color.TRANSPARENT} color={color.PINK}
+            //             onPress={() => navigation.openDrawer()}
+            //         />
+            //     ),
+            // }}
             />
             <ProfileStack.Screen name="PetSetting" component={PetSetting} options={{ title: 'New Pet' }} />
             <ProfileStack.Screen name="PetProfile" component={PetProfile} options={{ title: 'Pet Profile' }} />
@@ -285,9 +292,36 @@ const ChatboxStackScreen = () => {
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
-            }}>
+            }}
+        >
             <ChatboxStack.Screen name="Chat" component={Chat} />
         </ChatboxStack.Navigator>
+    )
+}
+
+const PremiumStackScreen = ({ navigation }) => {
+    return (
+        <PremiumStack.Navigator
+            screenOptions={{
+                headerTitle: null,
+                headerTransparent: true
+            }}
+        >
+            <PremiumStack.Screen
+                name="Premium"
+                component={Premium}
+                options={{
+                    title: 'Premium',
+                    headerLeft: () => (
+                        <Ionicons.Button name='md-menu' size={28} backgroundColor={color.TRANSPARENT} color={color.PINK}
+                            onPress={() => navigation.openDrawer()}
+                        />
+                    ),
+                }}
+            />
+            <PremiumStack.Screen name="Payment" component={Payment} />
+            <PremiumStack.Screen name="Banking" component={Banking} />
+        </PremiumStack.Navigator>
     )
 }
 
@@ -325,19 +359,21 @@ const HomeStack = ({ navigation, style }) => {
             <Stack.Navigator
                 initialRouteName='Home'
                 screenOptions={{
-                    headerShown: true,
-                    headerTitleAlign: 'center',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                        fontSize: 22
-                    },
-                    headerTintColor: color.PINK
+                    // headerShown: true,
+                    // headerTitleAlign: 'center',
+                    // headerTitleStyle: {
+                    //     fontWeight: 'bold',
+                    //     fontSize: 22
+                    // },
+                    // headerTintColor: color.PINK
+                    headerTitle: null,
+                    headerTransparent: true
                 }}>
                 <Stack.Screen name="Home" component={Home}
                     options={{
                         title: '',
                         headerLeft: () => (
-                            <Ionicons.Button name='md-menu' size={25} backgroundColor='#fff' color={color.PINK}
+                            <Ionicons.Button name='md-menu' size={28} backgroundColor={color.TRANSPARENT} color={color.PINK}
                                 onPress={() => navigation.openDrawer()}
                             />
                         ),
@@ -426,18 +462,18 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
     petActiveImg: {
-        width: 50,
-        height: 50,
+        width: 45,
+        height: 45,
         borderRadius: 25
     },
     activeIcon: {
-        width: 14,
-        height: 14,
+        width: 12,
+        height: 12,
         borderRadius: 7,
         backgroundColor: '#23da02',
         position: 'absolute',
         bottom: 2,
-        right: 10,
+        right: 8,
         borderWidth: 1,
         borderColor: '#fff'
     },
