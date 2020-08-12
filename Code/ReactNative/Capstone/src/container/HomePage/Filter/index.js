@@ -51,72 +51,44 @@ const Filter = ({ navigation }) => {
 
     const { is_vip } = user;
 
-    const requestLocationPermission = async () => {
+    const doSuccess = async (position) => {
         try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
-                'title': 'Location Access Required',
-                'message': 'This App needs to Access your location'
-            })
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                //To Check, If Permission is granted
-                setPosition()
-            } else {
-                alert("Permission Denied");
-            }
-        } catch (err) {
-            alert("err", err);
-            console.warn(err)
+            const { latitude, longitude } = position.coords;
+            console.log(position.coords)
+            //insert location to database
+            const res = await Axios.post(`${URL_BASE}users/location`, { latitude: latitude, longitude: longitude }, { headers: { Authorization: token } })
+
+            //filter data
+            await filterData(distance, res.data.data.latitude, res.data.data.longitude)
+            dispatch(stopLoading())
+        } catch (error) {
+            dispatch(stopLoading())
+            console.log(error)
         }
     }
 
-    const setPosition = async () => {
+    const onFilter = async () => {
         dispatch(startLoading())
-        Geolocation.getCurrentPosition(position => {
-            Axios.post(`${URL_BASE}users/location`, {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-            }, { headers: { Authorization: token } })
-                .then(res => {
-                    console.log('location', res.data.data)
-                    setLocation({
-                        latitude: res.data.data.latitude,
-                        longitude: res.data.data.longitude
-                    })
-                    dispatch(stopLoading())
-                })
-                .catch(e => {
-                    console.log(e)
-                    dispatch(stopLoading())
-                })
-        }, (error) => {
+        Geolocation.getCurrentPosition(doSuccess, (error) => {
             console.log('Error', error)
-            Alert.alert('Location Access Required:', 'This App needs to Access your location')
             dispatch(stopLoading())
+            Alert.alert('Location Access Required:', 'Turn on GPS to Access your location')
         }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 });
     }
 
     useEffect(() => {
-        if (is_vip == 1) {
-            requestLocationPermission()
-        }
+
     }, [])
 
-    const onFilter = () => {
-        dispatch(startLoading())
-        console.log(`${URL_BASE}users/filter?distance=${distance}&latitude=${location.latitude}&longitude=${location.longitude}`)
-        Axios.get(`${URL_BASE}users/filter?distance=${distance}&latitude=${location.latitude}&longitude=${location.longitude}`,
-            { headers: { Authorization: token } })
-            .then(res => {
-                console.log(res.data)
-                setFoundUsers(res.data.data)
-                dispatch(stopLoading())
-            })
-            .catch(e => {
-                dispatch(stopLoading())
-                console.log(e)
-                Alert.alert('Error!', e)
-            })
+    const filterData = async (distance, latitude, longitude) => {
+        try {
+            const url = `${URL_BASE}users/filter?distance=${distance}&latitude=${latitude}&longitude=${longitude}`
+            const res = await Axios.get(url, { headers: { Authorization: token } });
+            setFoundUsers(res.data.data)
+        } catch (error) {
+            throw error
+        }
+
     }
 
 
