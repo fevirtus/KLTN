@@ -10,6 +10,9 @@ import Setting from './Setting'
 import Privacy from './Setting/Privacy'
 import Feedback from './Setting/Feedback'
 import Match from './Match'
+import Premium from './Premium'
+import Payment from './Premium/Payment'
+import Banking from './Premium/Payment/Banking'
 
 export {
     Login,
@@ -23,5 +26,8 @@ export {
     Privacy,
     Feedback,
     EditPetProfile,
-    Match
+    Match,
+    Premium,
+    Payment,
+    Banking
 }

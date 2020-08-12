@@ -35,8 +35,6 @@ export const uploadImgToServer2 = async(uploadImg) => {
             }
         });
         const res = await response.json();
-
-        console.log(res.url)
         return res.url;
     } catch (error) {
         throw new Error('Picture error')
