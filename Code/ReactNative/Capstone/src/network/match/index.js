@@ -34,7 +34,7 @@ const checkDuplicateUser = async (currentUserId, guestUserId) => {
         })
         if (key) {
             await database().ref(`matches/${currentUserId}/${key}`)
-                .update({ seen: true })
+                .update({ seen: false })
         }
         return isDulicate;
     } catch (error) {
