@@ -56,12 +56,21 @@ const Chat = ({ route, navigation }) => {
           setMesseges(msgs.reverse());
         });
 
+
+    } catch (error) {
+      alert(error);
+    }
+  }, [guestUserId]);
+
+  useEffect(() => {
+    try {
+
       //update seen
       seenMatch(currentUserId, guestUserId)
     } catch (error) {
       alert(error);
     }
-  }, []);
+  });
 
   const handleSend = () => {
     setMsgValue("");
