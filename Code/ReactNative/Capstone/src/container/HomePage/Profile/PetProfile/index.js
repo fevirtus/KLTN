@@ -34,7 +34,7 @@ const PetProfile = ({ navigation, route }) => {
     })
     const dispatch = useDispatch()
 
-    const getPet = async () => {
+    const getPet = () => {
         dispatch(startLoading())
         axios.get(`${URL_BASE}pets/${petId}`, {
             headers: {

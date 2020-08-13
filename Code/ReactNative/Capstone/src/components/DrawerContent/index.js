@@ -70,7 +70,7 @@ const DrawerContent = (props) => {
                                 <Fontisto
                                     name="hipchat"
                                     color={color}
-                                    size={20}
+                                    size={21}
                                 />
                             )}
                             label="Chat"
@@ -103,7 +103,7 @@ const DrawerContent = (props) => {
                                 <FontAwesome
                                     name="diamond"
                                     color={color}
-                                    size={size}
+                                    size={21}
                                 />
                             )}
                             label="Premium"
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     },
     bottomDrawerSection: {
         marginBottom: 15,
-        borderTopColor: '#f4f4f4',
+        borderTopColor: color.LIGHT_LIGHT_GRAYGRAY,
         borderTopWidth: 1
     }
 });

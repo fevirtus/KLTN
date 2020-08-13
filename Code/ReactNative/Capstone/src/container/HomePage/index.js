@@ -223,7 +223,7 @@ const Home = ({ navigation }) => {
                         name="info"
                         size={32}
                         color={color.PINK}
-                        onPress={() => navigation.navigate('CardProfile')}
+                        onPress={() => navigation.navigate('CardProfile', { petId: item.id })}
                     />
                 </TouchableOpacity>
                 <Text style={styles.title}>{item.name}</Text>
@@ -326,7 +326,6 @@ const Home = ({ navigation }) => {
                                         onSwipedTop={onSwipedTop}
                                         stackSize={2}
                                         disableBottomSwipe
-                                        // infinite
                                         backgroundColor={'transparent'}
                                         overlayLabels={{
                                             left: {
@@ -544,56 +543,6 @@ const styles = StyleSheet.create({
     panel: {
         backgroundColor: color.WHITE,
         height: '100%'
-    },
-    // Bottom sheet profile
-    imageProfile: {
-        width: width,
-        height: height,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        resizeMode: 'contain'
-    },
-    iconProfile: {
-        padding: 10
-    },
-    information: {
-        paddingHorizontal: 20,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20
-    },
-    headerProfile: {
-        flexDirection: 'row',
-        paddingVertical: 8
-    },
-    nameProfile: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        width: '91%',
-        textAlign: 'center',
-        paddingLeft: 30
-    },
-    sexProfile: {
-        width: '9%',
-    },
-    details: {
-        flexDirection: 'row',
-        paddingVertical: 6
-    },
-    text: {
-        color: color.GRAY,
-        paddingTop: 2,
-        paddingLeft: 10
-    },
-    about: {
-        borderWidth: 0.5,
-        borderColor: color.LIGHT_GRAY,
-        padding: 8,
-        marginTop: 5,
-        borderRadius: 12
-    },
-    textAbout: {
-        color: color.PINK,
-        fontSize: 16
     },
     // Modal 
     commandButton: {
