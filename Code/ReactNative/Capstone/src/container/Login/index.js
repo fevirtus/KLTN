@@ -37,7 +37,6 @@ const Login = ({ navigation }) => {
                         <Text style={[styles.color_textPrivate, {
                             fontWeight: 'bold'
                         }]}>
-                            {" "}
                             Terms of Service
                         </Text>
                         <Text style={styles.color_textPrivate}>
@@ -111,8 +110,8 @@ const styles = StyleSheet.create({
         color: color.GRAY
     },
     formLogin: {
-        paddingHorizontal: 7,
-        paddingVertical: 34
+        paddingHorizontal: 5,
+        paddingVertical: 30
     }
 })
 

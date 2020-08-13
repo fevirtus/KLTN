@@ -5,15 +5,16 @@ import {
     TouchableOpacity, View,
     YellowBox, FlatList,
     Alert, ImageBackground,
-    Modal
+    Modal, Dimensions
 } from 'react-native';
 import Axios from 'axios';
 import Swiper from 'react-native-deck-swiper';
 import LinearGradient from 'react-native-linear-gradient'
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Foundation from 'react-native-vector-icons/Foundation';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BottomSheet from 'reanimated-bottom-sheet'
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,6 +25,9 @@ import { uuid } from '../../utility/constants';
 import { saveMatch, senderMsg, recieverMsg, systemMsg } from '../../network';
 import _ from 'lodash'
 import { saveActivePet } from '../../redux/actions/authActions';
+
+const { width } = Dimensions.get('window')
+const height = width * 100 / 100
 
 const Home = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -208,77 +212,18 @@ const Home = ({ navigation }) => {
     )
 
     const Card = (({ item }) => {
-        var images = _.concat(item.avatar, item.pictures)
-
         return (
-            // <View style={{ flex: 0.8}}>
-            //     <ScrollView horizontal pagingEnabled>
-            //         {
-            //             images.map((image, index) => (
-            //                 <ImageBackground
-            //                     key={index}
-            //                     style={styles.card}
-            //                     source={{ uri: image }}
-            //                     imageStyle={{ borderRadius: 8 }}
-            //                 >
-            //                     <TouchableOpacity style={styles.infoBtn}>
-            //                         <SimpleLineIcons
-            //                             name="info"
-            //                             size={32}
-            //                             color={color.WHITE}
-            //                             onPress={() => { }}
-            //                         />
-            //                     </TouchableOpacity>
-            //                     <Text style={styles.title}>{item.name}</Text>
-            //                     <View style={styles.bottomButtonsContainer}>
-            //                         <TouchableOpacity style={styles.iconContainer}>
-            //                             <AntDesign
-            //                                 name="close"
-            //                                 size={35}
-            //                                 color={color.RED}
-            //                                 onPress={() => {
-            //                                     swiperRef.current.swipeLeft()
-            //                                 }}
-            //                             />
-            //                         </TouchableOpacity>
-            //                         <TouchableOpacity style={styles.iconContainer}>
-            //                             <AntDesign
-            //                                 name="heart"
-            //                                 size={32}
-            //                                 color={color.GREEN}
-            //                                 onPress={() => {
-            //                                     swiperRef.current.swipeTop()
-            //                                 }}
-            //                             />
-            //                         </TouchableOpacity>
-            //                         <TouchableOpacity style={styles.iconContainer}>
-            //                             <AntDesign
-            //                                 name="star"
-            //                                 size={34}
-            //                                 color={color.BLUE}
-            //                                 onPress={() => {
-            //                                     swiperRef.current.swipeRight()
-            //                                 }}
-            //                             />
-            //                         </TouchableOpacity>
-            //                     </View>
-            //                 </ImageBackground>
-            //             ))
-            //         }
-            //     </ScrollView>
-            // </View>
-
             <ImageBackground
                 style={styles.card}
                 source={{ uri: item.avatar }}
                 imageStyle={{ borderRadius: 8 }}
             >
                 <TouchableOpacity style={styles.infoBtn}>
-                    <SimpleLineIcons
+                    <Foundation
                         name="info"
                         size={32}
-                        color={color.WHITE}
-                        onPress={() => { }}
+                        color={color.PINK}
+                        onPress={() => navigation.navigate('CardProfile')}
                     />
                 </TouchableOpacity>
                 <Text style={styles.title}>{item.name}</Text>
@@ -286,7 +231,7 @@ const Home = ({ navigation }) => {
                     <TouchableOpacity style={styles.iconContainer}>
                         <AntDesign
                             name="close"
-                            size={35}
+                            size={33}
                             color={color.RED}
                             onPress={() => {
                                 swiperRef.current.swipeLeft()
@@ -306,7 +251,7 @@ const Home = ({ navigation }) => {
                     <TouchableOpacity style={styles.iconContainer}>
                         <AntDesign
                             name="star"
-                            size={34}
+                            size={32}
                             color={color.BLUE}
                             onPress={() => {
                                 swiperRef.current.swipeRight()
@@ -337,11 +282,12 @@ const Home = ({ navigation }) => {
                         <View style={styles.price}>
                             <Text style={styles.textPrice}>Chỉ 59.000 đ/3 tháng</Text>
                         </View>
-                        <TouchableOpacity style={styles.commandButton} onPress={() => navigation.navigate('Payment')}>
+                        <TouchableOpacity style={styles.commandButton} onPress={() => navigation.navigate('Premium')}>
                             <Text style={styles.panelButtonTitle}>Đăng ký Premium</Text>
                         </TouchableOpacity>
                         <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Không phải bây giờ, cảm ơn</Text>
                     </LinearGradient>
+                    <Text style={styles.textCancel}>Thanh toán định kỳ, hủy bỏ bất cứ lúc nào.</Text>
                 </View>
             </Modal>
 
@@ -356,14 +302,16 @@ const Home = ({ navigation }) => {
                 </Container>) :
                 (<Container>
                     <View style={styles.container}>
+                        {/* Bottom list pet */}
                         <BottomSheet
                             ref={bs}
-                            snapPoints={['17%', 0]}
+                            snapPoints={['20%', 0]}
                             renderContent={renderInner}
                             renderHeader={renderHeader}
                             initialSnap={1}
                             enabledGestureInteraction={true}
                         />
+                        {/* Content */}
                         {
                             loading ? <Loading /> : (_.isEmpty(data) ? null
                                 : <View style={styles.swiperContainer}>
@@ -443,6 +391,14 @@ const Home = ({ navigation }) => {
                             )
                         }
                         <View style={styles.bottom}>
+                            <TouchableOpacity style={styles.btnReturn}>
+                                <MaterialIcons
+                                    name="child-friendly"
+                                    size={24}
+                                    color={color.RED}
+                                    onPress={() => { }}
+                                />
+                            </TouchableOpacity>
                             <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
                                 <Ionicons name="ios-add-circle" size={30} color={color.PINK} />
                             </TouchableOpacity>
@@ -467,7 +423,6 @@ const Home = ({ navigation }) => {
                                         />
                                     </TouchableOpacity>
                             }
-
                         </View>
                     </View>
                 </Container>)
@@ -513,8 +468,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        width: 54,
-        height: 54,
+        width: 52,
+        height: 52,
         backgroundColor: color.WHITE
     },
     petImageWrapper: {
@@ -568,6 +523,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    // Bottom sheet pet active
     header: {
         backgroundColor: color.WHITE,
         elevation: 4,
@@ -586,7 +542,58 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     panel: {
-        backgroundColor: color.WHITE
+        backgroundColor: color.WHITE,
+        height: '100%'
+    },
+    // Bottom sheet profile
+    imageProfile: {
+        width: width,
+        height: height,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        resizeMode: 'contain'
+    },
+    iconProfile: {
+        padding: 10
+    },
+    information: {
+        paddingHorizontal: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20
+    },
+    headerProfile: {
+        flexDirection: 'row',
+        paddingVertical: 8
+    },
+    nameProfile: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        width: '91%',
+        textAlign: 'center',
+        paddingLeft: 30
+    },
+    sexProfile: {
+        width: '9%',
+    },
+    details: {
+        flexDirection: 'row',
+        paddingVertical: 6
+    },
+    text: {
+        color: color.GRAY,
+        paddingTop: 2,
+        paddingLeft: 10
+    },
+    about: {
+        borderWidth: 0.5,
+        borderColor: color.LIGHT_GRAY,
+        padding: 8,
+        marginTop: 5,
+        borderRadius: 12
+    },
+    textAbout: {
+        color: color.PINK,
+        fontSize: 16
     },
     // Modal 
     commandButton: {
@@ -609,7 +616,7 @@ const styles = StyleSheet.create({
     modal: {
         backgroundColor: color.WHITE,
         marginHorizontal: 40,
-        marginVertical: 70,
+        marginTop: '20%',
         paddingHorizontal: 20,
         paddingTop: 20,
         paddingBottom: 10,
@@ -663,11 +670,19 @@ const styles = StyleSheet.create({
         color: color.LIGHT_GRAY,
         fontSize: 15,
         fontWeight: 'bold',
-        paddingTop: 18
+        paddingTop: 18,
+        letterSpacing: 1.2
+    },
+    textCancel: {
+        textAlign: 'center',
+        color: color.WHITE,
+        marginTop: 10,
+        fontSize: 11,
+        letterSpacing: 0.6
     }
 });
 
-// YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
-//     'Animated.event now requires a second argument for options']);
+YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
+    'Animated.event now requires a second argument for options']);
 
 export default Home;

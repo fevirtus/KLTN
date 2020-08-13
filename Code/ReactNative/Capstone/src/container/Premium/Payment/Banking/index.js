@@ -30,8 +30,6 @@ const Banking = () => {
             maxHeight: 500,
         };
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response);
-
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else {
@@ -165,10 +163,9 @@ const styles = StyleSheet.create({
     },
     commandButton: {
         padding: 14,
-        borderRadius: 10,
+        borderRadius: 25,
         backgroundColor: color.PINK,
         alignItems: 'center',
-        justifyContent: 'center',
         marginTop: 15,
         width: '90%',
         alignSelf: 'center'

@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
         padding: 15,
         backgroundColor: color.PINK,
         alignItems: 'center',
-        justifyContent: 'center',
         marginTop: 20,
         marginBottom: 6
     },

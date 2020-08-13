@@ -13,6 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { useSelector, useDispatch } from 'react-redux'
 import { GoogleSignin } from '@react-native-community/google-signin';
@@ -99,6 +100,17 @@ const DrawerContent = (props) => {
                         />
                         <DrawerItem
                             icon={({ color, size }) => (
+                                <FontAwesome
+                                    name="diamond"
+                                    color={color}
+                                    size={size}
+                                />
+                            )}
+                            label="Premium"
+                            onPress={() => { props.navigation.navigate('PremiumStackScreen') }}
+                        />
+                        <DrawerItem
+                            icon={({ color, size }) => (
                                 <Ionicons
                                     name="settings"
                                     color={color}
@@ -122,7 +134,6 @@ const DrawerContent = (props) => {
                     )}
                     label="Sign Out"
                     onPress={() => {
-                        // auth().signOut();
                         GoogleSignin.signOut();
                         LoginManager.logOut();
                         dispatch(clearToken())

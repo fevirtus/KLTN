@@ -2,6 +2,7 @@ import Login from './Login'
 import PetSetting from './PetSetting'
 import Home from './HomePage'
 import Profile from './HomePage/Profile'
+import CardProfile from './HomePage/CardProfile'
 import ChatDashboard from './HomePage/ChatDashboard'
 import Filter from './HomePage/Filter'
 import PetProfile from './HomePage/Profile/PetProfile'
@@ -19,6 +20,7 @@ export {
     PetSetting,
     Home,
     Profile,
+    CardProfile,
     Filter,
     PetProfile,
     ChatDashboard,

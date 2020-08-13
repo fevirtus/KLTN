@@ -17,6 +17,7 @@ import {
     Home,
     Filter,
     Profile,
+    CardProfile,
     PetProfile,
     ChatDashboard,
     Setting,
@@ -193,17 +194,6 @@ const MainTabScreen = ({ navigation }) => {
                 }}
             />
             <Tab.Screen
-                name="Premium"
-                component={PremiumStackScreen}
-                options={{
-                    tabBarLabel: 'Premium',
-                    tabBarColor: color.PINK,
-                    tabBarIcon: ({ color }) => (
-                        <FontAwesome name="diamond" color={color} size={22} />
-                    ),
-                }}
-            />
-            <Tab.Screen
                 name="Filter"
                 component={FilterStackScreen}
                 options={{
@@ -336,6 +326,7 @@ const PremiumStackScreen = ({ navigation }) => {
                 headerTitle: null,
                 headerTransparent: true
             }}
+            initialRouteName="Premium"
         >
             <PremiumStack.Screen
                 name="Premium"
@@ -420,6 +411,7 @@ const HomeStack = ({ navigation, style }) => {
                         }
                     }}
                 />
+                <Stack.Screen name="CardProfile" component={CardProfile} />
             </Stack.Navigator>
         </Animated.View>
     )
@@ -469,6 +461,7 @@ const NavContainer = () => {
                         </Drawer.Screen> */}
                         <Drawer.Screen name="ChatboxStackScreen" component={ChatboxStackScreen} />
                         <Drawer.Screen name="SettingStackScreen" component={SettingStackScreen} />
+                        <Drawer.Screen name="PremiumStackScreen" component={PremiumStackScreen} />
                         <Drawer.Screen name="Match" component={Match} />
                     </Drawer.Navigator>)
             }
