@@ -17,6 +17,10 @@
 /api/users/:id
 	+ GET: {headers:{Authorization: token}}
 	=> get an user by user_id
+	
+/api/users/:id/allInfo
+	+ GET: {headers:{Authorization: token}}
+	=> get an user with his pets
 
 /api/users/filter?distance=2&latitude=20.3333&longitude=0.3333
 	+ GET: {headers:{Authorization: token}}
@@ -66,6 +70,14 @@
 /api/pets/:id
 	+ GET: {headers:{Authorization: token}}
 	=> get pet by id
+
+/api/pets/:id/allInfo
+	+ GET: {headers:{Authorization: token}}
+	=> get pet by id with info of owner
+	
+/api/pets/topLike
+	+ GET: {headers:{Authorization: token}}
+	=> get top 10 pets having most likes
 	
 /api/pets
 	+ POST:{
