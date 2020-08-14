@@ -4,13 +4,15 @@ import {
     Text, Image,
     ImageBackground,
     Dimensions, ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    Modal
 } from 'react-native'
 import { useDispatch } from 'react-redux';
 import _ from 'lodash'
 import axios from 'axios'
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { URL_BASE, token } from '../../../api/config';
@@ -136,11 +138,50 @@ const CardProfile = ({ route }) => {
                             <Text style={styles.text}>Owner</Text>
                         </View>
                     </View>
-                    <TouchableOpacity>
-                        <Text style={styles.textRp}>TRÌNH BÁO {info.name}</Text>
+                    <TouchableOpacity onPress={() => setModalOpen(true)}>
+                        <Text style={styles.textRp}>REPORT {info.name}</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
+
+            <Modal visible={modalOpen} animationType='fade' transparent={true}>
+                <View style={styles.modal}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.report}>Báo cáo</Text>
+                        <Text style={[styles.text, { paddingBottom: 15 }]}>{info.name} sẽ không biết bạn báo cáo</Text>
+                        <TouchableOpacity style={styles.modalChild} onPress={() => { }}>
+                            <Entypo
+                                name="camera"
+                                size={21}
+                                color={color.WHITE}
+                                style={[styles.btnRp, { backgroundColor: color.LIGHT_BLUE }]}
+                            />
+                            <Text style={styles.textReport}>ẢNH KHÔNG THÍCH HỢP</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalChild} onPress={() => { }}>
+                            <MaterialCommunityIcons
+                                name="robot"
+                                size={22}
+                                color={color.WHITE}
+                                style={[styles.btnRp, { backgroundColor: color.GREEN }]}
+                            />
+                            <Text style={styles.textReport}>CÓ VẺ NHƯ TIN RÁC</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalChild} onPress={() => { }}>
+                            <FontAwesome5
+                                name="pen"
+                                size={17}
+                                color={color.WHITE}
+                                style={[styles.btnRp, { backgroundColor: color.LIGHT_GRAY }]}
+                            />
+                            <Text style={[styles.textReport, { borderBottomWidth: 0 }]}>KHÁC</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.cancel}>
+                            <Text style={styles.textCancel} onPress={() => setModalOpen(false)}>HỦY</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </Container>
     )
 }
@@ -248,6 +289,58 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         marginBottom: 20,
         textTransform: 'uppercase'
+    },
+    // Modal
+    modal: {
+        flex: 1,
+        backgroundColor: '#000000aa'
+    },
+    modalContent: {
+        backgroundColor: color.WHITE,
+        marginHorizontal: 35,
+        marginVertical: '40%',
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 15,
+        borderRadius: 6,
+        alignItems: 'center'
+    },
+    report: {
+        fontSize: 17,
+        color: color.BLACK,
+        fontWeight: 'bold'
+    },
+    modalChild: {
+        flexDirection: 'row',
+        paddingVertical: 10
+    },
+    btnRp: {
+        width: 30,
+        height: 30,
+        borderRadius: 5,
+        textAlign: 'center',
+        paddingTop: 4
+    },
+    textReport: {
+        color: color.GRAY,
+        width: '75%',
+        paddingLeft: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: color.LIGHT_LIGHT_GRAY,
+        paddingVertical: 5,
+        fontWeight: '700'
+    },
+    cancel: {
+        borderTopWidth: 1,
+        borderTopColor: color.LIGHT_LIGHT_GRAY,
+        width: '90%',
+        paddingTop: 12,
+
+    },
+    textCancel: {
+        color: color.GRAY,
+        fontWeight: '700',
+        textAlign: 'center'
     }
 })
 

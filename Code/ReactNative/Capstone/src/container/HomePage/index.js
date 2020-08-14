@@ -5,10 +5,12 @@ import {
     TouchableOpacity, View,
     YellowBox, FlatList,
     Alert, ImageBackground,
-    Modal, Dimensions
+    Modal
 } from 'react-native';
 import Axios from 'axios';
 import Swiper from 'react-native-deck-swiper';
+import Swipe from 'react-native-swiper'
+import Animated from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -25,9 +27,6 @@ import { uuid } from '../../utility/constants';
 import { saveMatch, senderMsg, recieverMsg, systemMsg } from '../../network';
 import _ from 'lodash'
 import { saveActivePet } from '../../redux/actions/authActions';
-
-const { width } = Dimensions.get('window')
-const height = width * 100 / 100
 
 const Home = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -191,9 +190,11 @@ const Home = ({ navigation }) => {
     })
 
     const renderHeader = () => (
-        <View style={styles.header}>
+        <View style={styles.header} >
             <View style={styles.panelHeader}>
-                <View style={styles.panelHandle}></View>
+                <TouchableOpacity onPress={() => bs.current.snapTo(1)}>
+                    <View style={styles.panelHandle}></View>
+                </TouchableOpacity>
             </View>
         </View>
     )
@@ -212,54 +213,98 @@ const Home = ({ navigation }) => {
     )
 
     const Card = (({ item }) => {
+        var images = _.concat(item.avatar, item.pictures)
+
         return (
-            <ImageBackground
-                style={styles.card}
-                source={{ uri: item.avatar }}
-                imageStyle={{ borderRadius: 8 }}
-            >
-                <TouchableOpacity style={styles.infoBtn}>
-                    <Foundation
-                        name="info"
-                        size={32}
-                        color={color.PINK}
-                        onPress={() => navigation.navigate('CardProfile', { petId: item.id })}
+            <Swipe
+                showsButtons={true}
+                loop={false}
+                scrollEnabled={false}
+                dot={
+                    <View style={{
+                        height: 5,
+                        width: 70,
+                        borderRadius: 5,
+                        backgroundColor: color.GRAY,
+                        marginHorizontal: 2
+                    }} />
+                }
+                activeDot={
+                    <View
+                        style={{
+                            height: 5,
+                            width: 70,
+                            borderRadius: 5,
+                            backgroundColor: color.PINK,
+                            marginHorizontal: 2
+                        }}
                     />
-                </TouchableOpacity>
-                <Text style={styles.title}>{item.name}</Text>
-                <View style={styles.bottomButtonsContainer}>
-                    <TouchableOpacity style={styles.iconContainer}>
-                        <AntDesign
-                            name="close"
-                            size={33}
-                            color={color.RED}
-                            onPress={() => {
-                                swiperRef.current.swipeLeft()
-                            }}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.iconContainer}>
-                        <AntDesign
-                            name="heart"
-                            size={32}
-                            color={color.GREEN}
-                            onPress={() => {
-                                swiperRef.current.swipeTop()
-                            }}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.iconContainer}>
-                        <AntDesign
-                            name="star"
-                            size={32}
-                            color={color.BLUE}
-                            onPress={() => {
-                                swiperRef.current.swipeRight()
-                            }}
-                        />
-                    </TouchableOpacity>
-                </View>
-            </ImageBackground>
+                }
+                paginationStyle={{
+                    position: 'absolute',
+                    bottom: '98%'
+                }}
+                nextButton={
+                    <Text style={styles.buttonText}>›</Text>
+                }
+                prevButton={
+                    <Text style={styles.buttonText}>‹</Text>
+                }
+            >
+                {
+                    images.map((image, index) => (
+                        <ImageBackground
+                            style={styles.card}
+                            source={{ uri: image }}
+                            imageStyle={{ borderRadius: 8 }}
+                            key={index}
+                        >
+                            <TouchableOpacity style={styles.infoBtn}>
+                                <Foundation
+                                    name="info"
+                                    size={32}
+                                    color={color.PINK}
+                                    onPress={() => navigation.navigate('CardProfile', { petId: item.id })}
+                                />
+                            </TouchableOpacity>
+                            <Text style={styles.title}>{item.name}</Text>
+                            <View style={styles.bottomButtonsContainer}>
+                                <TouchableOpacity style={styles.iconContainer}>
+                                    <AntDesign
+                                        name="close"
+                                        size={33}
+                                        color={color.RED}
+                                        onPress={() => {
+                                            swiperRef.current.swipeLeft()
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.iconContainer}>
+                                    <AntDesign
+                                        name="heart"
+                                        size={32}
+                                        color={color.GREEN}
+                                        onPress={() => {
+                                            swiperRef.current.swipeTop()
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.iconContainer}>
+                                    <AntDesign
+                                        name="star"
+                                        size={32}
+                                        color={color.BLUE}
+                                        onPress={() => {
+                                            swiperRef.current.swipeRight()
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </ImageBackground>
+                    ))
+                }
+
+            </Swipe >
         )
     })
 
@@ -389,7 +434,7 @@ const Home = ({ navigation }) => {
                                 </View>
                             )
                         }
-                        <View style={styles.bottom}>
+                        <Animated.View style={styles.bottom}>
                             <TouchableOpacity style={styles.btnReturn}>
                                 <MaterialIcons
                                     name="child-friendly"
@@ -422,7 +467,7 @@ const Home = ({ navigation }) => {
                                         />
                                     </TouchableOpacity>
                             }
-                        </View>
+                        </Animated.View>
                     </View>
                 </Container>)
             }
@@ -475,13 +520,13 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
         marginLeft: 15,
-        marginRight: 10,
+        marginRight: 10
     },
     petImage: {
         height: 70,
         width: 70,
         borderRadius: 50,
-        borderWidth: 3,
+        borderWidth: 3
     },
     bottom: {
         flexDirection: 'row',
@@ -525,16 +570,16 @@ const styles = StyleSheet.create({
     // Bottom sheet pet active
     header: {
         backgroundColor: color.WHITE,
-        elevation: 4,
         paddingTop: 12,
         borderTopLeftRadius: 20,
-        borderTopRightRadius: 20
+        borderTopRightRadius: 20,
+        elevation: 2
     },
     panelHeader: {
         alignItems: 'center'
     },
     panelHandle: {
-        width: 70,
+        width: 55,
         height: 6,
         borderRadius: 4,
         backgroundColor: color.LIGHT_GRAY,
@@ -628,6 +673,11 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontSize: 11,
         letterSpacing: 0.6
+    },
+    buttonText: {
+        color: color.PINK,
+        fontSize: 60,
+        paddingBottom: '35%'
     }
 });
 
