@@ -23,6 +23,8 @@ const { width } = Dimensions.get('window')
 const CardProfile = ({ route }) => {
     const { petId } = route.params;
     const dispatch = useDispatch()
+    const [active, setActive] = useState(0)
+    const [modalOpen, setModalOpen] = useState(false)
     const [info, setInfo] = useState({
         name: '',
         gender: '',
@@ -35,6 +37,7 @@ const CardProfile = ({ route }) => {
         user_avatar: '',
         user_name: ''
     })
+    var images = _.concat(info.avatar, info.pictures)
 
     const getInfo = () => {
         dispatch(startLoading())
@@ -45,7 +48,6 @@ const CardProfile = ({ route }) => {
         }).then(res => {
             // Set info
             setInfo(res.data)
-            console.log('info', res.data)
             dispatch(stopLoading())
         }).catch(e => {
             console.log("Api call error!", e)
@@ -57,12 +59,22 @@ const CardProfile = ({ route }) => {
         getInfo()
     }, [petId])
 
-    var images = _.concat(info.avatar, info.pictures)
+    const change = ({ nativeEvent }) => {
+        const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width)
+        if (slide != active) {
+            setActive(slide)
+        }
+    }
 
     return (
         <Container>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <ScrollView pagingEnabled horizontal>
+                <ScrollView
+                    pagingEnabled
+                    horizontal
+                    onScroll={change}
+                    showsHorizontalScrollIndicator={false}
+                >
                     {
                         images.map((image, index) => (
                             <ImageBackground source={{ uri: image }} style={styles.imageProfile} key={index}>
@@ -73,10 +85,25 @@ const CardProfile = ({ route }) => {
                         ))
                     }
                 </ScrollView>
+                <View style={styles.pagination}>
+                    {
+                        images.length === 1
+                            ? null
+                            : images.map((i, k) => (
+                                <View key={k} style={k == active ? styles.carouselActiveIndicators : styles.carouselIndicators} />
+                            ))
+                    }
+
+                </View>
                 <View style={styles.information}>
                     <View style={styles.headerProfile}>
                         <Text style={styles.nameProfile}>{info.name}</Text>
-                        <Ionicons name="md-male-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
+                        {
+                            info.gender === 1
+                                ? <Ionicons name="md-male-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
+                                : info.gender === 0 ? <Ionicons name="md-female-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
+                                    : null
+                        }
                     </View>
                     {
                         _.isEmpty(info.breed_name)
@@ -130,6 +157,28 @@ const styles = StyleSheet.create({
     iconProfile: {
         padding: 12
     },
+    pagination: {
+        flexDirection: 'row',
+        position: 'absolute',
+        top: 0,
+        alignSelf: 'center'
+    },
+    carouselIndicators: {
+        height: 5,
+        width: 70,
+        borderRadius: 5,
+        backgroundColor: color.GRAY,
+        marginTop: 6,
+        marginHorizontal: 2
+    },
+    carouselActiveIndicators: {
+        height: 5,
+        width: 70,
+        borderRadius: 5,
+        backgroundColor: color.WHITE,
+        marginTop: 6,
+        marginHorizontal: 2
+    },
     information: {
         paddingHorizontal: 20,
         borderTopLeftRadius: 20,
@@ -175,12 +224,12 @@ const styles = StyleSheet.create({
         paddingVertical: 20
     },
     info: {
-        paddingHorizontal: 10,
+        paddingHorizontal: 9,
         paddingTop: 4
     },
     avatar: {
-        width: 54,
-        height: 54,
+        width: 55,
+        height: 55,
         borderRadius: 30
     },
     name: {
