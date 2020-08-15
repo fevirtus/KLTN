@@ -56,13 +56,9 @@ const Home = ({ navigation }) => {
                 },
             }).then(res => {
                 console.log('DATA', res.data)
-                console.log('1')
                 setData(res.data)
-                console.log('2')
                 setIndex(0)
-                console.log('3')
                 setLoading(false)
-                console.log('4')
             }).catch(e => {
                 console.log("Api call error! 000", e)
             })
@@ -89,6 +85,9 @@ const Home = ({ navigation }) => {
 
     useEffect(() => {
         fetchData()
+        return () => {
+            setData([])
+        }
     }, [pet_active])
 
     const petActive = async (pet) => {
@@ -100,7 +99,7 @@ const Home = ({ navigation }) => {
                 Authorization: token
             }
         }).then(res => {
-            // alert('Set active successful')
+            alert('Set active successful')
             dispatch(saveActivePet(pet))
         }).catch((e) => {
             alert(e.message)
@@ -223,7 +222,6 @@ const Home = ({ navigation }) => {
 
     const Card = (({ item }) => {
         let images = _.concat(item.avatar, item.pictures)
-        console.log('IMG', images)
         let dotWidth = (Dimensions.get('screen').width * 0.82) / images.length
 
         return (
@@ -373,9 +371,8 @@ const Home = ({ navigation }) => {
                                 : <View style={styles.swiperContainer}>
                                     <Swiper
                                         cards={data}
-                                        cardIndex={index}
+                                        cardIndex={0}
                                         renderCard={(item) => {
-                                            // console.log('DATA', data)
                                             return <Card item={item} />
                                         }}
                                         ref={swiperRef}
