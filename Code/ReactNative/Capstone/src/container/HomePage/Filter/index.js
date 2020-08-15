@@ -12,29 +12,30 @@ import { startLoading, stopLoading } from '../../../redux/actions/loadingAction'
 import { Card, CardItem, Left, Thumbnail, Body } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-const FoundUsers = ({ onNameTap, item }) => {
+const FoundUsers = ({ onNameTap, item, onTap }) => {
     return (
-        <Card style={styles.cardStyle}>
-            <CardItem style={styles.cardItemStyle}>
-                <Left>
-                    <TouchableOpacity style={[styles.logoContainer]} >
-                        {item.avatar ? (
-                            <Thumbnail source={{ uri: item.avatar }} resizeMode="cover" />
-                        ) : (
-                                <Text style={styles.thumbnailName}>{item.name.charAt(0)}</Text>
-                            )}
-                    </TouchableOpacity>
-
-                    <Body>
-                        <Text style={styles.profileName} onPress={onNameTap}>{item.name}</Text>
-                        <View style={styles.location}>
-                            <Ionicons name='location-sharp' size={12} style={styles.iconLocation} />
-                            <Text style={styles.distance}>{item.distance} km</Text>
+        <TouchableOpacity onPress={onTap} >
+            <Card style={styles.cardStyle}>
+                <CardItem style={styles.cardItemStyle}>
+                    <Left>
+                        <View style={[styles.logoContainer]}>
+                            {item.avatar ? (
+                                <Thumbnail source={{ uri: item.avatar }} resizeMode="cover" />
+                            ) : (
+                                    <Text style={styles.thumbnailName}>{item.name.charAt(0)}</Text>
+                                )}
                         </View>
-                    </Body>
-                </Left>
-            </CardItem>
-        </Card>
+                        <Body>
+                            <Text style={styles.profileName} onPress={onNameTap}>{item.name}</Text>
+                            <View style={styles.location}>
+                                <Ionicons name='location-sharp' size={12} style={styles.iconLocation} />
+                                <Text style={styles.distance}>{item.distance} km</Text>
+                            </View>
+                        </Body>
+                    </Left>
+                </CardItem>
+            </Card>
+        </TouchableOpacity >
     );
 };
 
@@ -74,7 +75,6 @@ const Filter = ({ navigation }) => {
             dispatch(stopLoading())
             Alert.alert('Location Access Required:', 'Turn on GPS to Access your location')
         }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 });
-
     }
 
     useEffect(() => {
@@ -89,9 +89,7 @@ const Filter = ({ navigation }) => {
         } catch (error) {
             throw error
         }
-
     }
-
 
     return is_vip !== 1 ? null :
         (
@@ -120,11 +118,13 @@ const Filter = ({ navigation }) => {
                                 onNameTap={() => {
                                     console.log(item.name)
                                 }}
+                                onTap={() => {
+                                    navigation.navigate('ProfileUserFilter', { uid: item.uid })
+                                }}
                             />
                         )}
                     />
                 }
-
             </Container>
         )
 }
@@ -193,7 +193,8 @@ const styles = StyleSheet.create({
         color: color.LIGHT_GRAY
     },
     distance: {
-        color: color.LIGHT_GRAY
+        color: color.LIGHT_GRAY,
+        paddingLeft: 5
     }
 })
 

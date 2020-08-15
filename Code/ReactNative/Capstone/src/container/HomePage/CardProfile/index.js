@@ -95,7 +95,6 @@ const CardProfile = ({ route }) => {
                                 <View key={k} style={k == active ? styles.carouselActiveIndicators : styles.carouselIndicators} />
                             ))
                     }
-
                 </View>
                 <View style={styles.information}>
                     <View style={styles.headerProfile}>
@@ -187,7 +186,6 @@ const CardProfile = ({ route }) => {
 }
 
 const styles = StyleSheet.create({
-    // Bottom sheet profile
     imageProfile: {
         width: width,
         height: 260,

@@ -158,7 +158,6 @@ const Home = ({ navigation }) => {
         } else {
             Alert.alert('Error', 'You have to choose pet active below to do match')
         }
-
     }
 
     const react = (reaction, petId) => {
@@ -202,6 +201,7 @@ const Home = ({ navigation }) => {
     const renderInner = () => (
         <View style={styles.panel}>
             <FlatList
+                showsHorizontalScrollIndicator={false}
                 horizontal={true}
                 data={my_pets}
                 renderItem={({ item }) => {

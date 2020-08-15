@@ -264,6 +264,13 @@ const Profile = ({ navigation }) => {
                                         <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
                                     </TouchableOpacity>
                                 </View>
+                                {
+                                    user.is_vip === 1
+                                        ? <View style={styles.premium}>
+                                            <FontAwesome name="diamond" color={color.WHITE} size={18} />
+                                            <Text style={styles.textPremium}>Premium</Text>
+                                        </View> : null
+                                }
                                 <View style={styles.inputInformation}>
                                     <View style={styles.action}>
                                         <FontAwesome name="user-o" color={color.GRAY} size={22} />
@@ -496,6 +503,22 @@ const styles = StyleSheet.create({
         backgroundColor: '#41444B',
         borderWidth: 2,
         borderColor: color.WHITE
+    },
+    premium: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
+        backgroundColor: color.YELLOW,
+        padding: 6,
+        borderRadius: 6,
+        marginBottom: 5,
+        elevation: 3
+    },
+    textPremium: {
+        color: color.WHITE,
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft: 5
     },
     action: {
         flexDirection: 'row',

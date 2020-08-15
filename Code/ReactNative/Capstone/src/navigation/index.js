@@ -7,7 +7,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Animated from 'react-native-reanimated'
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash'
@@ -16,6 +15,8 @@ import {
     PetSetting,
     Home,
     Filter,
+    ProfileUserFilter,
+    ProfilePetFilter,
     Profile,
     CardProfile,
     PetProfile,
@@ -298,6 +299,18 @@ const FilterStackScreen = ({ navigation }) => {
                     ),
                 }}
             />
+            <FilterStack.Screen name="ProfileUserFilter" component={ProfileUserFilter}
+                options={{
+                    headerTitle: null,
+                    headerTransparent: true,
+                    headerTintColor: color.PINK
+                }} />
+            <FilterStack.Screen name="ProfilePetFilter" component={ProfilePetFilter}
+                options={{
+                    headerTitle: null,
+                    headerTransparent: true,
+                    headerTintColor: color.PINK
+                }} />
         </FilterStack.Navigator>
     )
 }
@@ -324,10 +337,9 @@ const PremiumStackScreen = ({ navigation }) => {
         <PremiumStack.Navigator
             screenOptions={{
                 headerTitle: null,
-                headerTransparent: true
-            }}
-            initialRouteName="Premium"
-        >
+                headerTransparent: true,
+                headerTintColor: color.PINK
+            }}>
             <PremiumStack.Screen
                 name="Premium"
                 component={Premium}
@@ -380,15 +392,9 @@ const HomeStack = ({ navigation, style }) => {
             <Stack.Navigator
                 initialRouteName='Home'
                 screenOptions={{
-                    // headerShown: true,
-                    // headerTitleAlign: 'center',
-                    // headerTitleStyle: {
-                    //     fontWeight: 'bold',
-                    //     fontSize: 22
-                    // },
-                    // headerTintColor: color.PINK
                     headerTitle: null,
-                    headerTransparent: true
+                    headerTransparent: true,
+                    headerTintColor: color.PINK
                 }}>
                 <Stack.Screen name="Home" component={Home}
                     options={{
