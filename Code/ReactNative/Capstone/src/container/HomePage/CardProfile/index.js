@@ -40,7 +40,7 @@ const CardProfile = ({ route }) => {
         user_name: ''
     })
     const images = _.concat(info.avatar, info.pictures)
-    const WIDTH = Dimensions.get('screen').width - 10;
+    const WIDTH = Dimensions.get('screen').width - 20;
 
     const getInfo = () => {
         dispatch(startLoading())

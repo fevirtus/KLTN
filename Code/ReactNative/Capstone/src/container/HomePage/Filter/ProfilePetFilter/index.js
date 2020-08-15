@@ -3,7 +3,7 @@ import {
     StyleSheet, View,
     Text, Image,
     ScrollView, TouchableOpacity,
-    Dimensions, ImageBackground
+    Dimensions, ImageBackground, Alert
 } from 'react-native'
 import _ from 'lodash'
 import axios from 'axios'
@@ -11,15 +11,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { color } from '../../../../utility'
 import { URL_BASE, token } from '../../../../api/config';
 import { startLoading, stopLoading } from '../../../../redux/actions/loadingAction';
 import { Container } from '../../../../components';
+import { saveMatch, systemMsg, updateMatches } from '../../../../network';
+import { uuid } from '../../../../utility/constants';
 
 const { width } = Dimensions.get('window')
 
-const ProfilePetFilter = ({ route }) => {
+const ProfilePetFilter = ({ navigation, route }) => {
     const [info, setInfo] = useState({
         name: '',
         gender: '',
@@ -28,13 +30,18 @@ const ProfilePetFilter = ({ route }) => {
         avatar: '',
         introduction: '',
         breed_name: '',
-        pictures: []
+        pictures: [],
+        user_id: '',
+        user_avatar: '',
     })
     const { petID } = route.params;
     const dispatch = useDispatch()
     const [active, setActive] = useState(0)
+    const pet_active = useSelector(state => state.auth.pet_active)
 
-    var images = _.concat(info.avatar, info.pictures)
+    const images = _.concat(info.avatar, info.pictures)
+
+    const WIDTH = Dimensions.get('screen').width - 20;
 
     const getInfo = () => {
         dispatch(startLoading())
@@ -44,6 +51,7 @@ const ProfilePetFilter = ({ route }) => {
             }
         }).then(res => {
             // Set info
+            console.log('DATA', res.data)
             setInfo(res.data)
             dispatch(stopLoading())
         }).catch(e => {
@@ -60,6 +68,53 @@ const ProfilePetFilter = ({ route }) => {
         const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width)
         if (slide != active) {
             setActive(slide)
+        }
+    }
+
+    const match = () => {
+        if (pet_active.id) {
+            let body = {
+                pet_id1: pet_active.id,
+                pet_id2: petID,
+                user2: info.user_id
+            }
+            axios.post(`${URL_BASE}common/match`, body, { headers: { Authorization: token } })
+                .then(res => {
+                    console.log('match', res.data)
+                    if (res.data.result === 'ok') {
+                        console.log('OK', res.data.data)
+                        const { guestUid, guestAvatar, guestName } = res.data.data;
+                        saveMatch(uuid, guestUid);
+                        saveMatch(guestUid, uuid);
+
+                        //send msg to currentUser
+                        let msg = `NOTIFICATION: ${pet_active.name} and ${info.name} have matched each other!`
+                        systemMsg(msg, uuid, guestUid, '')
+
+                        //send msg to guest
+                        let msg2 = `NOTIFICATION: ${info.name} and ${pet_active.name} have matched each other!`
+                        systemMsg(msg2, guestUid, uuid, '')
+
+                        // plus matches + 1
+                        updateMatches([pet_active.id, petID])
+
+                        navigation.navigate('Match', {
+                            myPet: pet_active.name,
+                            myPetAvatar: pet_active.avatar,
+                            myAvatar: info.user_avatar,
+                            yourPet: info.name,
+                            yourPetAvatar: info.avatar,
+                            yourAvatar: guestAvatar,
+                            yourName: guestName,
+                            yourUid: guestUid,
+                        })
+                    } else {
+                        Alert.alert('Successfull', 'Matched successfull, waiting for response!')
+                    }
+                })
+                .catch(e => console.error(e))
+        } else {
+            Alert.alert('Error', 'You have to choose pet active below to do match')
         }
     }
 
@@ -80,7 +135,7 @@ const ProfilePetFilter = ({ route }) => {
                                         name="heart"
                                         size={26}
                                         color={color.GREEN}
-                                        onPress={() => { }}
+                                        onPress={match}
                                     />
                                 </TouchableOpacity>
                             </ImageBackground>
@@ -92,7 +147,7 @@ const ProfilePetFilter = ({ route }) => {
                         images.length === 1
                             ? null
                             : images.map((i, k) => (
-                                <View key={k} style={k == active ? styles.carouselActiveIndicators : styles.carouselIndicators} />
+                                <View key={k} style={k == active ? [styles.carouselActiveIndicators, { width: WIDTH / images.length }] : [styles.carouselIndicators, { width: WIDTH / images.length }]} />
                             ))
                     }
                 </View>
