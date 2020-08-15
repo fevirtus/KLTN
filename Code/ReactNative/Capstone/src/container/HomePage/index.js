@@ -5,7 +5,8 @@ import {
     TouchableOpacity, View,
     YellowBox, FlatList,
     Alert, ImageBackground,
-    Modal
+    Modal,
+    Dimensions
 } from 'react-native';
 import Axios from 'axios';
 import Swiper from 'react-native-deck-swiper';
@@ -24,7 +25,7 @@ import { token, URL_BASE } from '../../api/config';
 import { Container, Loading } from '../../components';
 import { color } from '../../utility';
 import { uuid } from '../../utility/constants';
-import { saveMatch, senderMsg, recieverMsg, systemMsg } from '../../network';
+import { saveMatch, senderMsg, recieverMsg, systemMsg, updateMatches } from '../../network';
 import _ from 'lodash'
 import { saveActivePet } from '../../redux/actions/authActions';
 
@@ -54,14 +55,19 @@ const Home = ({ navigation }) => {
                     Authorization: token
                 },
             }).then(res => {
-                console.log(res.data)
+                console.log('DATA', res.data)
+                console.log('1')
                 setData(res.data)
+                console.log('2')
+                setIndex(0)
+                console.log('3')
                 setLoading(false)
+                console.log('4')
             }).catch(e => {
-                console.log("Api call error!", e)
+                console.log("Api call error! 000", e)
             })
         } else {
-            fetchDataAll()
+            // fetchDataAll()
         }
 
     }
@@ -74,6 +80,7 @@ const Home = ({ navigation }) => {
         }).then(res => {
             console.log(res.data)
             setData(res.data)
+            setIndex(0)
             setLoading(false)
         }).catch(e => {
             console.log("Api call error!", e)
@@ -93,7 +100,7 @@ const Home = ({ navigation }) => {
                 Authorization: token
             }
         }).then(res => {
-            alert('Set active successful')
+            // alert('Set active successful')
             dispatch(saveActivePet(pet))
         }).catch((e) => {
             alert(e.message)
@@ -141,6 +148,8 @@ const Home = ({ navigation }) => {
                         let msg2 = `NOTIFICATION: ${pet.name} and ${pet_active.name} have matched each other!`
                         systemMsg(msg2, guestUid, uuid, '')
 
+                        // plus matches + 1
+                        updateMatches([pet_active.id, pet.id])
 
                         navigation.navigate('Match', {
                             myPet: pet_active.name,
@@ -213,7 +222,9 @@ const Home = ({ navigation }) => {
     )
 
     const Card = (({ item }) => {
-        var images = _.concat(item.avatar, item.pictures)
+        let images = _.concat(item.avatar, item.pictures)
+        console.log('IMG', images)
+        let dotWidth = (Dimensions.get('screen').width * 0.82) / images.length
 
         return (
             <Swipe
@@ -223,7 +234,7 @@ const Home = ({ navigation }) => {
                 dot={
                     <View style={{
                         height: 5,
-                        width: 70,
+                        width: dotWidth,
                         borderRadius: 5,
                         backgroundColor: color.GRAY,
                         marginHorizontal: 2
@@ -233,7 +244,7 @@ const Home = ({ navigation }) => {
                     <View
                         style={{
                             height: 5,
-                            width: 70,
+                            width: dotWidth,
                             borderRadius: 5,
                             backgroundColor: color.PINK,
                             marginHorizontal: 2
@@ -363,15 +374,20 @@ const Home = ({ navigation }) => {
                                     <Swiper
                                         cards={data}
                                         cardIndex={index}
-                                        renderCard={(item) => <Card item={item} />}
+                                        renderCard={(item) => {
+                                            // console.log('DATA', data)
+                                            return <Card item={item} />
+                                        }}
                                         ref={swiperRef}
                                         onSwiped={onSwiped}
                                         onSwipedLeft={onSwipedLeft}
                                         onSwipedRight={onSwipedRight}
                                         onSwipedTop={onSwipedTop}
                                         stackSize={2}
+                                        infinite
                                         disableBottomSwipe
                                         backgroundColor={'transparent'}
+                                        // onSwipedAll={() => console.log('end')}
                                         overlayLabels={{
                                             left: {
                                                 title: 'NOPE',
@@ -440,7 +456,7 @@ const Home = ({ navigation }) => {
                                     name="child-friendly"
                                     size={24}
                                     color={color.RED}
-                                    onPress={() => { }}
+                                    onPress={() => { console.log(data, index) }}
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
