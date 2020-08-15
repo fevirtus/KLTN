@@ -5,6 +5,7 @@ import Profile from './HomePage/Profile'
 import CardProfile from './HomePage/CardProfile'
 import ChatDashboard from './HomePage/ChatDashboard'
 import Filter from './HomePage/Filter'
+import Ranking from './HomePage/Ranking'
 import ProfileUserFilter from './HomePage/Filter/ProfileUserFilter'
 import ProfilePetFilter from './HomePage/Filter/ProfilePetFilter'
 import PetProfile from './HomePage/Profile/PetProfile'
@@ -24,6 +25,7 @@ export {
     Profile,
     CardProfile,
     Filter,
+    Ranking,
     ProfileUserFilter,
     ProfilePetFilter,
     PetProfile,

@@ -18,6 +18,7 @@ import {
     ProfileUserFilter,
     ProfilePetFilter,
     Profile,
+    Ranking,
     CardProfile,
     PetProfile,
     ChatDashboard,
@@ -469,6 +470,7 @@ const NavContainer = () => {
                         <Drawer.Screen name="SettingStackScreen" component={SettingStackScreen} />
                         <Drawer.Screen name="PremiumStackScreen" component={PremiumStackScreen} />
                         <Drawer.Screen name="Match" component={Match} />
+                        <Drawer.Screen name="Ranking" component={Ranking} />
                     </Drawer.Navigator>)
             }
         </NavigationContainer>

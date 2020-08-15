@@ -65,7 +65,6 @@ const Home = ({ navigation }) => {
         } else {
             // fetchDataAll()
         }
-
     }
 
     const fetchDataAll = () => {
@@ -312,7 +311,6 @@ const Home = ({ navigation }) => {
                         </ImageBackground>
                     ))
                 }
-
             </Swipe >
         )
     })
