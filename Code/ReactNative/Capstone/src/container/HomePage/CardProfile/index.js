@@ -39,7 +39,8 @@ const CardProfile = ({ route }) => {
         user_avatar: '',
         user_name: ''
     })
-    var images = _.concat(info.avatar, info.pictures)
+    const images = _.concat(info.avatar, info.pictures)
+    const WIDTH = Dimensions.get('screen').width - 10;
 
     const getInfo = () => {
         dispatch(startLoading())
@@ -92,7 +93,7 @@ const CardProfile = ({ route }) => {
                         images.length === 1
                             ? null
                             : images.map((i, k) => (
-                                <View key={k} style={k == active ? styles.carouselActiveIndicators : styles.carouselIndicators} />
+                                <View key={k} style={k == active ? [styles.carouselActiveIndicators, { width: WIDTH / images.length }] : [styles.carouselIndicators, { width: WIDTH / images.length }]} />
                             ))
                     }
                 </View>
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
     },
     carouselIndicators: {
         height: 5,
-        width: 70,
+        // width: 70,
         borderRadius: 5,
         backgroundColor: color.GRAY,
         marginTop: 6,
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
     },
     carouselActiveIndicators: {
         height: 5,
-        width: 70,
+        // width: 70,
         borderRadius: 5,
         backgroundColor: color.WHITE,
         marginTop: 6,
