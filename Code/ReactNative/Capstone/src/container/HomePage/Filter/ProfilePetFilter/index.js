@@ -37,7 +37,9 @@ const ProfilePetFilter = ({ navigation, route }) => {
     const { petID } = route.params;
     const dispatch = useDispatch()
     const [active, setActive] = useState(0)
+    const [isMatch, setIsMatch] = useState(false)
     const pet_active = useSelector(state => state.auth.pet_active)
+    const user = useSelector(state => state.auth.user)
 
     const images = _.concat(info.avatar, info.pictures)
 
@@ -60,8 +62,23 @@ const ProfilePetFilter = ({ navigation, route }) => {
         })
     }
 
+    const getIsMatch = () => {
+        axios.get(`${URL_BASE}pets/isMatch?pet_active=${pet_active.id}&pet2=${petID}`, {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            // Set info
+            console.log('IS MATCH', res.data)
+            setIsMatch(res.data.isMatch)
+        }).catch(e => {
+            console.log("ERROR isMatch:", e)
+        })
+    }
+
     useEffect(() => {
         getInfo()
+        getIsMatch()
     }, [petID])
 
     const change = ({ nativeEvent }) => {
@@ -72,6 +89,14 @@ const ProfilePetFilter = ({ navigation, route }) => {
     }
 
     const match = () => {
+
+        if (isMatch) return
+
+        if (user.is_vip == 0) {
+            alert('You need to upgrade to Premium to do this')
+            return
+        }
+
         if (pet_active.id) {
             let body = {
                 pet_id1: pet_active.id,
@@ -81,6 +106,7 @@ const ProfilePetFilter = ({ navigation, route }) => {
             axios.post(`${URL_BASE}common/match`, body, { headers: { Authorization: token } })
                 .then(res => {
                     console.log('match', res.data)
+                    setIsMatch(true)
                     if (res.data.result === 'ok') {
                         console.log('OK', res.data.data)
                         const { guestUid, guestAvatar, guestName } = res.data.data;
@@ -134,7 +160,7 @@ const ProfilePetFilter = ({ navigation, route }) => {
                                     <AntDesign
                                         name="heart"
                                         size={26}
-                                        color={color.GREEN}
+                                        color={isMatch ? color.RED : color.GREEN}
                                         onPress={match}
                                     />
                                 </TouchableOpacity>
