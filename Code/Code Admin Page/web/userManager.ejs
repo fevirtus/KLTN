@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <body style="background-image: url(https://geniusmindgraphics.com/wp-content/uploads/2017/11/mobile-app-background.jpeg);">
+<h1 style="padding-left: 560px">List user</h1>
+<%
+        if(userData.length!=0){
+        var i=1;
+        userData.forEach(function(data){
+
+        %>
+        <form action="manager" method="POST" style="padding-left: 500px;">
+            <h2><a href="/image?id=<%=data.uid %>" style="color: chartreuse; text-decoration: none;">
+                Manager Post
+              </a></h2>  
+            ID:<br><input type="text" style="width: 212px;" name="idUpdate" value="<%=data.uid %>" readonly><br>
+            Name:<br> <input type="text" style="width: 212px;" id="username" name="usernameUpdate" value="<%=data.name %>" readonly><br>
+            Is Vip(0 or 1):<br> <input type="text" style="width: 212px;" id="privacy" name="privacy" value="<%=data.is_vip %>" pattern="[0-1]"><br>
+            Is Block(0 or 1):<br> <input type="text" style="width: 212px;" id="enable" name="enableUpdate" value="<%=data.is_block %>" pattern="[0-1]"><br>
+            Block Deadline:<br> <input id='a' type="datetime" value="<%=data.block_deadline %>" name="enableFromUpdate"><br>
+            Avatar:<br> <input type="text" style="width: 212px;" value="<%=data.avatar %>" name="avatarUpdate"><br>
+            <input type="submit" value="Update" style="margin-left: 80px;">
+          </form>
+        <%  i++; }) %>
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+</body>
+</html>
