@@ -108,7 +108,7 @@ const PetProfile = ({ navigation, route }) => {
     const { name, gender, weight, age, introduction, avatar, breed_name, pictures } = info
     return (
         <View style={styles.container}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <ImageBackground
                     style={styles.header}
                     source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
@@ -141,9 +141,14 @@ const PetProfile = ({ navigation, route }) => {
                             <Text style={styles.text}>{age}</Text>
                         </View>
                     </View>
-                    <View style={styles.introduction}>
-                        <Text style={[styles.text, { color: color.BLACK }]}>{introduction}</Text>
-                    </View>
+                    {
+                        _.isEmpty(introduction)
+                            ? null
+                            : <View style={styles.about}>
+                                <Text style={styles.subheading}>About</Text>
+                                <Text style={[styles.text, { paddingLeft: 0 }]}>{introduction}</Text>
+                            </View>
+                    }
                     {
                         _.isEmpty(pictures)
                             ? <View style={styles.emptyPic}></View>
@@ -177,14 +182,12 @@ const styles = StyleSheet.create({
         height: 225
     },
     content: {
-        flexDirection: 'column'
+        flexDirection: 'column',
+        paddingHorizontal: 30
     },
     petName: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '82%',
-        marginLeft: 'auto',
-        marginRight: 'auto',
         paddingTop: 10
     },
     name: {
@@ -194,9 +197,6 @@ const styles = StyleSheet.create({
     },
     information: {
         marginTop: 25,
-        width: '82%',
-        marginLeft: 'auto',
-        marginRight: 'auto',
         backgroundColor: color.PET_DESCRIPTION,
         flexDirection: 'row',
         borderRadius: 30,
@@ -224,9 +224,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: color.GRAY
     },
-    introduction: {
-        alignItems: 'center',
-        paddingTop: 20,
+    about: {
+        borderWidth: 0.6,
+        borderColor: color.LIGHT_GRAY,
+        padding: 10,
+        borderRadius: 12,
+        marginVertical: 15
     },
     listImg: {
         height: 100,
@@ -259,11 +262,11 @@ const styles = StyleSheet.create({
     },
     commandButton: {
         padding: 14,
-        borderRadius: 10,
+        borderRadius: 25,
         backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
-        width: '90%',
+        width: '100%',
         alignSelf: 'center',
         marginVertical: 10
     },

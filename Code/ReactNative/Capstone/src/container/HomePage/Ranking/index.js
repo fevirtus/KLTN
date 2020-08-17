@@ -121,7 +121,6 @@ const Ranking = () => {
             <View style={styles.content}>
                 {
                     index + 1 === 1
-
                         ? <View style={styles.w}><View style={styles.number1}>
                             <Text>1</Text>
                         </View></View>
@@ -198,7 +197,6 @@ const Ranking = () => {
                             ]
                         }}
                     >
-
                         <FlatList
                             data={liked}
                             renderItem={({ item, index }) => {
@@ -280,7 +278,7 @@ const styles = StyleSheet.create({
     },
     wrapper: {
         flexDirection: 'row',
-        backgroundColor: color.LIGHT_PINK,
+        backgroundColor: color.PET_DESCRIPTION,
         marginVertical: 12,
         borderRadius: 25,
         alignItems: 'center',

@@ -96,7 +96,7 @@ const DrawerContent = (props) => {
                                 />
                             )}
                             label="Ranking"
-                            onPress={() => { props.navigation.navigate('Ranking') }}
+                            onPress={() => { props.navigation.navigate('RankingStackScreen') }}
                         />
                         <DrawerItem
                             icon={({ color, size }) => (

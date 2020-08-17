@@ -95,16 +95,25 @@ const Filter = ({ navigation }) => {
         (
             <Container>
                 <View style={styles.form}>
-                    <Text style={styles.textDistance}>Distance ({distance} KM) </Text>
+                    <Text style={styles.textDistance}>Distance</Text>
+                    <Text style={styles.title}>Hiển thị tất cả người dùng trong bán kính</Text>
                     <Slider
                         minimumValue={1}
                         maximumValue={100}
                         step={1}
                         value={distance}
                         onValueChange={(val) => { setDistance(val) }}
+                        minimumTrackTintColor={color.PINK}
+                        thumbTintColor={color.WHITE}
                     />
+                    <View style={styles.distanceWrap}>
+                        <Text style={styles.text}>{distance}km</Text>
+                        {
+                            distance === 100 ? null : <Text style={styles.text}>100km</Text>
+                        }
+                    </View>
                     <TouchableOpacity style={styles.submit} onPress={onFilter}>
-                        <Text style={styles.textSubmit}>Submit</Text>
+                        <Text style={styles.textSubmit}>Tìm</Text>
                     </TouchableOpacity>
                 </View>
                 {foundUsers.length > 0 &&
@@ -137,9 +146,23 @@ const styles = StyleSheet.create({
         paddingTop: 25,
     },
     textDistance: {
-        paddingTop: 5,
-        fontSize: 18,
-        textAlign: 'center'
+        paddingVertical: 8,
+        fontSize: 20,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        color: color.BLACK
+    },
+    title: {
+        color: color.GRAY,
+        paddingBottom: 6
+    },
+    distanceWrap: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    text: {
+        color: color.GRAY,
+        fontSize: 13
     },
     submit: {
         height: 48,

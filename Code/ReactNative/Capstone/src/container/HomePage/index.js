@@ -11,6 +11,7 @@ import {
 import Axios from 'axios';
 import Swiper from 'react-native-deck-swiper';
 import Swipe from 'react-native-swiper'
+import LottieView from 'lottie-react-native'
 import Animated from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -44,6 +45,7 @@ const Home = ({ navigation }) => {
         setIndex((index + 1) % data.length)
     }
     const [modalOpen, setModalOpen] = useState(false)
+    const [modalActive, setModalActive] = useState(false)
 
     const bs = useRef(null)
 
@@ -98,7 +100,8 @@ const Home = ({ navigation }) => {
                 Authorization: token
             }
         }).then(res => {
-            alert('Set active successful')
+            setModalActive(true)
+            bs.current.snapTo(1)
             dispatch(saveActivePet(pet))
         }).catch((e) => {
             alert(e.message)
@@ -340,6 +343,20 @@ const Home = ({ navigation }) => {
                         <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Không phải bây giờ, cảm ơn</Text>
                     </LinearGradient>
                     <Text style={styles.textCancel}>Thanh toán định kỳ, hủy bỏ bất cứ lúc nào.</Text>
+                </View>
+            </Modal>
+            {/* Modal pet active */}
+            <Modal visible={modalActive} animationType='fade' transparent={true}>
+                <View style={styles.modalContent}>
+                    <View style={styles.modalView}>
+                        <View style={styles.animation}>
+                            <LottieView source={require('../../utility/constants/success.json')} autoPlay loop />
+                        </View>
+                        <Text style={styles.textSuccess}>Bạn đã chọn pet active thành công</Text>
+                        <View style={styles.ok}>
+                            <Text style={styles.okStyle} onPress={() => setModalActive(false)}>OK</Text>
+                        </View>
+                    </View>
                 </View>
             </Modal>
 
@@ -689,6 +706,33 @@ const styles = StyleSheet.create({
         color: color.PINK,
         fontSize: 60,
         paddingBottom: '35%'
+    },
+    // Modal pet active
+    modalView: {
+        backgroundColor: color.WHITE,
+        marginHorizontal: 40,
+        marginTop: '48%',
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        borderRadius: 6,
+        alignItems: 'center'
+    },
+    animation: {
+        width: 100,
+        height: 85
+    },
+    textSuccess: {
+        paddingVertical: 10
+    },
+    ok: {
+        backgroundColor: color.LIGHT_BLUE,
+        paddingHorizontal: 22,
+        paddingVertical: 8,
+        borderRadius: 6
+    },
+    okStyle: {
+        fontSize: 16,
+        color: color.WHITE
     }
 });
 

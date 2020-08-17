@@ -51,6 +51,7 @@ const FilterStack = createStackNavigator();
 const ChatboxStack = createStackNavigator();
 const SettingStack = createStackNavigator();
 const PremiumStack = createStackNavigator();
+const RankingStack = createStackNavigator();
 
 const MainTabScreen = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -216,7 +217,6 @@ const LoginStack = () => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -232,7 +232,6 @@ const ChatStackScreen = ({ navigation }) => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -257,7 +256,6 @@ const ProfileStackScreen = ({ navigation }) => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -285,7 +283,6 @@ const FilterStackScreen = ({ navigation }) => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -322,7 +319,6 @@ const ChatboxStackScreen = () => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -382,6 +378,29 @@ const SettingStackScreen = ({ navigation }) => {
             <SettingStack.Screen name="Privacy" component={Privacy} />
             <SettingStack.Screen name="Feedback" component={Feedback} />
         </SettingStack.Navigator>
+    )
+}
+
+const RankingStackScreen = ({ navigation }) => {
+    return (
+        <RankingStack.Navigator
+            screenOptions={{
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontSize: 22
+                },
+                headerTintColor: color.PINK
+            }}>
+            <RankingStack.Screen name="Ranking" component={Ranking} options={{
+                title: 'Ranking',
+                headerLeft: () => (
+                    <Ionicons.Button
+                        name='arrow-back' backgroundColor={color.WHITE} size={25} color={color.PINK}
+                        onPress={() => navigation.navigate('Home')}
+                    />
+                )
+            }} />
+        </RankingStack.Navigator>
     )
 }
 
@@ -469,8 +488,8 @@ const NavContainer = () => {
                         <Drawer.Screen name="ChatboxStackScreen" component={ChatboxStackScreen} />
                         <Drawer.Screen name="SettingStackScreen" component={SettingStackScreen} />
                         <Drawer.Screen name="PremiumStackScreen" component={PremiumStackScreen} />
+                        <Drawer.Screen name="RankingStackScreen" component={RankingStackScreen} />
                         <Drawer.Screen name="Match" component={Match} />
-                        <Drawer.Screen name="Ranking" component={Ranking} />
                     </Drawer.Navigator>)
             }
         </NavigationContainer>
