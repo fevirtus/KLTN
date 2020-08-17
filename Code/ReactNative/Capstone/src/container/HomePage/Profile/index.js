@@ -26,7 +26,7 @@ import { Container, DismissKeyboard } from '../../../components'
 import { URL_BASE, token } from '../../../api/config'
 import Axios from 'axios';
 import { RadioButton } from 'react-native-paper';
-import { UpdateUser, UpdateUserName, uploadImgToServer } from '../../../network';
+import { UpdateUser, UpdateUserName, uploadImgToServer, validateUser } from '../../../network';
 import { uuid } from '../../../utility/constants';
 import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -49,6 +49,7 @@ const Profile = ({ navigation }) => {
         avatar: user.avatar
     });
     const [isValidPhone, setValidPhone] = useState(true)
+    const [isValidName, setValidName] = useState(true)
     const [isChange, setIsChange] = useState(false);
     const [uploadImg, setUploadImg] = useState({
         img: null
@@ -105,6 +106,7 @@ const Profile = ({ navigation }) => {
     }
 
     const onUpdateUser = async () => {
+        if (!validateUser(data)) return
         dispatch(startLoading())
         if (user.name != data.name) {
             //update user name on firebase
@@ -218,6 +220,14 @@ const Profile = ({ navigation }) => {
         }
     }
 
+    const handleValidName = (val) => {
+        if (val.trim().length >= 2 && val.trim().length <= 15) {
+            setValidName(true)
+        } else {
+            setValidName(false)
+        }
+    }
+
     return (
         <Container>
             <DismissKeyboard>
@@ -278,10 +288,19 @@ const Profile = ({ navigation }) => {
                                             placeholder="Name"
                                             value={data.name}
                                             placeholderTextColor={color.GRAY}
-                                            onChangeText={(name) => handleChangeInfo('name', name)}
+                                            onChangeText={(name) => {
+                                                handleChangeInfo('name', name)
+                                                handleValidName(name)
+                                            }}
+                                            // onEndEditing={(e) => handleValidName(e.nativeEvent.text)}
                                             style={styles.textInput}
                                         />
                                     </View>
+                                    {isValidName ? null :
+                                        <Animatable.View animation="fadeInLeft" duration={500}>
+                                            <Text style={styles.errorMsg}>Name must have 2-15 characters</Text>
+                                        </Animatable.View>
+                                    }
                                     <View style={styles.action}>
                                         <Fontisto name="email" color={color.GRAY} size={22} />
                                         <TextInput
@@ -326,13 +345,16 @@ const Profile = ({ navigation }) => {
                                             keyboardType="numeric"
                                             value={data.phone}
                                             placeholderTextColor={color.GRAY}
-                                            onChangeText={(phone) => handleChangeInfo('phone', phone)}
-                                            onEndEditing={(e) => handleValidPhone(e.nativeEvent.text)}
+                                            onChangeText={(phone) => {
+                                                handleChangeInfo('phone', phone)
+                                                handleValidPhone(phone)
+                                            }}
+                                        // onEndEditing={(e) => handleValidPhone(e.nativeEvent.text)}
                                         />
                                     </View>
                                     {isValidPhone ? null :
                                         <Animatable.View animation="fadeInLeft" duration={500}>
-                                            <Text style={styles.errorMsg}>Phone number must be 10 digits</Text>
+                                            <Text style={styles.errorMsg}>Phone number must have 10 figures</Text>
                                         </Animatable.View>
                                     }
                                     <View style={styles.action}>

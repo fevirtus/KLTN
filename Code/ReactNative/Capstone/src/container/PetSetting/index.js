@@ -20,10 +20,11 @@ import { Container, Loading } from '../../components';
 import { color } from '../../utility';
 import { addPet } from '../../redux/actions/authActions';
 import _ from 'lodash'
-import { uploadImgToServer } from '../../network';
+import { uploadImgToServer, validatePet } from '../../network';
 import { startLoading, stopLoading } from '../../redux/actions/loadingAction';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as Animatable from 'react-native-animatable';
 
 const PetSetting = ({ navigation }) => {
     const [info, setInfo] = useState({
@@ -42,6 +43,9 @@ const PetSetting = ({ navigation }) => {
         img: null
     });
     const [showDatePicker, setShowDatePicker] = useState(false);
+
+    const [isValidWeight, setValidWeight] = useState(true)
+    const [isValidName, setValidName] = useState(true)
 
     useEffect(() => {
         Axios.get(`${URL_BASE}pets/breeds`, { headers: { Authorization: token } })
@@ -85,6 +89,22 @@ const PetSetting = ({ navigation }) => {
         });
     }
 
+    const handleValidName = (val) => {
+        if (val.trim().length >= 2 && val.trim().length <= 15) {
+            setValidName(true)
+        } else {
+            setValidName(false)
+        }
+    }
+
+    const handleValidWeight = (val) => {
+        if (val.length <= 3) {
+            setValidWeight(true)
+        } else {
+            setValidWeight(false)
+        }
+    }
+
     const onDatePicker = (event, selectedDate) => {
         setShowDatePicker(false)
         if (selectedDate) {
@@ -92,23 +112,8 @@ const PetSetting = ({ navigation }) => {
         }
     };
 
-    const validatePet = () => {
-        if (_.isEmpty(info.name.trim())) {
-            alert('Name can not be empty')
-            return false;
-        }
-        if (info.breed === '-1') {
-            alert('Must choose breed of pet')
-            return false;
-        }
-        if (_.isEmpty(info.avatar)) {
-            alert('Pet avatar can not be empty')
-            return false;
-        }
-        return true;
-    }
     const onCreateNewPet = async () => {
-        if (validatePet()) {
+        if (validatePet(info)) {
             try {
                 dispatch(startLoading())
                 let petAvatar = await uploadImgToServer(uploadImg);
@@ -148,10 +153,18 @@ const PetSetting = ({ navigation }) => {
                                 placeholder="Name"
                                 value={info.name}
                                 placeholderTextColor={color.GRAY}
-                                onChangeText={(name) => handleChangeInfo('name', name)}
+                                onChangeText={(name) => {
+                                    handleChangeInfo('name', name)
+                                    handleValidName(name)
+                                }}
                                 style={styles.textInput}
                             />
                         </View>
+                        {isValidName ? null :
+                            <Animatable.View animation="fadeInLeft" duration={500}>
+                                <Text style={styles.errorMsg}>Name must have 2-15 characters</Text>
+                            </Animatable.View>
+                        }
                         <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 20, }}>
                             <MaterialIcons name="pets" color={color.GRAY} size={20} style={{ marginTop: 10 }} />
                             <DropDownPicker
@@ -212,10 +225,18 @@ const PetSetting = ({ navigation }) => {
                                 keyboardType="numeric"
                                 value={info.weight}
                                 placeholderTextColor={color.GRAY}
-                                onChangeText={(weight) => handleChangeInfo('weight', weight)}
+                                onChangeText={(weight) => {
+                                    handleChangeInfo('weight', weight)
+                                    handleValidWeight(weight)
+                                }}
                                 style={styles.textInput}
                             />
                         </View>
+                        {isValidWeight ? null :
+                            <Animatable.View animation="fadeInLeft" duration={500}>
+                                <Text style={styles.errorMsg}>Weight must have less than 3 figures</Text>
+                            </Animatable.View>
+                        }
                         <View style={[styles.action, { width: '100%' }]}>
                             <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
                             <TextInput
@@ -376,6 +397,13 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: color.WHITE
     },
+    errorMsg: {
+        color: color.RED,
+        width: '100%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        paddingLeft: 20,
+    }
 })
 
 export default PetSetting
