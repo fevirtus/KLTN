@@ -19,6 +19,7 @@ import { URL_BASE, token } from '../../../api/config';
 import { color } from '../../../utility';
 import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
 import { Container } from '../../../components';
+import { convertToAge } from '../../../network';
 
 const { width } = Dimensions.get('window')
 
@@ -120,7 +121,7 @@ const CardProfile = ({ route }) => {
                             ? null
                             : <View style={styles.details}>
                                 <MaterialCommunityIcons name="clock-time-nine-outline" size={22} color={color.PINK} />
-                                <Text style={styles.text}>{info.age}</Text>
+                                <Text style={styles.text}>{convertToAge(info.age)}</Text>
                             </View>
                     }
                     {

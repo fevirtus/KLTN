@@ -337,20 +337,15 @@ const Profile = ({ navigation }) => {
                                     }
                                     <View style={styles.action}>
                                         <FontAwesome name="birthday-cake" color={color.GRAY} size={22} />
-                                        <TouchableOpacity
-                                            style={styles.calendar}
-                                            onPress={() => setShowDatePicker(true)}
-                                        >
-                                            <TextInput
-                                                placeholder="Birthday"
-                                                value={data.birth_date}
-                                                placeholderTextColor={color.GRAY}
-                                                editable={false}
-                                                style={[styles.textInput, { width: '40%' }]}
-                                            />
-                                            <View style={styles.iconCal}>
-                                                <FontAwesome name="calendar" color={color.GRAY} size={22} />
-                                            </View>
+                                        <TextInput
+                                            placeholder="Birthday"
+                                            value={data.birth_date}
+                                            placeholderTextColor={color.GRAY}
+                                            editable={false}
+                                            style={styles.textInput}
+                                        />
+                                        <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                                            <FontAwesome name="calendar" color={color.GRAY} size={22} />
                                         </TouchableOpacity>
                                     </View>
                                     {showDatePicker &&

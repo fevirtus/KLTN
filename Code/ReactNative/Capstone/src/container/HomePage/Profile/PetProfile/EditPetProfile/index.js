@@ -25,6 +25,8 @@ import { updatePet, updateActivePet } from '../../../../../redux/actions/authAct
 import ImageCropPicker from 'react-native-image-crop-picker';
 import { ActionSheet, Root } from 'native-base'
 import { startLoading, stopLoading } from '../../../../../redux/actions/loadingAction';
+import moment from 'moment';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const EditPetProfile = ({ navigation, route }) => {
     const pet_active = useSelector(state => state.auth.pet_active)
@@ -48,6 +50,7 @@ const EditPetProfile = ({ navigation, route }) => {
     });
     // const [fileList, setFileList] = useState([])
     const [isChange, setIsChange] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
     useEffect(() => {
         dispatch(startLoading())
@@ -67,6 +70,12 @@ const EditPetProfile = ({ navigation, route }) => {
         setInfo({ ...info, [type]: value })
         setIsChange(petInfo[type] != value);
     }
+    const onDatePicker = (event, selectedDate) => {
+        setShowDatePicker(false)
+        if (selectedDate) {
+            handleChangeInfo('age', moment(selectedDate).format('YYYY-MM-DD'))
+        }
+    };
 
     const validatePet = () => {
         if (_.isEmpty(info.name.trim())) {
@@ -334,7 +343,7 @@ const EditPetProfile = ({ navigation, route }) => {
                                 style={styles.textInput}
                             />
                         </View>
-                        <View style={styles.action}>
+                        {/* <View style={styles.action}>
                             <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
                             <TextInput
                                 placeholder="Age"
@@ -344,7 +353,32 @@ const EditPetProfile = ({ navigation, route }) => {
                                 onChangeText={(age) => handleChangeInfo('age', age)}
                                 style={styles.textInput}
                             />
+                        </View> */}
+                        <View style={[styles.action, { width: '100%' }]}>
+                            <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
+                            <TextInput
+                                placeholder="Birthday"
+                                value={info.age}
+                                placeholderTextColor={color.GRAY}
+                                editable={false}
+                                style={styles.textInput}
+                            />
+                            <TouchableOpacity onPress={() => setShowDatePicker(true)}
+                                style={{ marginRight: 20 }}
+                            >
+                                <FontAwesome name="calendar" color={color.GRAY} size={18} />
+                            </TouchableOpacity>
                         </View>
+                        {showDatePicker &&
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={info.age ? new Date(info.age) : new Date()}
+                                mode='date'
+                                is24Hour={true}
+                                display="default"
+                                onChange={onDatePicker}
+                            />
+                        }
                         <View style={styles.action}>
                             <MaterialIcons name="description" color={color.GRAY} size={22} />
                             <TextInput

@@ -18,6 +18,7 @@ import { URL_BASE, token } from '../../../../api/config'
 import { useDispatch } from 'react-redux';
 import { deletePet } from '../../../../redux/actions/authActions';
 import { startLoading, stopLoading } from '../../../../redux/actions/loadingAction';
+import { convertToAge } from '../../../../network';
 
 const PetProfile = ({ navigation, route }) => {
     const { petId } = route.params;
@@ -138,7 +139,7 @@ const PetProfile = ({ navigation, route }) => {
                         </View>
                         <View style={styles.item}>
                             <Text style={styles.subheading}>Age</Text>
-                            <Text style={styles.text}>{age}</Text>
+                            <Text style={styles.text}>{convertToAge(age)}</Text>
                         </View>
                     </View>
                     {
