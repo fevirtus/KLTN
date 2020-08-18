@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     moreInfo: {
         paddingHorizontal: 20,
         paddingTop: 20,
-
+        paddingBottom: 40,
     },
     email: {
         textAlign: 'center',

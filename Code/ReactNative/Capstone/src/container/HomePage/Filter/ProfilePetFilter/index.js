@@ -147,27 +147,29 @@ const ProfilePetFilter = ({ navigation, route }) => {
     return (
         <Container>
             <View style={styles.container}>
-                <ScrollView
-                    pagingEnabled
-                    horizontal
-                    onScroll={change}
-                    showsHorizontalScrollIndicator={false}
-                >
-                    {
-                        images.map((image, index) => (
-                            <ImageBackground source={{ uri: image }} style={styles.imageProfile} key={index}>
-                                <TouchableOpacity style={styles.iconContainer}>
-                                    <AntDesign
-                                        name="heart"
-                                        size={26}
-                                        color={isMatch ? color.RED : color.GREEN}
-                                        onPress={match}
-                                    />
-                                </TouchableOpacity>
-                            </ImageBackground>
-                        ))
-                    }
-                </ScrollView>
+                <View>
+                    <ScrollView
+                        pagingEnabled
+                        horizontal
+                        onScroll={change}
+                        showsHorizontalScrollIndicator={false}
+                    >
+                        {
+                            images.map((image, index) => (
+                                <ImageBackground source={{ uri: image }} style={styles.imageProfile} key={index}>
+                                </ImageBackground>
+                            ))
+                        }
+                    </ScrollView>
+                    <TouchableOpacity style={styles.iconContainer}>
+                        <AntDesign
+                            name="heart"
+                            size={26}
+                            color={isMatch ? color.RED : color.GREEN}
+                            onPress={match}
+                        />
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.pagination}>
                     {
                         images.length === 1
@@ -296,9 +298,9 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         backgroundColor: color.WHITE,
-        position: 'relative',
-        top: '55%',
-        right: 12
+        position: 'absolute',
+        right: 10,
+        bottom: 10,
     },
 })
 
