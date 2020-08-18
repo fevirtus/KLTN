@@ -19,12 +19,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { URL_BASE, token } from '../../../../../api/config';
 import { Container } from '../../../../../components';
 import { color } from '../../../../../utility';
-import { uploadImgToServer, uploadPicturesToServer } from '../../../../../network';
+import { uploadImgToServer, uploadPicturesToServer, validatePet } from '../../../../../network';
 import _ from 'lodash'
 import { updatePet, updateActivePet } from '../../../../../redux/actions/authActions';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import { ActionSheet, Root } from 'native-base'
 import { startLoading, stopLoading } from '../../../../../redux/actions/loadingAction';
+import moment from 'moment';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const EditPetProfile = ({ navigation, route }) => {
     const pet_active = useSelector(state => state.auth.pet_active)
@@ -48,6 +50,9 @@ const EditPetProfile = ({ navigation, route }) => {
     });
     // const [fileList, setFileList] = useState([])
     const [isChange, setIsChange] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [isValidWeight, setValidWeight] = useState(true)
+    const [isValidName, setValidName] = useState(true)
 
     useEffect(() => {
         dispatch(startLoading())
@@ -68,17 +73,28 @@ const EditPetProfile = ({ navigation, route }) => {
         setIsChange(petInfo[type] != value);
     }
 
-    const validatePet = () => {
-        if (_.isEmpty(info.name.trim())) {
-            alert('Name can not be empty')
-            return false;
+    const handleValidName = (val) => {
+        if (val.trim().length >= 2 && val.trim().length <= 15) {
+            setValidName(true)
+        } else {
+            setValidName(false)
         }
-        if (info.breed === '-1') {
-            alert('Must choose breed of pet')
-            return false;
-        }
-        return true;
     }
+
+    const handleValidWeight = (val) => {
+        if (val.length <= 3) {
+            setValidWeight(true)
+        } else {
+            setValidWeight(false)
+        }
+    }
+
+    const onDatePicker = (event, selectedDate) => {
+        setShowDatePicker(false)
+        if (selectedDate) {
+            handleChangeInfo('age', moment(selectedDate).format('YYYY-MM-DD'))
+        }
+    };
 
     const handlePicker = () => {
         let options = {
@@ -184,7 +200,7 @@ const EditPetProfile = ({ navigation, route }) => {
     }
 
     const onUpdatePet = async () => {
-        if (validatePet()) {
+        if (validatePet(info)) {
             dispatch(startLoading())
             if (petInfo.avatar != info.avatar) {
                 try {
@@ -265,10 +281,18 @@ const EditPetProfile = ({ navigation, route }) => {
                                 placeholder="Name"
                                 value={info.name}
                                 placeholderTextColor={color.GRAY}
-                                onChangeText={(name) => handleChangeInfo('name', name)}
+                                onChangeText={(name) => {
+                                    handleChangeInfo('name', name)
+                                    handleValidName(name)
+                                }}
                                 style={styles.textInput}
                             />
                         </View>
+                        {isValidName ? null :
+                            <Animatable.View animation="fadeInLeft" duration={500}>
+                                <Text style={styles.errorMsg}>Name must have 2-15 characters</Text>
+                            </Animatable.View>
+                        }
                         <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 20, }}>
                             <MaterialIcons name="pets" color={color.GRAY} size={20} style={{ marginTop: 10 }} />
                             {breeds.length > 0 &&
@@ -330,21 +354,43 @@ const EditPetProfile = ({ navigation, route }) => {
                                 keyboardType="numeric"
                                 value={info.weight}
                                 placeholderTextColor={color.GRAY}
-                                onChangeText={(weight) => handleChangeInfo('weight', weight)}
+                                onChangeText={(weight) => {
+                                    handleChangeInfo('weight', weight)
+                                    handleValidWeight(weight)
+                                }}
                                 style={styles.textInput}
                             />
                         </View>
-                        <View style={styles.action}>
+                        {isValidWeight ? null :
+                            <Animatable.View animation="fadeInLeft" duration={500}>
+                                <Text style={styles.errorMsg}>Weight must have less than 3 figures</Text>
+                            </Animatable.View>
+                        }
+                        <View style={[styles.action, { width: '100%' }]}>
                             <FontAwesome name="birthday-cake" color={color.GRAY} size={18} />
                             <TextInput
-                                placeholder="Age"
-                                keyboardType="numeric"
+                                placeholder="Birthday"
                                 value={info.age}
                                 placeholderTextColor={color.GRAY}
-                                onChangeText={(age) => handleChangeInfo('age', age)}
+                                editable={false}
                                 style={styles.textInput}
                             />
+                            <TouchableOpacity onPress={() => setShowDatePicker(true)}
+                                style={{ marginRight: 20 }}
+                            >
+                                <FontAwesome name="calendar" color={color.GRAY} size={18} />
+                            </TouchableOpacity>
                         </View>
+                        {showDatePicker &&
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={info.age ? new Date(info.age) : new Date()}
+                                mode='date'
+                                is24Hour={true}
+                                display="default"
+                                onChange={onDatePicker}
+                            />
+                        }
                         <View style={styles.action}>
                             <MaterialIcons name="description" color={color.GRAY} size={22} />
                             <TextInput
@@ -530,6 +576,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         paddingBottom: 10
+    },
+    errorMsg: {
+        color: color.RED,
+        width: '100%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        paddingLeft: 20,
     }
 })
 

@@ -13,11 +13,13 @@ import axios from 'axios'
 import { ScrollView } from 'react-native-gesture-handler';
 import _ from 'lodash'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { color } from '../../../../utility';
 import { URL_BASE, token } from '../../../../api/config'
 import { useDispatch } from 'react-redux';
 import { deletePet } from '../../../../redux/actions/authActions';
 import { startLoading, stopLoading } from '../../../../redux/actions/loadingAction';
+import { convertToAge } from '../../../../network';
 
 const PetProfile = ({ navigation, route }) => {
     const { petId } = route.params;
@@ -116,16 +118,24 @@ const PetProfile = ({ navigation, route }) => {
                 </ImageBackground>
                 <View style={styles.content}>
                     <View style={styles.petName}>
-                        <View>
+                        <View style={{ flex: 2 }}>
                             <Text style={styles.name}>{name}</Text>
                             <Text style={styles.text}>{breed_name}</Text>
                         </View>
-                        <TouchableOpacity
-                            style={styles.buttonDelete}
-                            onPress={_deletePet}
-                        >
-                            <FontAwesome5 name="trash" size={22} color="white" />
-                        </TouchableOpacity>
+                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                            <TouchableOpacity
+                                style={[styles.buttonEdit, { marginRight: 10 }]}
+                                onPress={onEditPet}
+                            >
+                                <FontAwesome name="edit" size={22} color="white" />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.buttonDelete}
+                                onPress={_deletePet}
+                            >
+                                <FontAwesome5 name="trash" size={22} color="white" />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                     <View style={styles.information}>
                         <View style={styles.item}>
@@ -138,7 +148,7 @@ const PetProfile = ({ navigation, route }) => {
                         </View>
                         <View style={styles.item}>
                             <Text style={styles.subheading}>Age</Text>
-                            <Text style={styles.text}>{age}</Text>
+                            <Text style={styles.text}>{convertToAge(age)}</Text>
                         </View>
                     </View>
                     {
@@ -163,9 +173,6 @@ const PetProfile = ({ navigation, route }) => {
                                 />
                             </View>
                     }
-                    <TouchableOpacity style={styles.commandButton} onPress={onEditPet}>
-                        <Text style={styles.panelButtonTitle}>Edit</Text>
-                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </View>
@@ -188,7 +195,8 @@ const styles = StyleSheet.create({
     petName: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingTop: 10
+        paddingTop: 10,
+        flex: 1
     },
     name: {
         fontSize: 28,
@@ -232,9 +240,9 @@ const styles = StyleSheet.create({
         marginVertical: 15
     },
     listImg: {
-        height: 100,
+        // height: 100,
         alignItems: 'center',
-        paddingHorizontal: 20
+        // paddingHorizontal: 20
     },
     emptyPic: {
         height: 15
@@ -246,12 +254,21 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     petImage: {
-        height: 85,
-        width: 85,
+        height: 200,
+        width: 150,
         borderRadius: 20,
         borderWidth: 3,
     },
     buttonDelete: {
+        borderRadius: 50,
+        backgroundColor: color.PINK,
+        width: 38,
+        height: 38,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 5,
+    },
+    buttonEdit: {
         borderRadius: 50,
         backgroundColor: color.PINK,
         width: 38,
