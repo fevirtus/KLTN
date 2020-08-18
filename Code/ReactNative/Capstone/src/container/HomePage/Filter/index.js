@@ -26,7 +26,7 @@ const FoundUsers = ({ onNameTap, item, onTap }) => {
                                 )}
                         </View>
                         <Body>
-                            <Text style={styles.profileName} onPress={onNameTap}>{item.name}</Text>
+                            <Text style={styles.profileName} >{item.name}</Text>
                             <View style={styles.location}>
                                 <Ionicons name='location-sharp' size={12} style={styles.iconLocation} />
                                 <Text style={styles.distance}>{item.distance} km</Text>
