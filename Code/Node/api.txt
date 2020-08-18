@@ -35,6 +35,14 @@
 		
 	=> upgrade current user to Premium
 	
+/api/users/feedback
+	+ POST: 
+		- headers:{Authorization: token},
+		- body:{
+			"content": required
+		}
+		
+	=> feedback to admin
 	
 /api/users/
 	+ PUT: {
@@ -79,6 +87,14 @@
 	+ GET: {headers:{Authorization: token}}
 	=> get top 10 pets having most likes
 	
+/api/pets/topMatch
+	+ GET: {headers:{Authorization: token}}
+	=> get top 10 pets having most matches
+	
+/api/pets/isMatch?pet_active=12&pet2=99
+	+ GET: {headers:{Authorization: token}}
+	=> verified pet_active and pet2 is matched
+	
 /api/pets
 	+ POST:{
 		headers:{Authorization: token},
@@ -87,6 +103,16 @@
 		}
 	}
 	=> create a new pet of the login user
+
+/api/pets/report
+	+ POST:{
+		headers:{Authorization: token},
+		body:{
+			"pet_id":required,
+			"reason":required,
+		}
+	}
+	=> insert pictures of pet
 
 /api/pets/:id/pictures
 	+ POST:{
