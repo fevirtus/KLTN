@@ -4,11 +4,45 @@ import { CheckBox } from 'react-native-elements'
 import { color } from '../../../utility'
 import { useSelector, useDispatch } from 'react-redux';
 import { Container } from '../../../components'
+import Axios from 'axios';
+import { URL_BASE, token } from '../../../api/config';
+import { hideUser } from '../../../network';
+import { uuid } from '../../../utility/constants';
 
 const Privacy = ({ navigation }) => {
     const checked = useSelector(state => state.home.isHideSwiper)
     const dispatch = useDispatch()
-    
+
+    const updateUser = (hide) => {
+        try {
+            Axios.put(`${URL_BASE}users`, {
+                updateFields: {
+                    hide: hide
+                }
+            }, { headers: { Authorization: token } })
+        } catch (error) {
+
+        }
+    }
+
+    const toggleHideUser = () => {
+        try {
+            if (!checked) {
+                console.log('HIDE')
+                updateUser(1)
+                hideUser(uuid, true)
+            } else {
+                console.log('SHOW')
+                updateUser(0)
+                hideUser(uuid, false)
+            }
+            dispatch({ type: 'HIDE_SWIPER' })
+
+        } catch (error) {
+            console.log('ERROR toggleHideUser()', error)
+        }
+    }
+
     return (
         <Container>
             <View style={styles.checkboxContainer}>
@@ -20,7 +54,7 @@ const Privacy = ({ navigation }) => {
                     checkedColor={color.PINK}
                     uncheckedColor={color.PINK}
                     checked={checked}
-                    onPress={() => dispatch({ type: 'HIDE_SWIPER' })}
+                    onPress={toggleHideUser}
                 />
             </View>
             <Text style={styles.text2}>if you select hide, you can't match new pet!</Text>

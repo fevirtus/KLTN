@@ -39,12 +39,12 @@ export const UpdateUserName = async (uuid, displayName) => {
     }
 };
 
-export const hideUser = async (uuid) => {
+export const hideUser = async (uuid, hide) => {
     try {
         return await database()
             .ref("users/" + uuid)
             .update({
-                hide: true
+                hide: hide
             });
     } catch (error) {
         return error;
