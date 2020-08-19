@@ -25,7 +25,7 @@ const ChatDashboard = ({ navigation }) => {
                         let users = []
                         dataSnapshot.forEach((child) => {
                             const has = matchedUsers.filter(mu => mu.guest == child.val().uuid);
-                            if (has.length > 0) {//exist in matchedUsers
+                            if (has.length > 0 && !child.val().hide) {//exist in matchedUsers
                                 users.push({
                                     id: child.val().uuid,
                                     name: child.val().name,
