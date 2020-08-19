@@ -91,51 +91,50 @@ const Filter = ({ navigation }) => {
         }
     }
 
-    return is_vip !== 1 ? null :
-        (
-            <Container>
-                <View style={styles.form}>
-                    <Text style={styles.textDistance}>Distance</Text>
-                    {/* <Text style={styles.title}>Hiển thị tất cả người dùng trong bán kính</Text> */}
-                    <Slider
-                        minimumValue={1}
-                        maximumValue={100}
-                        step={1}
-                        value={distance}
-                        onValueChange={(val) => { setDistance(val) }}
-                        minimumTrackTintColor={color.PINK}
-                        thumbTintColor={color.WHITE}
-                    />
-                    <View style={styles.distanceWrap}>
-                        <Text style={styles.text}>{distance}km</Text>
-                        {
-                            distance === 100 ? null : <Text style={styles.text}>100km</Text>
-                        }
-                    </View>
-                    <TouchableOpacity style={styles.submit} onPress={onFilter}>
-                        <Text style={styles.textSubmit}>Scan</Text>
-                    </TouchableOpacity>
+    return (
+        <Container>
+            <View style={styles.form}>
+                <Text style={styles.textDistance}>Distance</Text>
+                {/* <Text style={styles.title}>Hiển thị tất cả người dùng trong bán kính</Text> */}
+                <Slider
+                    minimumValue={1}
+                    maximumValue={100}
+                    step={1}
+                    value={distance}
+                    onValueChange={(val) => { setDistance(val) }}
+                    minimumTrackTintColor={color.PINK}
+                    thumbTintColor={color.WHITE}
+                />
+                <View style={styles.distanceWrap}>
+                    <Text style={styles.text}>{distance}km</Text>
+                    {
+                        distance === 100 ? null : <Text style={styles.text}>100km</Text>
+                    }
                 </View>
-                {foundUsers.length > 0 &&
-                    <FlatList
-                        alwaysBounceVertical={false}
-                        data={foundUsers}
-                        keyExtractor={(_, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <FoundUsers
-                                item={item}
-                                onNameTap={() => {
-                                    console.log(item.name)
-                                }}
-                                onTap={() => {
-                                    navigation.navigate('ProfileUserFilter', { uid: item.uid })
-                                }}
-                            />
-                        )}
-                    />
-                }
-            </Container>
-        )
+                <TouchableOpacity style={styles.submit} onPress={onFilter}>
+                    <Text style={styles.textSubmit}>Scan</Text>
+                </TouchableOpacity>
+            </View>
+            {foundUsers.length > 0 &&
+                <FlatList
+                    alwaysBounceVertical={false}
+                    data={foundUsers}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <FoundUsers
+                            item={item}
+                            onNameTap={() => {
+                                console.log(item.name)
+                            }}
+                            onTap={() => {
+                                navigation.navigate('ProfileUserFilter', { uid: item.uid })
+                            }}
+                        />
+                    )}
+                />
+            }
+        </Container>
+    )
 }
 
 const styles = StyleSheet.create({

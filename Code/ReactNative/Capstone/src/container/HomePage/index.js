@@ -572,14 +572,13 @@ const styles = StyleSheet.create({
     },
     // Hide mode
     hideMode: {
-        flex: 1,
+        flex: 0.9,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: color.LIGHT_GRAY,
-        marginTop: 20,
+        marginTop: '20%',
         marginBottom: 20,
-        marginLeft: 20,
-        marginRight: 20,
+        marginHorizontal: 20,
         borderRadius: 8,
         elevation: 4
     },

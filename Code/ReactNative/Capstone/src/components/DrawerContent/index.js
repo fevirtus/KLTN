@@ -10,6 +10,7 @@ import {
     DrawerContentScrollView,
     DrawerItem
 } from '@react-navigation/drawer'
+import LinearGradient from 'react-native-linear-gradient'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
@@ -26,7 +27,7 @@ const DrawerContent = (props) => {
     const dispatch = useDispatch()
 
     return (
-        <View style={styles.drawerContent}>
+        <LinearGradient colors={user.is_vip ? [color.YELLOW, color.WHITE, '#fafdcb'] : [color.WHITE, color.WHITE]} style={styles.drawerContent}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
@@ -36,7 +37,7 @@ const DrawerContent = (props) => {
                                 size={55}
                             />
                             <View style={styles.userInfoText}>
-                                <Title style={styles.title}>{user.name}</Title>
+                                <Title style={user.is_vip ? [styles.title, { color: '#cf1b1b' }] : styles.title}>{user.name}</Title>
                                 <Caption style={styles.caption}>{user.email}</Caption>
                             </View>
                         </View>
@@ -140,16 +141,16 @@ const DrawerContent = (props) => {
                     }}
                 />
             </Drawer.Section>
-        </View>
+        </LinearGradient>
     )
 }
 
 const styles = StyleSheet.create({
     drawerContent: {
-        flex: 1,
+        flex: 1
     },
     userInfoSection: {
-        paddingLeft: 20,
+        paddingLeft: 14,
     },
     userInfo: {
         flexDirection: 'row',
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         marginLeft: 12,
         borderBottomWidth: 0.6,
-        borderBottomColor: color.LIGHT_GRAY
+        borderBottomColor: color.LIGHT_LIGHT_GRAY
     },
     title: {
         fontSize: 16,
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     },
     bottomDrawerSection: {
         marginBottom: 15,
-        borderTopColor: color.LIGHT_LIGHT_GRAYGRAY,
+        borderTopColor: color.LIGHT_LIGHT_GRAY,
         borderTopWidth: 1
     }
 });
