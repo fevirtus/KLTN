@@ -5,10 +5,11 @@ import {
     ImageBackground,
     Dimensions, ScrollView,
     TouchableOpacity,
-    Modal
+    Modal,
+    TextInput
 } from 'react-native'
 import { useDispatch } from 'react-redux';
-import _ from 'lodash'
+import _, { truncate } from 'lodash'
 import axios from 'axios'
 import LottieView from 'lottie-react-native'
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -31,6 +32,9 @@ const CardProfile = ({ route }) => {
     const [modalOpen, setModalOpen] = useState(false)
     const [modalNoti, setModalNoti] = useState(false)
     const [reportImg, setReportImg] = useState('')
+    const [isOther, setIsOther] = useState(false)
+    const [checked, setChecked] = useState(0)
+    const [otherReason, setOtherReason] = useState('')
     const [info, setInfo] = useState({
         name: '',
         gender: '',
@@ -71,10 +75,18 @@ const CardProfile = ({ route }) => {
         getInfo()
     }, [petId])
 
-    const report = (reasonId) => {
+    const report = () => {
+        let rs = '';
+        if (checked == 2) {
+            rs = otherReason
+        } else {
+            rs = reason[checked]
+        }
+
         axios.post(`${URL_BASE}pets/report`, {
             pet_id: petId,
-            reason: reasonId
+            reason: rs,
+            img: reportImg,
         }, { headers: { Authorization: token } })
             .then(res => {
                 setModalOpen(false)
@@ -104,12 +116,16 @@ const CardProfile = ({ route }) => {
                     {
                         images.map((image, index) => (
                             <ImageBackground source={{ uri: image }} style={styles.imageProfile} key={index}>
-                                <TouchableOpacity onPress={() => {
-                                    setReportImg(image)
-                                    console.log('IMG', image)
-                                    console.log('rp', reportImg)
-                                }}>
-                                    <Entypo name="dots-three-horizontal" size={28} color={color.PINK} style={styles.iconProfile} />
+                                <TouchableOpacity style={styles.iconProfile}
+                                    onPress={() => {
+                                        console.log('IMG', image)
+                                        setReportImg(image)
+                                        setModalOpen(true)
+                                    }}
+                                >
+                                    <Entypo name="dots-three-horizontal"
+                                        size={28} color={color.PINK}
+                                    />
                                 </TouchableOpacity>
                             </ImageBackground>
                         ))
@@ -165,18 +181,23 @@ const CardProfile = ({ route }) => {
                             <Text style={styles.text}>Owner</Text>
                         </View>
                     </View>
-                    <TouchableOpacity onPress={() => setModalOpen(true)}>
+                    {/* <TouchableOpacity onPress={() => setModalOpen(true)}>
                         <Text style={styles.textRp}>REPORT {info.name}</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </ScrollView>
 
             <Modal visible={modalOpen} animationType='fade' transparent={true}>
                 <View style={styles.modal}>
                     <View style={styles.modalContent}>
-                        <Text style={styles.report}>Báo cáo</Text>
-                        <Text style={[styles.text, { paddingBottom: 15 }]}>{info.name} sẽ không biết bạn báo cáo</Text>
-                        <TouchableOpacity style={styles.modalChild} onPress={() => report(reason[0])}>
+                        <Text style={styles.report}>REPORT</Text>
+                        <Text style={[styles.text, { paddingBottom: 15 }]}>{info.name} won't know your report</Text>
+                        <TouchableOpacity style={styles.modalChild}
+                            onPress={() => {
+                                setIsOther(false)
+                                setChecked(0)
+                            }}
+                        >
                             <Entypo
                                 name="camera"
                                 size={21}
@@ -184,8 +205,14 @@ const CardProfile = ({ route }) => {
                                 style={[styles.btnRp, { backgroundColor: color.LIGHT_BLUE }]}
                             />
                             <Text style={styles.textReport}>{reason[0]}</Text>
+                            {checked == 0 ? <Ionicons name='checkmark-circle-outline' size={20} style={styles.iconCheck} /> : null}
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalChild} onPress={() => report(reason[1])}>
+                        <TouchableOpacity style={styles.modalChild}
+                            onPress={() => {
+                                setIsOther(false)
+                                setChecked(1)
+                            }}
+                        >
                             <MaterialCommunityIcons
                                 name="robot"
                                 size={22}
@@ -193,8 +220,14 @@ const CardProfile = ({ route }) => {
                                 style={[styles.btnRp, { backgroundColor: color.GREEN }]}
                             />
                             <Text style={styles.textReport}>{reason[1]}</Text>
+                            {checked == 1 ? <Ionicons name='checkmark-circle-outline' size={20} style={styles.iconCheck} /> : null}
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalChild} onPress={() => report(reason[2])}>
+                        <TouchableOpacity style={styles.modalChild}
+                            onPress={() => {
+                                setIsOther(true)
+                                setChecked(2)
+                            }}
+                        >
                             <FontAwesome5
                                 name="pen"
                                 size={17}
@@ -202,10 +235,21 @@ const CardProfile = ({ route }) => {
                                 style={[styles.btnRp, { backgroundColor: color.LIGHT_GRAY }]}
                             />
                             <Text style={[styles.textReport, { borderBottomWidth: 0 }]}>{reason[2]}</Text>
+                            {checked == 2 ? <Ionicons name='checkmark-circle-outline' size={20} style={styles.iconCheck} /> : null}
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.cancel}>
-                            <Text style={styles.textCancel} onPress={() => setModalOpen(false)}>HỦY</Text>
-                        </TouchableOpacity>
+                        {isOther &&
+                            <TextInput
+                                value={otherReason}
+                                placeholder='Enter others reason ...'
+                                style={styles.other}
+                                onChangeText={(txt) => setOtherReason(txt)}
+                            />
+                        }
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.btn} onPress={() => setModalOpen(false)}>CANCEL</Text>
+                            <Text style={[styles.btn, { color: color.GREEN }]} onPress={report}>SUBMIT</Text>
+                        </View>
+
                     </View>
                 </View>
             </Modal>
@@ -223,7 +267,7 @@ const CardProfile = ({ route }) => {
                     </View>
                 </View>
             </Modal>
-        </Container>
+        </Container >
     )
 }
 
@@ -236,7 +280,12 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     iconProfile: {
-        padding: 12
+        // backgroundColor: 'red',
+        justifyContent: 'center',
+        height: 20,
+        marginRight: 10,
+        marginTop: 15,
+        zIndex: 100,
     },
     pagination: {
         flexDirection: 'row',
@@ -368,12 +417,12 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         fontWeight: '700'
     },
-    cancel: {
-        borderTopWidth: 1,
-        borderTopColor: color.LIGHT_LIGHT_GRAY,
-        width: '90%',
-        paddingTop: 12,
-
+    btn: {
+        flex: 1,
+        textAlign: 'center',
+        paddingVertical: 10,
+        color: color.LIGHT_GRAY,
+        fontWeight: 'bold'
     },
     textCancel: {
         color: color.GRAY,
@@ -406,7 +455,19 @@ const styles = StyleSheet.create({
     okStyle: {
         fontSize: 16,
         color: color.WHITE
+    },
+    other: {
+        borderWidth: 1,
+        borderColor: color.LIGHT_GRAY,
+        borderRadius: 5,
+        width: '90%',
+    },
+    iconCheck: {
+        color: color.GREEN,
+        marginTop: 3,
+        // size: 20
     }
+
 })
 
 export default CardProfile
