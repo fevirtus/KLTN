@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import {
     View, StyleSheet,
     Text, Image,
-    TouchableOpacity
+    TouchableOpacity,
+    Modal
 } from 'react-native'
+import LottieView from 'lottie-react-native'
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import axios from 'axios'
@@ -20,6 +22,7 @@ const Banking = () => {
     const [uploadImg, setUploadImg] = useState({
         img: null
     });
+    const [modalOpen, setModalOpen] = useState(false)
     const dispatch = useDispatch()
 
     const handlePicker = () => {
@@ -58,10 +61,10 @@ const Banking = () => {
                 .then(res => {
                     dispatch(stopLoading())
                     setIsChange(false)
+                    setModalOpen(true)
                 })
                 .catch(error => {
                     dispatch(stopLoading())
-                    console.log(error)
                 });
         } catch (e) {
             dispatch(stopLoading())
@@ -104,6 +107,20 @@ const Banking = () => {
                     <Text style={styles.panelButtonTitle}>Upgrade Premium</Text>
                 </TouchableOpacity>
             }
+            <Modal visible={modalOpen} animationType='fade' transparent={true}>
+                <View style={styles.modal}>
+                    <View style={styles.modalView}>
+                        <View style={styles.animation}>
+                            <LottieView source={require('../../../../utility/constants/success.json')} autoPlay loop />
+                        </View>
+                        <Text style={styles.textSuccess}>Send request successful!</Text>
+                        <Text style={[styles.textSuccess, { paddingVertical: 4 }]}>We will reply as soon as possible!</Text>
+                        <View style={styles.ok}>
+                            <Text style={styles.okStyle} onPress={() => setModalOpen(false)}>OK</Text>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </Container>
     )
 }
@@ -175,6 +192,37 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: color.WHITE,
     },
+    // Modal
+    modal: {
+        flex: 1,
+        backgroundColor: '#000000aa'
+    },
+    modalView: {
+        backgroundColor: color.WHITE,
+        marginHorizontal: 40,
+        marginTop: '48%',
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        borderRadius: 6,
+        alignItems: 'center'
+    },
+    animation: {
+        width: 100,
+        height: 85
+    },
+    textSuccess: {
+        paddingVertical: 10
+    },
+    ok: {
+        backgroundColor: color.LIGHT_BLUE,
+        paddingHorizontal: 22,
+        paddingVertical: 8,
+        borderRadius: 6
+    },
+    okStyle: {
+        fontSize: 16,
+        color: color.WHITE
+    }
 })
 
 export default Banking

@@ -37,6 +37,7 @@ const Login = ({ navigation }) => {
                         <Text style={[styles.color_textPrivate, {
                             fontWeight: 'bold'
                         }]}>
+                            {" "}
                             Terms of Service
                         </Text>
                         <Text style={styles.color_textPrivate}>

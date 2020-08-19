@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Dimensions, Image, StyleSheet,
-    Text,
+    Dimensions, Image,
+    Text, StyleSheet,
     TextInput, FlatList,
     TouchableOpacity, View
 } from 'react-native';
@@ -265,7 +265,7 @@ const EditPetProfile = ({ navigation, route }) => {
     })
 
     return (
-        <KeyboardAwareScrollView onPress={() => Keyboard.dismiss()}>
+        <KeyboardAwareScrollView>
             <Container>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.profilePicWrap}>
