@@ -7,7 +7,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Animated from 'react-native-reanimated'
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash'
@@ -16,7 +15,10 @@ import {
     PetSetting,
     Home,
     Filter,
+    ProfileUserFilter,
+    ProfilePetFilter,
     Profile,
+    Ranking,
     CardProfile,
     PetProfile,
     ChatDashboard,
@@ -49,6 +51,7 @@ const FilterStack = createStackNavigator();
 const ChatboxStack = createStackNavigator();
 const SettingStack = createStackNavigator();
 const PremiumStack = createStackNavigator();
+const RankingStack = createStackNavigator();
 
 const MainTabScreen = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -214,7 +217,6 @@ const LoginStack = () => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -230,7 +232,6 @@ const ChatStackScreen = ({ navigation }) => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -255,7 +256,6 @@ const ProfileStackScreen = ({ navigation }) => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -283,7 +283,6 @@ const FilterStackScreen = ({ navigation }) => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -298,6 +297,18 @@ const FilterStackScreen = ({ navigation }) => {
                     ),
                 }}
             />
+            <FilterStack.Screen name="ProfileUserFilter" component={ProfileUserFilter}
+                options={{
+                    headerTitle: 'User',
+                    // headerTransparent: true,
+                    headerTintColor: color.PINK
+                }} />
+            <FilterStack.Screen name="ProfilePetFilter" component={ProfilePetFilter}
+                options={{
+                    headerTitle: 'Pet',
+                    // headerTransparent: true,
+                    headerTintColor: color.PINK
+                }} />
         </FilterStack.Navigator>
     )
 }
@@ -308,7 +319,6 @@ const ChatboxStackScreen = () => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -324,10 +334,9 @@ const PremiumStackScreen = ({ navigation }) => {
         <PremiumStack.Navigator
             screenOptions={{
                 headerTitle: null,
-                headerTransparent: true
-            }}
-            initialRouteName="Premium"
-        >
+                headerTransparent: true,
+                headerTintColor: color.PINK
+            }}>
             <PremiumStack.Screen
                 name="Premium"
                 component={Premium}
@@ -372,6 +381,29 @@ const SettingStackScreen = ({ navigation }) => {
     )
 }
 
+const RankingStackScreen = ({ navigation }) => {
+    return (
+        <RankingStack.Navigator
+            screenOptions={{
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontSize: 22
+                },
+                headerTintColor: color.PINK
+            }}>
+            <RankingStack.Screen name="Ranking" component={Ranking} options={{
+                title: 'Ranking',
+                headerLeft: () => (
+                    <Ionicons.Button
+                        name='arrow-back' backgroundColor={color.WHITE} size={25} color={color.PINK}
+                        onPress={() => navigation.navigate('Home')}
+                    />
+                )
+            }} />
+        </RankingStack.Navigator>
+    )
+}
+
 const HomeStack = ({ navigation, style }) => {
     const pet_active = useSelector(state => state.auth.pet_active)
 
@@ -380,15 +412,9 @@ const HomeStack = ({ navigation, style }) => {
             <Stack.Navigator
                 initialRouteName='Home'
                 screenOptions={{
-                    // headerShown: true,
-                    // headerTitleAlign: 'center',
-                    // headerTitleStyle: {
-                    //     fontWeight: 'bold',
-                    //     fontSize: 22
-                    // },
-                    // headerTintColor: color.PINK
                     headerTitle: null,
-                    headerTransparent: true
+                    headerTransparent: true,
+                    headerTintColor: color.PINK
                 }}>
                 <Stack.Screen name="Home" component={Home}
                     options={{
@@ -462,6 +488,7 @@ const NavContainer = () => {
                         <Drawer.Screen name="ChatboxStackScreen" component={ChatboxStackScreen} />
                         <Drawer.Screen name="SettingStackScreen" component={SettingStackScreen} />
                         <Drawer.Screen name="PremiumStackScreen" component={PremiumStackScreen} />
+                        <Drawer.Screen name="RankingStackScreen" component={RankingStackScreen} />
                         <Drawer.Screen name="Match" component={Match} />
                     </Drawer.Navigator>)
             }

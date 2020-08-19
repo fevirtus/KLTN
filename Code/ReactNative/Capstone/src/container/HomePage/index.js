@@ -5,11 +5,13 @@ import {
     TouchableOpacity, View,
     YellowBox, FlatList,
     Alert, ImageBackground,
-    Modal
+    Modal,
+    Dimensions
 } from 'react-native';
 import Axios from 'axios';
 import Swiper from 'react-native-deck-swiper';
 import Swipe from 'react-native-swiper'
+import LottieView from 'lottie-react-native'
 import Animated from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,7 +26,7 @@ import { token, URL_BASE } from '../../api/config';
 import { Container, Loading } from '../../components';
 import { color } from '../../utility';
 import { uuid } from '../../utility/constants';
-import { saveMatch, senderMsg, recieverMsg, systemMsg } from '../../network';
+import { saveMatch, senderMsg, recieverMsg, systemMsg, updateMatches } from '../../network';
 import _ from 'lodash'
 import { saveActivePet } from '../../redux/actions/authActions';
 
@@ -43,6 +45,7 @@ const Home = ({ navigation }) => {
         setIndex((index + 1) % data.length)
     }
     const [modalOpen, setModalOpen] = useState(false)
+    const [modalActive, setModalActive] = useState(false)
 
     const bs = useRef(null)
 
@@ -54,16 +57,16 @@ const Home = ({ navigation }) => {
                     Authorization: token
                 },
             }).then(res => {
-                console.log(res.data)
+                console.log('DATA', res.data)
                 setData(res.data)
+                setIndex(0)
                 setLoading(false)
             }).catch(e => {
-                console.log("Api call error!", e)
+                console.log("Api call error! 000", e)
             })
         } else {
-            fetchDataAll()
+            // fetchDataAll()
         }
-
     }
 
     const fetchDataAll = () => {
@@ -74,6 +77,7 @@ const Home = ({ navigation }) => {
         }).then(res => {
             console.log(res.data)
             setData(res.data)
+            setIndex(0)
             setLoading(false)
         }).catch(e => {
             console.log("Api call error!", e)
@@ -82,6 +86,9 @@ const Home = ({ navigation }) => {
 
     useEffect(() => {
         fetchData()
+        return () => {
+            setData([])
+        }
     }, [pet_active])
 
     const petActive = async (pet) => {
@@ -93,7 +100,8 @@ const Home = ({ navigation }) => {
                 Authorization: token
             }
         }).then(res => {
-            alert('Set active successful')
+            setModalActive(true)
+            bs.current.snapTo(1)
             dispatch(saveActivePet(pet))
         }).catch((e) => {
             alert(e.message)
@@ -141,6 +149,8 @@ const Home = ({ navigation }) => {
                         let msg2 = `NOTIFICATION: ${pet.name} and ${pet_active.name} have matched each other!`
                         systemMsg(msg2, guestUid, uuid, '')
 
+                        // plus matches + 1
+                        updateMatches([pet_active.id, pet.id])
 
                         navigation.navigate('Match', {
                             myPet: pet_active.name,
@@ -158,7 +168,6 @@ const Home = ({ navigation }) => {
         } else {
             Alert.alert('Error', 'You have to choose pet active below to do match')
         }
-
     }
 
     const react = (reaction, petId) => {
@@ -213,7 +222,8 @@ const Home = ({ navigation }) => {
     )
 
     const Card = (({ item }) => {
-        var images = _.concat(item.avatar, item.pictures)
+        let images = _.concat(item.avatar, item.pictures)
+        let dotWidth = (Dimensions.get('screen').width * 0.82) / images.length
 
         return (
             <Swipe
@@ -223,7 +233,7 @@ const Home = ({ navigation }) => {
                 dot={
                     <View style={{
                         height: 5,
-                        width: 70,
+                        width: dotWidth,
                         borderRadius: 5,
                         backgroundColor: color.GRAY,
                         marginHorizontal: 2
@@ -233,7 +243,7 @@ const Home = ({ navigation }) => {
                     <View
                         style={{
                             height: 5,
-                            width: 70,
+                            width: dotWidth,
                             borderRadius: 5,
                             backgroundColor: color.PINK,
                             marginHorizontal: 2
@@ -303,7 +313,6 @@ const Home = ({ navigation }) => {
                         </ImageBackground>
                     ))
                 }
-
             </Swipe >
         )
     })
@@ -335,6 +344,20 @@ const Home = ({ navigation }) => {
                     <Text style={styles.textCancel}>Thanh toán định kỳ, hủy bỏ bất cứ lúc nào.</Text>
                 </View>
             </Modal>
+            {/* Modal pet active */}
+            <Modal visible={modalActive} animationType='fade' transparent={true}>
+                <View style={styles.modalContent}>
+                    <View style={styles.modalView}>
+                        <View style={styles.animation}>
+                            <LottieView source={require('../../utility/constants/success.json')} autoPlay loop />
+                        </View>
+                        <Text style={styles.textSuccess}>Bạn đã chọn pet active thành công</Text>
+                        <View style={styles.ok}>
+                            <Text style={styles.okStyle} onPress={() => setModalActive(false)}>OK</Text>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
             {hide ?
                 (<Container>
@@ -350,7 +373,7 @@ const Home = ({ navigation }) => {
                         {/* Bottom list pet */}
                         <BottomSheet
                             ref={bs}
-                            snapPoints={['20%', 0]}
+                            snapPoints={['18%', 0]}
                             renderContent={renderInner}
                             renderHeader={renderHeader}
                             initialSnap={1}
@@ -362,16 +385,20 @@ const Home = ({ navigation }) => {
                                 : <View style={styles.swiperContainer}>
                                     <Swiper
                                         cards={data}
-                                        cardIndex={index}
-                                        renderCard={(item) => <Card item={item} />}
+                                        cardIndex={0}
+                                        renderCard={(item) => {
+                                            return <Card item={item} />
+                                        }}
                                         ref={swiperRef}
                                         onSwiped={onSwiped}
                                         onSwipedLeft={onSwipedLeft}
                                         onSwipedRight={onSwipedRight}
                                         onSwipedTop={onSwipedTop}
                                         stackSize={2}
+                                        infinite
                                         disableBottomSwipe
                                         backgroundColor={'transparent'}
+                                        // onSwipedAll={() => console.log('end')}
                                         overlayLabels={{
                                             left: {
                                                 title: 'NOPE',
@@ -440,7 +467,7 @@ const Home = ({ navigation }) => {
                                     name="child-friendly"
                                     size={24}
                                     color={color.RED}
-                                    onPress={() => { }}
+                                    onPress={() => { console.log(data, index) }}
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
@@ -489,8 +516,8 @@ const styles = StyleSheet.create({
     infoBtn: {
         flex: 4,
         position: 'relative',
-        top: 8,
-        right: 12,
+        top: 12,
+        right: 14,
         alignItems: 'flex-end'
     },
     title: {
@@ -678,6 +705,33 @@ const styles = StyleSheet.create({
         color: color.PINK,
         fontSize: 60,
         paddingBottom: '35%'
+    },
+    // Modal pet active
+    modalView: {
+        backgroundColor: color.WHITE,
+        marginHorizontal: 40,
+        marginTop: '48%',
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        borderRadius: 6,
+        alignItems: 'center'
+    },
+    animation: {
+        width: 100,
+        height: 85
+    },
+    textSuccess: {
+        paddingVertical: 10
+    },
+    ok: {
+        backgroundColor: color.LIGHT_BLUE,
+        paddingHorizontal: 22,
+        paddingVertical: 8,
+        borderRadius: 6
+    },
+    okStyle: {
+        fontSize: 16,
+        color: color.WHITE
     }
 });
 

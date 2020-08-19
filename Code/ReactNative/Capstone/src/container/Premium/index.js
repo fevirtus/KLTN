@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         paddingBottom: 30
     },
     plus: {
-        paddingTop: 60,
+        paddingTop: 68,
         paddingBottom: 20
     },
     actionPre: {

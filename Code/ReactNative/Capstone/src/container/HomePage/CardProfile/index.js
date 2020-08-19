@@ -10,6 +10,7 @@ import {
 import { useDispatch } from 'react-redux';
 import _ from 'lodash'
 import axios from 'axios'
+import LottieView from 'lottie-react-native'
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -19,6 +20,7 @@ import { URL_BASE, token } from '../../../api/config';
 import { color } from '../../../utility';
 import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
 import { Container } from '../../../components';
+import { convertToAge } from '../../../network';
 
 const { width } = Dimensions.get('window')
 
@@ -27,6 +29,8 @@ const CardProfile = ({ route }) => {
     const dispatch = useDispatch()
     const [active, setActive] = useState(0)
     const [modalOpen, setModalOpen] = useState(false)
+    const [modalNoti, setModalNoti] = useState(false)
+    const [reportImg, setReportImg] = useState('')
     const [info, setInfo] = useState({
         name: '',
         gender: '',
@@ -39,7 +43,13 @@ const CardProfile = ({ route }) => {
         user_avatar: '',
         user_name: ''
     })
-    var images = _.concat(info.avatar, info.pictures)
+    const [reason, setReason] = useState([
+        'INAPPROPRIATE PHOTOS',
+        'FEELS LIKE SPAM',
+        'OTHER'
+    ])
+    const images = _.concat(info.avatar, info.pictures)
+    const WIDTH = Dimensions.get('screen').width - 20;
 
     const getInfo = () => {
         dispatch(startLoading())
@@ -61,6 +71,20 @@ const CardProfile = ({ route }) => {
         getInfo()
     }, [petId])
 
+    const report = (reasonId) => {
+        axios.post(`${URL_BASE}pets/report`, {
+            pet_id: petId,
+            reason: reasonId
+        }, { headers: { Authorization: token } })
+            .then(res => {
+                setModalOpen(false)
+                setModalNoti(true)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }
+
     const change = ({ nativeEvent }) => {
         const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width)
         if (slide != active) {
@@ -80,7 +104,11 @@ const CardProfile = ({ route }) => {
                     {
                         images.map((image, index) => (
                             <ImageBackground source={{ uri: image }} style={styles.imageProfile} key={index}>
-                                <TouchableOpacity onPress={() => { }}>
+                                <TouchableOpacity onPress={() => {
+                                    setReportImg(image)
+                                    console.log('IMG', image)
+                                    console.log('rp', reportImg)
+                                }}>
                                     <Entypo name="dots-three-horizontal" size={28} color={color.PINK} style={styles.iconProfile} />
                                 </TouchableOpacity>
                             </ImageBackground>
@@ -92,10 +120,9 @@ const CardProfile = ({ route }) => {
                         images.length === 1
                             ? null
                             : images.map((i, k) => (
-                                <View key={k} style={k == active ? styles.carouselActiveIndicators : styles.carouselIndicators} />
+                                <View key={k} style={k == active ? [styles.carouselActiveIndicators, { width: WIDTH / images.length }] : [styles.carouselIndicators, { width: WIDTH / images.length }]} />
                             ))
                     }
-
                 </View>
                 <View style={styles.information}>
                     <View style={styles.headerProfile}>
@@ -120,7 +147,7 @@ const CardProfile = ({ route }) => {
                             ? null
                             : <View style={styles.details}>
                                 <MaterialCommunityIcons name="clock-time-nine-outline" size={22} color={color.PINK} />
-                                <Text style={styles.text}>{info.age}</Text>
+                                <Text style={styles.text}>{convertToAge(info.age)}</Text>
                             </View>
                     }
                     {
@@ -149,36 +176,50 @@ const CardProfile = ({ route }) => {
                     <View style={styles.modalContent}>
                         <Text style={styles.report}>Báo cáo</Text>
                         <Text style={[styles.text, { paddingBottom: 15 }]}>{info.name} sẽ không biết bạn báo cáo</Text>
-                        <TouchableOpacity style={styles.modalChild} onPress={() => { }}>
+                        <TouchableOpacity style={styles.modalChild} onPress={() => report(reason[0])}>
                             <Entypo
                                 name="camera"
                                 size={21}
                                 color={color.WHITE}
                                 style={[styles.btnRp, { backgroundColor: color.LIGHT_BLUE }]}
                             />
-                            <Text style={styles.textReport}>ẢNH KHÔNG THÍCH HỢP</Text>
+                            <Text style={styles.textReport}>{reason[0]}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalChild} onPress={() => { }}>
+                        <TouchableOpacity style={styles.modalChild} onPress={() => report(reason[1])}>
                             <MaterialCommunityIcons
                                 name="robot"
                                 size={22}
                                 color={color.WHITE}
                                 style={[styles.btnRp, { backgroundColor: color.GREEN }]}
                             />
-                            <Text style={styles.textReport}>CÓ VẺ NHƯ TIN RÁC</Text>
+                            <Text style={styles.textReport}>{reason[1]}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalChild} onPress={() => { }}>
+                        <TouchableOpacity style={styles.modalChild} onPress={() => report(reason[2])}>
                             <FontAwesome5
                                 name="pen"
                                 size={17}
                                 color={color.WHITE}
                                 style={[styles.btnRp, { backgroundColor: color.LIGHT_GRAY }]}
                             />
-                            <Text style={[styles.textReport, { borderBottomWidth: 0 }]}>KHÁC</Text>
+                            <Text style={[styles.textReport, { borderBottomWidth: 0 }]}>{reason[2]}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.cancel}>
                             <Text style={styles.textCancel} onPress={() => setModalOpen(false)}>HỦY</Text>
                         </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+            {/* Modal noti */}
+            <Modal visible={modalNoti} animationType='fade' transparent={true}>
+                <View style={styles.modal}>
+                    <View style={styles.modalView}>
+                        <View style={styles.animation}>
+                            <LottieView source={require('../../../utility/constants/success.json')} autoPlay loop />
+                        </View>
+                        <Text style={styles.textSuccess}>You have report successful</Text>
+                        <View style={styles.ok}>
+                            <Text style={styles.okStyle} onPress={() => setModalNoti(false)}>OK</Text>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -187,7 +228,6 @@ const CardProfile = ({ route }) => {
 }
 
 const styles = StyleSheet.create({
-    // Bottom sheet profile
     imageProfile: {
         width: width,
         height: 260,
@@ -206,7 +246,6 @@ const styles = StyleSheet.create({
     },
     carouselIndicators: {
         height: 5,
-        width: 70,
         borderRadius: 5,
         backgroundColor: color.GRAY,
         marginTop: 6,
@@ -214,7 +253,6 @@ const styles = StyleSheet.create({
     },
     carouselActiveIndicators: {
         height: 5,
-        width: 70,
         borderRadius: 5,
         backgroundColor: color.WHITE,
         marginTop: 6,
@@ -341,6 +379,33 @@ const styles = StyleSheet.create({
         color: color.GRAY,
         fontWeight: '700',
         textAlign: 'center'
+    },
+    // Modal noti
+    modalView: {
+        backgroundColor: color.WHITE,
+        marginHorizontal: 40,
+        marginTop: '48%',
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        borderRadius: 6,
+        alignItems: 'center'
+    },
+    animation: {
+        width: 100,
+        height: 85
+    },
+    textSuccess: {
+        paddingVertical: 10
+    },
+    ok: {
+        backgroundColor: color.LIGHT_BLUE,
+        paddingHorizontal: 22,
+        paddingVertical: 8,
+        borderRadius: 6
+    },
+    okStyle: {
+        fontSize: 16,
+        color: color.WHITE
     }
 })
 

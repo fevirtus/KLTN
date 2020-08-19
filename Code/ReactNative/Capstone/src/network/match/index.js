@@ -1,5 +1,7 @@
 
 import database from '@react-native-firebase/database';
+import Axios from 'axios';
+import { URL_BASE, token } from '../../api/config';
 
 export const saveMatch = async (currentUserId, guestUserId) => {
     try {
@@ -64,3 +66,10 @@ export const seenMatch = async (currentUserId, guestUserId) => {
     }
 }
 
+export const updateMatches = (petIds) => {
+    Axios.put(`${URL_BASE}pets/updateMatch`, {
+        pet_ids: petIds
+    }, { headers: { Authorization: token } })
+        .then(res => { })
+        .catch(error => console.log('ERROR updateMatches:', error))
+}

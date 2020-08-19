@@ -15,7 +15,7 @@ const Setting = ({ navigation }) => {
                     <View style={styles.iconWrapper}>
                         <Icon name="lock" size={28} color={color.WHITE} />
                     </View>
-                    <Text style={styles.text}>Privacy</Text>
+                    <Text style={styles.text}>Hide Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Feedback')}>
                     <View style={styles.iconWrapper}>

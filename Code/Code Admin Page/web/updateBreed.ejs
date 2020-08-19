@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <body style="background-image: url(https://geniusmindgraphics.com/wp-content/uploads/2017/11/mobile-app-background.jpeg);">
+<h1 style="padding-left: 560px">List user</h1>
+<%
+        if(pet.length!=0){
+        var i=1;
+        pet.forEach(function(data){
+
+        %>
+        <form action="updateBreed" method="POST" style="padding-left: 500px;">
+            ID:<br><input type="text" style="width: 212px;" name="idUpdate" value="<%=data.id %>" readonly><br>
+            Breed:<br> <input type="text" style="width: 212px;" id="username" name="namePet" value="<%=data.name %>" required><br>
+            Modified Time:<br> <input id='a' style="width: 212px;" type="datetime" value="<%=data.modified_time %>" name="modified_time"><br>
+            <input type="submit" value="Update" style="margin-left: 80px;">
+          </form>
+        <%  i++; }) %>
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+</body>
+</html>

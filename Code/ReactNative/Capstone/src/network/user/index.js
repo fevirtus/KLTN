@@ -26,12 +26,25 @@ export const UpdateUser = async (uuid, imgSource) => {
         return error;
     }
 };
+
 export const UpdateUserName = async (uuid, displayName) => {
     try {
         return await database()
             .ref("users/" + uuid)
             .update({
                 name: displayName
+            });
+    } catch (error) {
+        return error;
+    }
+};
+
+export const hideUser = async (uuid, hide) => {
+    try {
+        return await database()
+            .ref("users/" + uuid)
+            .update({
+                hide: hide
             });
     } catch (error) {
         return error;

@@ -1,0 +1,23 @@
+
+<script src="js/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<body style="background-image: url(https://geniusmindgraphics.com/wp-content/uploads/2017/11/mobile-app-background.jpeg);">
+<div class="container"> 
+    <h1 class="text-center">Create an account</h1> 
+    <h4 style="margin-left: 428px;"><a href="/" style="color: brown;">Login Now</a></h4>
+    <div class="row"> 
+     <div class="col-xs-12 col-sm-12 col-md-4 well well-sm col-md-offset-4"> 
+      <legend><a href=""><i class="glyphicon glyphicon-globe"></i></a> Admin account
+      </legend> 
+      <form action="create" method="POST" class="form" role="form"> 
+       <div class="row"> 
+       </div><label style="color: red;">Email:*</label><input class="form-control" name="youremail" minlength="12" maxlength="30" placeholder="Email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 4}$" required="required"> <label style="color: red;">Password:*</label><input class="form-control" name="passwordNew" placeholder="Password" type="password" minlength="6" maxlength="10" required="required" > <label style="color: red;">RePassword:*</label><input class="form-control" name="rePassword" placeholder="RE-Password" type="password"> 
+       <div class="row">
+       <br> 
+       <br> 
+       <button class="btn btn-lg btn-primary btn-block" type="submit" value="create"> Create</button> 
+      </form> 
+     </div> 
+    </div>
+   </div>
+</body>
