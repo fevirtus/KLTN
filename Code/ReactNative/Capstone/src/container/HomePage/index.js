@@ -211,7 +211,6 @@ const Home = ({ navigation }) => {
     const renderInner = () => (
         <View style={styles.panel}>
             <FlatList
-                showsHorizontalScrollIndicator={false}
                 horizontal={true}
                 data={my_pets}
                 renderItem={({ item }) => {
@@ -374,7 +373,7 @@ const Home = ({ navigation }) => {
                         {/* Bottom list pet */}
                         <BottomSheet
                             ref={bs}
-                            snapPoints={['20%', 0]}
+                            snapPoints={['18%', 0]}
                             renderContent={renderInner}
                             renderHeader={renderHeader}
                             initialSnap={1}
@@ -517,8 +516,8 @@ const styles = StyleSheet.create({
     infoBtn: {
         flex: 4,
         position: 'relative',
-        top: 8,
-        right: 12,
+        top: 12,
+        right: 14,
         alignItems: 'flex-end'
     },
     title: {

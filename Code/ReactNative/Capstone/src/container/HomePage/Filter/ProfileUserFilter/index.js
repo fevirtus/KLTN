@@ -19,6 +19,7 @@ import _ from 'lodash'
 const ProfileUserFilter = ({ navigation, route }) => {
     const { uid } = route.params;
     const dispatch = useDispatch()
+    const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState({
         name: '',
         avatar: '',
@@ -38,10 +39,10 @@ const ProfileUserFilter = ({ navigation, route }) => {
                 Authorization: token
             }
         }).then(res => {
-            console.log('DATA', res.data)
             // Set info
             setInfo(res.data)
             dispatch(stopLoading())
+            setLoading(false)
         }).catch(e => {
             console.log("Api call error!", e)
             dispatch(stopLoading())
@@ -68,65 +69,68 @@ const ProfileUserFilter = ({ navigation, route }) => {
 
     return (
         <Container>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.header}>
-                    <ImageBackground
-                        style={styles.img_background}
-                        source={info.avatar ? { uri: info.avatar } : require('../../../../../images/no-image.jpg')}
-                    />
-                    <View style={styles.profilePicWrap}>
-                        <Image
-                            source={info.avatar ? { uri: info.avatar } : require('../../../../../images/no-image.jpg')}
-                            style={styles.imageUser}
-                        />
-                        {
-                            info.is_vip === 1
-                                ? <TouchableOpacity style={styles.diamond}>
-                                    <FontAwesome name="diamond" size={18} color={color.WHITE} />
-                                </TouchableOpacity> : null
-                        }
-                    </View>
-                </View>
-                <View
-                    style={styles.userName}
-                >
-                    <Text style={styles.name}>{info.name}</Text>
-                    {info.gender == null ? null :
-                        (info.gender == 1 ? <Ionicons name={'md-male-sharp'} size={20} color={color.PINK} />
-                            : <Ionicons name={'md-female-sharp'} size={20} color={color.PINK} />)
-                    }
-                </View>
-                <Text style={styles.email}>{info.email}</Text>
+            {
+                loading ? <Loading />
+                    : <ScrollView showsVerticalScrollIndicator={false}>
+                        <View style={styles.header}>
+                            <ImageBackground
+                                style={styles.img_background}
+                                source={info.avatar ? { uri: info.avatar } : require('../../../../../images/no-image.jpg')}
+                            />
+                            <View style={styles.profilePicWrap}>
+                                <Image
+                                    source={info.avatar ? { uri: info.avatar } : require('../../../../../images/no-image.jpg')}
+                                    style={styles.imageUser}
+                                />
+                                {
+                                    info.is_vip === 1
+                                        ? <TouchableOpacity style={styles.diamond}>
+                                            <FontAwesome name="diamond" size={18} color={color.WHITE} />
+                                        </TouchableOpacity> : null
+                                }
+                            </View>
+                        </View>
+                        <View
+                            style={styles.userName}
+                        >
+                            <Text style={styles.name}>{info.name}</Text>
+                            {info.gender == null ? null :
+                                (info.gender == 1 ? <Ionicons name={'md-male-sharp'} size={20} color={color.PINK} />
+                                    : <Ionicons name={'md-female-sharp'} size={20} color={color.PINK} />)
+                            }
+                        </View>
+                        <Text style={styles.email}>{info.email}</Text>
 
-                <View style={styles.numberPet}>
-                    <Text style={styles.text}>{info.pets.length} pets</Text>
-                </View>
-                <View style={styles.pet}>
-                    <FlatList
-                        horizontal={true}
-                        data={info.pets}
-                        renderItem={({ item }) => {
-                            return renderList(item)
-                        }}
-                        keyExtractor={(_, index) => index.toString()}
-                    />
-                </View>
-                <View style={styles.moreInfo}>
-                    <Text style={{ fontSize: 18, color: color.GRAY }}>MORE INFORMATION:</Text>
-                    {!_.isEmpty(info.phone) &&
-                        <View style={styles.info}>
-                            <Text style={styles.title}>Phone:</Text>
-                            <Text style={styles.infoData}>{info.phone}</Text>
+                        <View style={styles.numberPet}>
+                            <Text style={styles.text}>{info.pets.length} pets</Text>
                         </View>
-                    }
-                    {!_.isEmpty(info.birth_date) &&
-                        <View style={styles.info}>
-                            <Text style={styles.title}>Birthday:</Text>
-                            <Text style={styles.infoData}>{info.birth_date}</Text>
+                        <View style={styles.pet}>
+                            <FlatList
+                                horizontal={true}
+                                data={info.pets}
+                                renderItem={({ item }) => {
+                                    return renderList(item)
+                                }}
+                                keyExtractor={(_, index) => index.toString()}
+                            />
                         </View>
-                    }
-                </View>
-            </ScrollView>
+                        <View style={styles.moreInfo}>
+                            <Text style={{ fontSize: 18, color: color.GRAY }}>MORE INFORMATION:</Text>
+                            {!_.isEmpty(info.phone) &&
+                                <View style={styles.info}>
+                                    <Text style={styles.title}>Phone:</Text>
+                                    <Text style={styles.infoData}>{info.phone}</Text>
+                                </View>
+                            }
+                            {!_.isEmpty(info.birth_date) &&
+                                <View style={styles.info}>
+                                    <Text style={styles.title}>Birthday:</Text>
+                                    <Text style={styles.infoData}>{info.birth_date}</Text>
+                                </View>
+                            }
+                        </View>
+                    </ScrollView>
+            }
         </Container>
     )
 }

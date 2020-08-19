@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
+import axios from 'axios'
 import { CheckBox } from 'react-native-elements'
 import { color } from '../../../utility'
 import { DismissKeyboard, Container } from '../../../components'
+import { URL_BASE, token } from '../../../api/config';
 
 const Feedback = ({ navigation }) => {
     const [checked1, setChecked1] = useState(false)
@@ -26,6 +28,18 @@ const Feedback = ({ navigation }) => {
         setChecked1(false)
         setChecked2(false)
         setChecked3(true)
+    }
+
+    const handleSubmit = () => {
+        axios.post(`${URL_BASE}users/feedback`, {
+            content: feedback
+        }, { headers: { Authorization: token } })
+            .then(res => {
+                console.log(res)
+            })
+            .catch(e => {
+                console.log(e)
+            })
     }
 
     return (
@@ -69,31 +83,27 @@ const Feedback = ({ navigation }) => {
                             />
                             <Text style={styles.text}>Bug</Text>
                         </View>
-                        <TextInput 
+                        <TextInput
                             multiline
                             style={styles.textInput}
                             value={feedback}
                             onChangeText={setFeedback}
                         />
-                        <TouchableOpacity style={styles.submit}>
+                        <TouchableOpacity style={styles.submit} onPress={handleSubmit}>
                             <Text style={styles.textSubmit}>Submit</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-            </Container>         
+            </Container>
         </DismissKeyboard>
     )
 }
 
 const styles = StyleSheet.create({
     form: {
-        paddingRight: 20,
-        paddingLeft: 20,
+        paddingHorizontal: 20,
         marginTop: 20,
-        marginLeft: 15,
-        marginRight: 15,
-        backgroundColor: color.LIGHT_GRAY,
-        borderRadius: 5
+        marginHorizontal: 15
     },
     checkbox: {
         flexDirection: 'row',
@@ -108,9 +118,10 @@ const styles = StyleSheet.create({
     textInput: {
         height: 150,
         backgroundColor: color.WHITE,
-        paddingLeft: 20,
-        paddingRight: 20,
-        borderRadius: 5
+        padding: 20,
+        borderRadius: 5,
+        marginTop: 18,
+        textAlignVertical: 'top'
     },
     submit: {
         height: 48,

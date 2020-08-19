@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { deletePet } from '../../../../redux/actions/authActions';
 import { startLoading, stopLoading } from '../../../../redux/actions/loadingAction';
 import { convertToAge } from '../../../../network';
+import { Loading } from '../../../../components';
 
 const PetProfile = ({ navigation, route }) => {
     const { petId } = route.params;
@@ -35,6 +36,7 @@ const PetProfile = ({ navigation, route }) => {
         pictures: []
     })
     const dispatch = useDispatch()
+    const [loading, setLoading] = useState(true)
 
     const getPet = () => {
         dispatch(startLoading())
@@ -45,6 +47,7 @@ const PetProfile = ({ navigation, route }) => {
         }).then(res => {
             // Set info
             setInfo(res.data)
+            setLoading(false)
             dispatch(stopLoading())
         }).catch(e => {
             console.log("Api call error!", e)
@@ -110,71 +113,74 @@ const PetProfile = ({ navigation, route }) => {
     const { name, gender, weight, age, introduction, avatar, breed_name, pictures } = info
     return (
         <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <ImageBackground
-                    style={styles.header}
-                    source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
-                >
-                </ImageBackground>
-                <View style={styles.content}>
-                    <View style={styles.petName}>
-                        <View style={{ flex: 2 }}>
-                            <Text style={styles.name}>{name}</Text>
-                            <Text style={styles.text}>{breed_name}</Text>
-                        </View>
-                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                            <TouchableOpacity
-                                style={[styles.buttonEdit, { marginRight: 10 }]}
-                                onPress={onEditPet}
-                            >
-                                <FontAwesome name="edit" size={22} color="white" />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.buttonDelete}
-                                onPress={_deletePet}
-                            >
-                                <FontAwesome5 name="trash" size={22} color="white" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.information}>
-                        <View style={styles.item}>
-                            <Text style={styles.subheading}>Weight</Text>
-                            <Text style={styles.text}>{weight} kg</Text>
-                        </View>
-                        <View style={styles.itemCenter}>
-                            <Text style={styles.subheading}>Gender</Text>
-                            <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
-                        </View>
-                        <View style={styles.item}>
-                            <Text style={styles.subheading}>Age</Text>
-                            <Text style={styles.text}>{convertToAge(age)}</Text>
-                        </View>
-                    </View>
-                    {
-                        _.isEmpty(introduction)
-                            ? null
-                            : <View style={styles.about}>
-                                <Text style={styles.subheading}>About</Text>
-                                <Text style={[styles.text, { paddingLeft: 0 }]}>{introduction}</Text>
+            {
+                loading ? <Loading />
+                    : <ScrollView showsVerticalScrollIndicator={false}>
+                        <ImageBackground
+                            style={styles.header}
+                            source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
+                        >
+                        </ImageBackground>
+                        <View style={styles.content}>
+                            <View style={styles.petName}>
+                                <View style={{ flex: 2 }}>
+                                    <Text style={styles.name}>{name}</Text>
+                                    <Text style={styles.text}>{breed_name}</Text>
+                                </View>
+                                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                    <TouchableOpacity
+                                        style={[styles.buttonEdit, { marginRight: 10 }]}
+                                        onPress={onEditPet}
+                                    >
+                                        <FontAwesome name="edit" size={22} color="white" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.buttonDelete}
+                                        onPress={_deletePet}
+                                    >
+                                        <FontAwesome5 name="trash" size={22} color="white" />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                    }
-                    {
-                        _.isEmpty(pictures)
-                            ? <View style={styles.emptyPic}></View>
-                            : <View style={styles.listImg}>
-                                <FlatList
-                                    horizontal={true}
-                                    data={pictures}
-                                    renderItem={({ item }) => {
-                                        return renderList(item)
-                                    }}
-                                    keyExtractor={(item, index) => index.toString()}
-                                />
+                            <View style={styles.information}>
+                                <View style={styles.item}>
+                                    <Text style={styles.subheading}>Weight</Text>
+                                    <Text style={styles.text}>{weight} kg</Text>
+                                </View>
+                                <View style={styles.itemCenter}>
+                                    <Text style={styles.subheading}>Gender</Text>
+                                    <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
+                                </View>
+                                <View style={styles.item}>
+                                    <Text style={styles.subheading}>Age</Text>
+                                    <Text style={styles.text}>{convertToAge(age)}</Text>
+                                </View>
                             </View>
-                    }
-                </View>
-            </ScrollView>
+                            {
+                                _.isEmpty(introduction)
+                                    ? null
+                                    : <View style={styles.about}>
+                                        <Text style={styles.subheading}>About</Text>
+                                        <Text style={[styles.text, { paddingLeft: 0 }]}>{introduction}</Text>
+                                    </View>
+                            }
+                            {
+                                _.isEmpty(pictures)
+                                    ? <View style={styles.emptyPic}></View>
+                                    : <View style={styles.listImg}>
+                                        <FlatList
+                                            horizontal={true}
+                                            data={pictures}
+                                            renderItem={({ item }) => {
+                                                return renderList(item)
+                                            }}
+                                            keyExtractor={(item, index) => index.toString()}
+                                        />
+                                    </View>
+                            }
+                        </View>
+                    </ScrollView>
+            }
         </View>
     )
 }
