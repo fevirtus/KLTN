@@ -24,10 +24,11 @@ import { color } from '../../utility'
 
 const DrawerContent = (props) => {
     const user = useSelector(state => state.auth.user)
+    const vip = useSelector(state => state.vip.vip)
     const dispatch = useDispatch()
 
     return (
-        <LinearGradient colors={user.is_vip ? [color.YELLOW, color.WHITE, '#fafdcb'] : [color.WHITE, color.WHITE]} style={styles.drawerContent}>
+        <LinearGradient colors={vip == 1 ? [color.YELLOW, color.WHITE, '#fafdcb'] : [color.WHITE, color.WHITE]} style={styles.drawerContent}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
@@ -37,7 +38,7 @@ const DrawerContent = (props) => {
                                 size={55}
                             />
                             <View style={styles.userInfoText}>
-                                <Title style={user.is_vip ? [styles.title, { color: '#cf1b1b' }] : styles.title}>{user.name}</Title>
+                                <Title style={vip == 1 ? [styles.title, { color: '#cf1b1b' }] : styles.title}>{user.name}</Title>
                                 <Caption style={styles.caption}>{user.email}</Caption>
                             </View>
                         </View>

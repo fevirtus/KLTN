@@ -40,6 +40,7 @@ const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 3);
 const Profile = ({ navigation }) => {
     const user = useSelector(state => state.auth.user);
     const pets = useSelector(state => state.auth.pets);
+    const vip = useSelector(state => state.vip.vip)
 
     const [data, setData] = useState({
         name: user.name,
@@ -275,7 +276,7 @@ const Profile = ({ navigation }) => {
                                     </TouchableOpacity>
                                 </View>
                                 {
-                                    user.is_vip === 1
+                                    vip === 1
                                         ? <View style={styles.premium}>
                                             <FontAwesome name="diamond" color={color.WHITE} size={18} />
                                             <Text style={styles.textPremium}>Premium</Text>

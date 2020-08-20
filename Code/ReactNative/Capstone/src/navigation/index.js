@@ -41,6 +41,7 @@ import { DrawerContent } from '../components'
 import { startLoading, stopLoading } from '../redux/actions/loadingAction';
 import { saveToken } from '../redux/actions/tokenAction';
 import database from '@react-native-firebase/database';
+import { saveVip } from '../redux/actions/vipAction';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -100,6 +101,17 @@ const MainTabScreen = ({ navigation }) => {
         }
     }
 
+    const loadVIP = async () => {
+        try {
+            Axios.get(`${URL_BASE}users/vip`, { headers: { Authorization: token } })
+                .then(res => {
+                    dispatch(saveVip(res.data))
+                })
+        } catch (error) {
+            throw error
+        }
+    }
+
     const loadData = async () => {
         try {
             dispatch(startLoading())
@@ -111,6 +123,7 @@ const MainTabScreen = ({ navigation }) => {
                 await loadPets()
             }
             loadNewMatch()
+            loadVIP()
             dispatch(stopLoading())
             setDone(true)
         } catch (error) {
@@ -146,7 +159,7 @@ const MainTabScreen = ({ navigation }) => {
                     setMatch(newMatch)
                 })
         } catch (error) {
-            console.log(error)
+            throw error
         }
     }
 

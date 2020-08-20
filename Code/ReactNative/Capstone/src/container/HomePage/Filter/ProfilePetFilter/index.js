@@ -40,6 +40,7 @@ const ProfilePetFilter = ({ navigation, route }) => {
     const [isMatch, setIsMatch] = useState(false)
     const pet_active = useSelector(state => state.auth.pet_active)
     const user = useSelector(state => state.auth.user)
+    const vip = useSelector(state => state.vip.vip)
 
     const images = _.concat(info.avatar, info.pictures)
 
@@ -92,7 +93,7 @@ const ProfilePetFilter = ({ navigation, route }) => {
 
         if (isMatch) return
 
-        if (user.is_vip == 0) {
+        if (vip == 0) {
             alert('You need to upgrade to Premium to do this')
             return
         }

@@ -118,7 +118,6 @@ const CardProfile = ({ route }) => {
                             <ImageBackground source={{ uri: image }} style={styles.imageProfile} key={index}>
                                 <TouchableOpacity style={styles.iconProfile}
                                     onPress={() => {
-                                        console.log('IMG', image)
                                         setReportImg(image)
                                         setModalOpen(true)
                                     }}

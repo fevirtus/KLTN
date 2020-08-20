@@ -32,3 +32,6 @@ export const STOP_LOADING = "STOP_LOADING";
 export const SAVE_TOKEN = "SAVE_TOKEN";
 export const CLEAR_TOKEN = "CLEAR_TOKEN";
 
+//for VIP
+export const SAVE_VIP = "SAVE_VIP";
+

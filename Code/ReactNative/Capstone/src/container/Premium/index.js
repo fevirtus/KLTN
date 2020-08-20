@@ -8,9 +8,10 @@ import {
 import { useSelector } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 import { color } from '../../utility'
+import moment from 'moment';
 
 const Premium = ({ navigation }) => {
-    const user = useSelector(state => state.auth.user)
+    const vip = useSelector(state => state.vip)
 
     const PremiumPlus = ({ text }) => (
         <View style={styles.actionPre}>
@@ -38,14 +39,25 @@ const Premium = ({ navigation }) => {
                     <PremiumPlus text={'Quay lại bao nhiêu lần tùy ý'} />
                     <PremiumPlus text={'Tìm hồ sơ theo thông tin'} />
                 </View>
-                <TouchableOpacity style={styles.commandButton} onPress={() => navigation.navigate('Payment')}>
-                    <Text style={styles.panelButtonTitle}>Upgrade Premium</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => { }}>
-                    <Text style={styles.haveAcc}>
-                        I have a premium account
-                        </Text>
-                </TouchableOpacity>
+                {vip.status == 'IN_ACTIVE' ?
+                    <TouchableOpacity style={styles.commandButton} onPress={() => navigation.navigate('Payment')}>
+                        <Text style={styles.panelButtonTitle}>Upgrade Premium</Text>
+                    </TouchableOpacity>
+                    : null
+                }
+                {vip.status == 'ACTIVE' ?
+                    <View style={styles.box}>
+                        <Text style={styles.title}>Remain Time:</Text>
+                        <Text style={styles.remainTime}>{moment(vip.remainTime).format('YYYY-MM-DD hh:mm:ss')}</Text>
+                    </View>
+                    : null
+                }
+                {vip.status == 'PROCESS' ?
+                    <View style={styles.box}>
+                        <Text style={styles.msg}>You have just request to upgrade to Premium account. Please wait for response!</Text>
+                    </View>
+                    : null
+                }
             </ImageBackground>
         </View>
     )
@@ -102,6 +114,32 @@ const styles = StyleSheet.create({
     haveAcc: {
         textAlign: 'center',
         color: color.GRAY
+    },
+    box: {
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        backgroundColor: color.WHITE,
+        width: '70%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        padding: 10,
+        elevation: 5,
+        borderRadius: 5,
+    },
+    title: {
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    remainTime: {
+        textAlign: 'center',
+        fontSize: 18,
+        color: color.GREEN
+    },
+    msg: {
+        textAlign: 'center',
+        fontSize: 20,
+        color: color.RED
     }
 })
 

@@ -35,6 +35,7 @@ const Home = ({ navigation }) => {
     const pet_active = useSelector(state => state.auth.pet_active)
     const user = useSelector(state => state.auth.user)
     const my_pets = useSelector(state => state.auth.pets)
+    const vip = useSelector(state => state.vip.vip)
 
     const [data, setData] = useState([])
     const [index, setIndex] = useState(0)
@@ -504,7 +505,7 @@ const Home = ({ navigation }) => {
                                 <Ionicons name="ios-add-circle" size={30} color={color.PINK} />
                             </TouchableOpacity>
                             {
-                                user.is_vip === 1
+                                vip === 1
                                     ? <TouchableOpacity style={styles.btnReturn}>
                                         <MaterialCommunityIcons
                                             name="reload"
