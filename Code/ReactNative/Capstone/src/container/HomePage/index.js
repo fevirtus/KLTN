@@ -46,6 +46,7 @@ const Home = ({ navigation }) => {
     }
     const [modalOpen, setModalOpen] = useState(false)
     const [modalActive, setModalActive] = useState(false)
+    const [modalMix, setModalMix] = useState(false)
 
     const bs = useRef(null)
 
@@ -57,7 +58,7 @@ const Home = ({ navigation }) => {
                     Authorization: token
                 },
             }).then(res => {
-                console.log('DATA', res.data)
+                // console.log('DATA', res.data)
                 setData(res.data)
                 setIndex(0)
                 setLoading(false)
@@ -358,6 +359,32 @@ const Home = ({ navigation }) => {
                     </View>
                 </View>
             </Modal>
+            {/* Modal next generation */}
+            <Modal visible={modalMix} animationType='fade' transparent={true}>
+                <View style={styles.modalContent}>
+                    <View style={styles.modalViewMix}>
+                        <View style={styles.nextWrapper}>
+                            <Image source={{ uri: pet_active.avatar }} style={styles.petActiveImg} />
+                            <View style={styles.animationMix}>
+                                <LottieView source={require('../../utility/constants/mix.json')} autoPlay loop />
+                            </View>
+                            {
+                                _.isEmpty(data)
+                                    ? null
+                                    : <Image source={{ uri: data[index].avatar }} style={styles.petActiveImg} />
+                            }
+                        </View>
+                        <View style={styles.animation}>
+                            <LottieView source={require('../../utility/constants/result.json')} autoPlay />
+                        </View>
+                        <Image source={{ uri: pet_active.avatar }} style={styles.petResult} />
+                        <Text style={styles.textSuccess}>Đây có thể sẽ là con của {pet_active.name} và {_.isEmpty(data) ? null : data[index].name}</Text>
+                        <View style={[styles.ok, { marginTop: 10 }]}>
+                            <Text style={styles.okStyle} onPress={() => setModalMix(false)}>OK</Text>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
             {hide ?
                 (<Container>
@@ -381,7 +408,10 @@ const Home = ({ navigation }) => {
                         />
                         {/* Content */}
                         {
-                            loading ? <Loading /> : (_.isEmpty(data) ? null
+                            loading ? <Loading /> : (_.isEmpty(data)
+                                ? <View>
+                                    <Text>caus vl</Text>
+                                </View>
                                 : <View style={styles.swiperContainer}>
                                     <Swiper
                                         cards={data}
@@ -467,7 +497,7 @@ const Home = ({ navigation }) => {
                                     name="child-friendly"
                                     size={24}
                                     color={color.RED}
-                                    onPress={() => { console.log(data, index) }}
+                                    onPress={() => setModalMix(true)}
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
@@ -731,6 +761,35 @@ const styles = StyleSheet.create({
     okStyle: {
         fontSize: 16,
         color: color.WHITE
+    },
+    // Modal for next generation
+    modalViewMix: {
+        backgroundColor: color.WHITE,
+        marginHorizontal: 50,
+        marginTop: '30%',
+        padding: 20,
+        borderRadius: 6,
+        alignItems: 'center'
+    },
+    nextWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '80%',
+        alignItems: 'center'
+    },
+    petActiveImg: {
+        width: 65,
+        height: 65,
+        borderRadius: 10
+    },
+    petResult: {
+        width: 120,
+        height: 120,
+        borderRadius: 12
+    },
+    animationMix: {
+        width: 60,
+        height: 60
     }
 });
 
