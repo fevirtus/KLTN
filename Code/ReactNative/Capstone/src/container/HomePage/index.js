@@ -281,8 +281,8 @@ const Home = ({ navigation }) => {
                             <View style={styles.bottomButtonsContainer}>
                                 <TouchableOpacity style={styles.iconContainer}>
                                     <AntDesign
-                                        name="close"
-                                        size={33}
+                                        name="dislike1"
+                                        size={32}
                                         color={color.RED}
                                         onPress={() => {
                                             swiperRef.current.swipeLeft()
@@ -301,7 +301,7 @@ const Home = ({ navigation }) => {
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.iconContainer}>
                                     <AntDesign
-                                        name="star"
+                                        name="like1"
                                         size={32}
                                         color={color.BLUE}
                                         onPress={() => {

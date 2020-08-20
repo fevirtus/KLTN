@@ -6,6 +6,8 @@ import {
     FlatList
 } from 'react-native'
 import axios from 'axios'
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Container } from '../../../components'
 import { color } from '../../../utility';
 import { URL_BASE, token } from '../../../api/config';
@@ -13,7 +15,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const { width } = Dimensions.get('window')
 const SLIDER_WIDTH = Dimensions.get('window').width;
-const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 
 const Ranking = () => {
     const [liked, setLiked] = useState({
@@ -39,7 +40,11 @@ const Ranking = () => {
                 Authorization: token
             },
         }).then(res => {
-            setLiked(res.data)
+            let listLike = res.data;
+            let first = listLike[0]
+            listLike[0] = listLike[1]
+            listLike[1] = first
+            setLiked(listLike)
         }).catch(e => {
             console.log("Api call error!", e)
         })
@@ -51,7 +56,11 @@ const Ranking = () => {
                 Authorization: token
             },
         }).then(res => {
-            setMatched(res.data)
+            let listMatch = res.data;
+            let firstEl = listMatch[0]
+            listMatch[0] = listMatch[1]
+            listMatch[1] = firstEl
+            setMatched(listMatch)
         }).catch(e => {
             console.log("Api call error!", e)
         })
@@ -95,45 +104,104 @@ const Ranking = () => {
 
     const renderListLiked = (item, index) => {
         return (
-            <View style={styles.content}>
+            <View>
                 {
-                    index + 1 === 1
-
-                        ? <View style={styles.w}><View style={styles.number1}>
-                            <Text>1</Text>
-                        </View></View>
-                        : <Text style={styles.order}>{index + 1}</Text>
+                    index > 2 ?
+                        <View style={styles.content}>
+                            <Text style={styles.order}>{index + 1}</Text>
+                            <View style={styles.wrapper}>
+                                <Image
+                                    source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
+                                    style={styles.img1}
+                                />
+                                <Text style={styles.name}>{item.name}</Text>
+                                <View style={styles.orderNumber}>
+                                    <AntDesign name="like1" size={17} color={color.BLUE} />
+                                    <Text style={[styles.number, { width: '30%' }]}>{item.likes}</Text>
+                                </View>
+                            </View>
+                        </View> : null
                 }
-                <View style={styles.wrapper}>
-                    <Image
-                        source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
-                        style={styles.img1}
-                    />
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.number}>{item.likes}</Text>
-                </View>
+            </View>
+        )
+    }
+
+    const renderLikeTop3 = (item, index) => {
+        return (
+            <View style={styles.top3}>
+                {
+                    index < 3 ?
+                        <View>
+                            {
+                                index === 0
+                                    ? <FontAwesome5 name="crown" size={20} color='#ececec' style={styles.top1} />
+                                    : index === 1
+                                        ? <FontAwesome5 name="crown" size={24} color='#ffe75e' style={styles.top1} />
+                                        : <FontAwesome5 name="crown" size={20} color='#ec823a' style={styles.top1} />
+                            }
+                            <Image
+                                source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
+                                style={index === 1 ? styles.imgTop1 : styles.img23}
+                            />
+                            <Text style={styles.nameTop}>{item.name}</Text>
+                            <View style={styles.orderNumber}>
+                                <AntDesign name="like1" size={17} color={color.BLUE} />
+                                <Text style={styles.numberTop}>{item.likes}</Text>
+                            </View>
+                        </View> : null
+                }
+            </View>
+        )
+    }
+
+    const renderMatchTop3 = (item, index) => {
+        return (
+            <View style={styles.top3}>
+                {
+                    index < 3 ?
+                        <View>
+                            {
+                                index === 0
+                                    ? <FontAwesome5 name="crown" size={20} color='#ececec' style={styles.top1} />
+                                    : index === 1
+                                        ? <FontAwesome5 name="crown" size={24} color='#ffe75e' style={styles.top1} />
+                                        : <FontAwesome5 name="crown" size={20} color='#ec823a' style={styles.top1} />
+                            }
+                            <Image
+                                source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
+                                style={index === 1 ? styles.imgTop1 : styles.img23}
+                            />
+                            <Text style={styles.nameTop}>{item.name}</Text>
+                            <View style={styles.orderNumber}>
+                                <AntDesign name="heart" size={17} color={color.GREEN} />
+                                <Text style={styles.numberTop}>{item.matches}</Text>
+                            </View>
+                        </View> : null
+                }
             </View>
         )
     }
 
     const renderListMatch = (item, index) => {
         return (
-            <View style={styles.content}>
+            <View>
                 {
-                    index + 1 === 1
-                        ? <View style={styles.w}><View style={styles.number1}>
-                            <Text>1</Text>
-                        </View></View>
-                        : <Text style={styles.order}>{index + 1}</Text>
+                    index > 2 ?
+                        <View style={styles.content}>
+                            <Text style={styles.order}>{index + 1}</Text>
+                            <View style={styles.wrapper}>
+                                <Image
+                                    source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
+                                    style={styles.img1}
+                                />
+                                <Text style={styles.name}>{item.name}</Text>
+                                <View style={styles.orderNumber}>
+                                    <AntDesign name="heart" size={17} color={color.GREEN} />
+                                    <Text style={styles.number}>{item.matches}</Text>
+                                </View>
+                            </View>
+                        </View> : null
                 }
-                <View style={styles.wrapper}>
-                    <Image
-                        source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
-                        style={styles.img1}
-                    />
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.number}>{item.matches}</Text>
-                </View>
             </View>
         )
     }
@@ -177,6 +245,16 @@ const Ranking = () => {
                         onLayout={event => setTranslateY(event.nativeEvent.layout.height)}
                     >
                         <FlatList
+                            horizontal={true}
+                            scrollEnabled={false}
+                            showsVerticalScrollIndicator={false}
+                            data={matched}
+                            renderItem={({ item, index }) => {
+                                return renderMatchTop3(item, index)
+                            }}
+                            keyExtractor={(_, index) => index.toString()}
+                        />
+                        <FlatList
                             data={matched}
                             renderItem={({ item, index }) => {
                                 return renderListMatch(item, index)
@@ -197,6 +275,16 @@ const Ranking = () => {
                             ]
                         }}
                     >
+                        <FlatList
+                            horizontal={true}
+                            scrollEnabled={false}
+                            showsVerticalScrollIndicator={false}
+                            data={liked}
+                            renderItem={({ item, index }) => {
+                                return renderLikeTop3(item, index)
+                            }}
+                            keyExtractor={(_, index) => index.toString()}
+                        />
                         <FlatList
                             data={liked}
                             renderItem={({ item, index }) => {
@@ -231,7 +319,7 @@ const styles = StyleSheet.create({
         height: '100%',
         top: 0,
         backgroundColor: color.BLUE,
-        borderRadius: 4
+        borderRadius: 20
     },
     tabOne: {
         flex: 1,
@@ -239,7 +327,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: color.BLUE,
-        borderRadius: 4,
+        borderRadius: 20,
         borderRightWidth: 0,
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0
@@ -250,7 +338,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: color.BLUE,
-        borderRadius: 4,
+        borderRadius: 20,
         borderLeftWidth: 0,
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0
@@ -259,30 +347,50 @@ const styles = StyleSheet.create({
     content: {
         flexDirection: 'row'
     },
+    top3: {
+        paddingHorizontal: 20,
+        paddingBottom: 10,
+        justifyContent: 'flex-end'
+    },
+    img23: {
+        width: 65,
+        height: 65,
+        borderRadius: 50
+    },
+    imgTop1: {
+        width: 85,
+        height: 85,
+        borderRadius: 50
+    },
+    nameTop: {
+        alignSelf: 'center',
+        color: color.BLACK,
+        marginVertical: 4
+    },
+    numberTop: {
+        fontWeight: 'bold',
+        marginLeft: 5,
+        color: color.PINK
+    },
+    top1: {
+        alignSelf: 'center'
+    },
+    // Top 4
     order: {
         width: '10%',
         alignSelf: 'center',
-        fontSize: 15
-    },
-    w: {
-        width: '10%',
-        flexDirection: 'row'
-    },
-    number1: {
-        width: 20,
-        height: 20,
-        borderRadius: 15,
-        backgroundColor: color.WHITE,
-        alignSelf: 'center',
-        alignItems: 'center'
+        fontSize: 15,
+        fontWeight: 'bold'
     },
     wrapper: {
         flexDirection: 'row',
         backgroundColor: color.PET_DESCRIPTION,
         marginVertical: 12,
-        borderRadius: 25,
+        borderRadius: 35,
         alignItems: 'center',
-        width: '90%'
+        width: '90%',
+        padding: 10,
+        elevation: 4
     },
     img1: {
         width: 50,
@@ -295,7 +403,13 @@ const styles = StyleSheet.create({
     },
     number: {
         width: '10%',
-        color: color.PINK
+        color: color.PINK,
+        fontWeight: 'bold',
+        marginLeft: 5,
+    },
+    orderNumber: {
+        flexDirection: 'row',
+        alignSelf: 'center'
     }
 })
 

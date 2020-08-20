@@ -5,12 +5,13 @@ import { uuid } from '../../utility/constants';
 
 const Match = ({ navigation, route }) => {
     const { myPet, myPetAvatar, myAvatar, yourPet, yourPetAvatar, yourAvatar, yourName, yourUid } = route.params;
+
     return (
         <View style={styles.container}>
             <Image style={styles.matches} source={require('../../../images/itsamatch.png')} />
             <Text style={styles.matchText}>
-                <Text style={styles.petName} >{myPet}</Text> and
-                <Text style={styles.petName} > {yourPet}</Text> have matched each other.
+                <Text style={styles.petName}>{myPet}</Text> and
+                <Text style={styles.petName}> {yourPet}</Text> have matched each other.
             </Text>
             <View style={styles.avatarPets}>
                 <Image
@@ -61,7 +62,8 @@ const Match = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: color.WHITE
     },
     matches: {
         marginBottom: 30
