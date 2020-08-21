@@ -766,7 +766,7 @@ const styles = StyleSheet.create({
     // Modal for next generation
     modalViewMix: {
         backgroundColor: color.WHITE,
-        marginHorizontal: 50,
+        marginHorizontal: 30,
         marginTop: '30%',
         padding: 20,
         borderRadius: 6,
