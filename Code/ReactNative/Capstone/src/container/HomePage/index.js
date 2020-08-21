@@ -801,7 +801,7 @@ const styles = StyleSheet.create({
     modalViewMix: {
         backgroundColor: color.WHITE,
         marginHorizontal: 30,
-        marginTop: '30%',
+        marginTop: '20%',
         padding: 20,
         borderRadius: 6,
         alignItems: 'center'
