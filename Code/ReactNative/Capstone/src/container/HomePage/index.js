@@ -61,6 +61,9 @@ const Home = ({ navigation }) => {
             }).then(res => {
                 // console.log('DATA', res.data)
                 setData(res.data)
+                if (res.data.length == 0) {
+                    fetchDataAll()
+                }
                 setIndex(0)
                 setLoading(false)
             }).catch(e => {

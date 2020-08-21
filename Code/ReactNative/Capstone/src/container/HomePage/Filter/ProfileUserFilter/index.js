@@ -23,7 +23,7 @@ const ProfileUserFilter = ({ navigation, route }) => {
     const [info, setInfo] = useState({
         name: '',
         avatar: '',
-        is_vip: '',
+        vip: '',
         email: '',
         gender: null,
         birth_date: null,
@@ -83,7 +83,7 @@ const ProfileUserFilter = ({ navigation, route }) => {
                                     style={styles.imageUser}
                                 />
                                 {
-                                    info.is_vip === 1
+                                    info.vip === 1
                                         ? <TouchableOpacity style={styles.diamond}>
                                             <FontAwesome name="diamond" size={18} color={color.WHITE} />
                                         </TouchableOpacity> : null
