@@ -29,6 +29,7 @@ import { uuid } from '../../utility/constants';
 import { saveMatch, senderMsg, recieverMsg, systemMsg, updateMatches } from '../../network';
 import _ from 'lodash'
 import { saveActivePet } from '../../redux/actions/authActions';
+import { startLoading, stopLoading } from '../../redux/actions/loadingAction';
 
 const Home = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -48,6 +49,7 @@ const Home = ({ navigation }) => {
     const [modalOpen, setModalOpen] = useState(false)
     const [modalActive, setModalActive] = useState(false)
     const [modalMix, setModalMix] = useState(false)
+    const [nextGeneration, setNextGeneration] = useState('')
 
     const bs = useRef(null)
 
@@ -226,6 +228,31 @@ const Home = ({ navigation }) => {
         </View>
     )
 
+    const makeBaby = () => {
+        if (vip == 0) {
+            setModalOpen(true)
+        } else {
+            if (pet_active.id) {
+                dispatch(startLoading())
+                Axios.get(`${URL_BASE}pets/nextGeneration?breed=${pet_active.breed}`, { headers: { Authorization: token } })
+                    .then(res => {
+                        console.log('NEXT GENERATION', res.data)
+                        if (!_.isEmpty(res.data.img)) {
+                            setNextGeneration(res.data.img)
+                        }
+                        setModalMix(true)
+                        dispatch(stopLoading())
+                    })
+                    .catch(error => {
+                        dispatch(stopLoading())
+                        console.log('ERROR makeBaby()', error)
+                    })
+            } else {
+                setModalActive(true)
+            }
+        }
+    }
+
     const Card = (({ item }) => {
         let images = _.concat(item.avatar, item.pictures)
         let dotWidth = (Dimensions.get('screen').width * 0.82) / images.length
@@ -381,7 +408,7 @@ const Home = ({ navigation }) => {
                         <View style={styles.animation}>
                             <LottieView source={require('../../utility/constants/result.json')} autoPlay />
                         </View>
-                        <Image source={{ uri: pet_active.avatar }} style={styles.petResult} />
+                        <Image source={_.isEmpty(nextGeneration) ? require('../../../images/no-image.jpg') : { uri: nextGeneration }} style={styles.petResult} />
                         <Text style={styles.textSuccess}>Đây có thể sẽ là con của {pet_active.name} và {_.isEmpty(data) ? null : data[index].name}</Text>
                         <View style={[styles.ok, { marginTop: 10 }]}>
                             <Text style={styles.okStyle} onPress={() => setModalMix(false)}>OK</Text>
@@ -501,7 +528,7 @@ const Home = ({ navigation }) => {
                                     name="child-friendly"
                                     size={24}
                                     color={color.RED}
-                                    onPress={() => setModalMix(true)}
+                                    onPress={makeBaby}
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
@@ -787,8 +814,8 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     petResult: {
-        width: 120,
-        height: 120,
+        width: 200,
+        height: 200,
         borderRadius: 12
     },
     animationMix: {

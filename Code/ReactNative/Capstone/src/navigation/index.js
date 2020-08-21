@@ -102,9 +102,11 @@ const MainTabScreen = ({ navigation }) => {
     }
 
     const loadVIP = async () => {
+        console.log('load VIP:----------------- ')
         try {
             Axios.get(`${URL_BASE}users/vip`, { headers: { Authorization: token } })
                 .then(res => {
+                    console.log('VIP', res.data)
                     dispatch(saveVip(res.data))
                 })
         } catch (error) {
