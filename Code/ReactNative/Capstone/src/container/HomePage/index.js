@@ -67,7 +67,7 @@ const Home = ({ navigation }) => {
                 console.log("Api call error! 000", e)
             })
         } else {
-            // fetchDataAll()
+            fetchDataAll()
         }
     }
 
