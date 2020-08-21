@@ -5,10 +5,11 @@ import {
     ImageBackground,
     TouchableOpacity
 } from 'react-native'
+import moment from 'moment';
+import LottieView from 'lottie-react-native'
 import { useSelector } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 import { color } from '../../utility'
-import moment from 'moment';
 
 const Premium = ({ navigation }) => {
     const vip = useSelector(state => state.vip)
@@ -34,10 +35,10 @@ const Premium = ({ navigation }) => {
             >
                 <Text style={styles.premium}>Premium Plus</Text>
                 <View style={styles.plus}>
-                    <PremiumPlus text={'Không giới hạn lượt Match'} />
-                    <PremiumPlus text={'Không giới hạn lượt Like'} />
-                    <PremiumPlus text={'Quay lại bao nhiêu lần tùy ý'} />
-                    <PremiumPlus text={'Tìm hồ sơ theo thông tin'} />
+                    <PremiumPlus text={'Unlimited matches'} />
+                    <PremiumPlus text={'Unlimited likes'} />
+                    <PremiumPlus text={'Unlimited returns'} />
+                    <PremiumPlus text={'Different search options'} />
                 </View>
                 {vip.status == 'IN_ACTIVE' ?
                     <TouchableOpacity style={styles.commandButton} onPress={() => navigation.navigate('Payment')}>
@@ -46,15 +47,21 @@ const Premium = ({ navigation }) => {
                     : null
                 }
                 {vip.status == 'ACTIVE' ?
-                    <View style={styles.box}>
-                        <Text style={styles.title}>Remain Time:</Text>
-                        <Text style={styles.remainTime}>{moment(vip.remainTime).format('YYYY-MM-DD hh:mm:ss')}</Text>
-                    </View>
+                    <>
+                        <View style={styles.box}>
+                            <Text style={styles.title}>Expired Time:</Text>
+                            <Text style={styles.remainTime}>{moment(vip.remainTime).format('YYYY-MM-DD')}</Text>
+                        </View>
+                        <Text style={styles.textEnjoy}>#Enjoy your time with PetDating</Text>
+                    </>
                     : null
                 }
                 {vip.status == 'PROCESS' ?
                     <View style={styles.box}>
-                        <Text style={styles.msg}>You have just request to upgrade to Premium account. Please wait for response!</Text>
+                        <View style={styles.animation}>
+                            <LottieView source={require('../../utility/constants/loadingPre.json')} autoPlay loop />
+                        </View>
+                        <Text style={styles.msg}>Please wait while we process your request to upgrade Premium!</Text>
                     </View>
                     : null
                 }
@@ -72,7 +79,7 @@ const styles = StyleSheet.create({
     },
     premium: {
         textAlign: 'center',
-        paddingTop: 40,
+        paddingTop: '25%',
         fontSize: 28,
         color: color.WHITE,
         fontWeight: 'bold',
@@ -83,7 +90,7 @@ const styles = StyleSheet.create({
         paddingBottom: 30
     },
     plus: {
-        paddingTop: 68,
+        paddingTop: 60,
         paddingBottom: 20
     },
     actionPre: {
@@ -116,30 +123,42 @@ const styles = StyleSheet.create({
         color: color.GRAY
     },
     box: {
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        backgroundColor: color.WHITE,
+        backgroundColor: '#cffffe',
         width: '70%',
         marginLeft: 'auto',
         marginRight: 'auto',
         padding: 10,
         elevation: 5,
         borderRadius: 5,
+        alignItems: 'center'
     },
     title: {
         textAlign: 'center',
         fontSize: 20,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        paddingBottom: 4
     },
     remainTime: {
         textAlign: 'center',
         fontSize: 18,
-        color: color.GREEN
+        color: color.GREEN,
+        fontStyle: 'italic'
     },
     msg: {
         textAlign: 'center',
-        fontSize: 20,
-        color: color.RED
+        fontSize: 17,
+        color: color.GRAY
+    },
+    animation: {
+        width: 150,
+        height: 100
+    },
+    textEnjoy: {
+        textAlign: 'center',
+        paddingTop: 5,
+        fontStyle: 'italic',
+        fontSize: 15,
+        color: color.DARK_GRAY
     }
 })
 

@@ -95,7 +95,6 @@ const Filter = ({ navigation }) => {
         <Container>
             <View style={styles.form}>
                 <Text style={styles.textDistance}>Distance</Text>
-                {/* <Text style={styles.title}>Hiển thị tất cả người dùng trong bán kính</Text> */}
                 <Slider
                     minimumValue={1}
                     maximumValue={100}
@@ -112,7 +111,7 @@ const Filter = ({ navigation }) => {
                     }
                 </View>
                 <TouchableOpacity style={styles.submit} onPress={onFilter}>
-                    <Text style={styles.textSubmit}>Scan</Text>
+                    <Text style={styles.textSubmit}>Find</Text>
                 </TouchableOpacity>
             </View>
             {foundUsers.length > 0 &&

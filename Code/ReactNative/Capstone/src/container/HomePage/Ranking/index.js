@@ -8,25 +8,18 @@ import {
 import axios from 'axios'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import SkeletonContent from 'react-native-skeleton-content-nonexpo';
 import { Container } from '../../../components'
 import { color } from '../../../utility';
 import { URL_BASE, token } from '../../../api/config';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const { width } = Dimensions.get('window')
-const SLIDER_WIDTH = Dimensions.get('window').width;
 
 const Ranking = () => {
-    const [liked, setLiked] = useState({
-        avatar: '',
-        name: '',
-        likes: ''
-    })
-    const [matched, setMatched] = useState({
-        avatar: '',
-        name: '',
-        matches: ''
-    })
+    const [liked, setLiked] = useState([])
+    const [matched, setMatched] = useState([])
+    const [loading, setLoading] = useState(true)
     // Animated state
     const [active, setActive] = useState(0)
     const [translateX, setTranslateX] = useState(new Animated.Value(0))
@@ -45,6 +38,7 @@ const Ranking = () => {
             listLike[0] = listLike[1]
             listLike[1] = first
             setLiked(listLike)
+            setLoading(false)
         }).catch(e => {
             console.log("Api call error!", e)
         })
@@ -61,6 +55,7 @@ const Ranking = () => {
             listMatch[0] = listMatch[1]
             listMatch[1] = firstEl
             setMatched(listMatch)
+            setLoading(false)
         }).catch(e => {
             console.log("Api call error!", e)
         })
@@ -117,7 +112,7 @@ const Ranking = () => {
                                 <Text style={styles.name}>{item.name}</Text>
                                 <View style={styles.orderNumber}>
                                     <AntDesign name="like1" size={17} color={color.BLUE} />
-                                    <Text style={[styles.number, { width: '30%' }]}>{item.likes}</Text>
+                                    <Text style={styles.number}>{item.likes}</Text>
                                 </View>
                             </View>
                         </View> : null
@@ -184,25 +179,28 @@ const Ranking = () => {
 
     const renderListMatch = (item, index) => {
         return (
-            <View>
-                {
-                    index > 2 ?
-                        <View style={styles.content}>
-                            <Text style={styles.order}>{index + 1}</Text>
-                            <View style={styles.wrapper}>
-                                <Image
-                                    source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
-                                    style={styles.img1}
-                                />
-                                <Text style={styles.name}>{item.name}</Text>
-                                <View style={styles.orderNumber}>
-                                    <AntDesign name="heart" size={17} color={color.GREEN} />
-                                    <Text style={styles.number}>{item.matches}</Text>
+            <SkeletonContent isLoading={loading}>
+                <View>
+                    {
+                        index > 2 ?
+                            <View style={styles.content}>
+                                <Text style={styles.order}>{index + 1}</Text>
+                                <View style={styles.wrapper}>
+                                    <Image
+                                        source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
+                                        style={styles.img1}
+                                    />
+                                    <Text style={styles.name}>{item.name}</Text>
+                                    <View style={styles.orderNumber}>
+                                        <AntDesign name="heart" size={17} color={color.GREEN} />
+                                        <Text style={styles.number}>{item.matches}</Text>
+                                    </View>
                                 </View>
-                            </View>
-                        </View> : null
-                }
-            </View>
+                            </View> : null
+                    }
+                </View>
+
+            </SkeletonContent>
         )
     }
 
@@ -223,13 +221,13 @@ const Ranking = () => {
                         style={styles.tabOne}
                         onPress={() => setActive(0)}
                     >
-                        <Text style={{ color: active === 0 ? color.WHITE : color.BLUE }}>Top Matched</Text>
+                        <Text style={{ color: active === 0 ? color.WHITE : color.PINK }}>Top Matched</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.tabTwo}
                         onPress={() => setActive(1)}
                     >
-                        <Text style={{ color: active === 1 ? color.WHITE : color.BLUE }}>Top Liked</Text>
+                        <Text style={{ color: active === 1 ? color.WHITE : color.PINK }}>Top Liked</Text>
                     </TouchableOpacity>
                 </View>
                 {/* Match */}
@@ -244,23 +242,31 @@ const Ranking = () => {
                         }}
                         onLayout={event => setTranslateY(event.nativeEvent.layout.height)}
                     >
-                        <FlatList
-                            horizontal={true}
-                            scrollEnabled={false}
-                            showsVerticalScrollIndicator={false}
-                            data={matched}
-                            renderItem={({ item, index }) => {
-                                return renderMatchTop3(item, index)
-                            }}
-                            keyExtractor={(_, index) => index.toString()}
-                        />
-                        <FlatList
-                            data={matched}
-                            renderItem={({ item, index }) => {
-                                return renderListMatch(item, index)
-                            }}
-                            keyExtractor={(_, index) => index.toString()}
-                        />
+                        <SkeletonContent
+                            isLoading={loading}
+                            layout={[
+                                { key: 'someId', width: 280, height: 120, marginBottom: 15 },
+                                { key: 'someOtherId', width: 280, height: 350, marginBottom: 6 }
+                            ]}
+                        >
+                            <FlatList
+                                horizontal={true}
+                                scrollEnabled={false}
+                                showsVerticalScrollIndicator={false}
+                                data={matched}
+                                renderItem={({ item, index }) => {
+                                    return renderMatchTop3(item, index)
+                                }}
+                                keyExtractor={(_, index) => index.toString()}
+                            />
+                            <FlatList
+                                data={matched}
+                                renderItem={({ item, index }) => {
+                                    return renderListMatch(item, index)
+                                }}
+                                keyExtractor={(_, index) => index.toString()}
+                            />
+                        </SkeletonContent>
                     </Animated.View>
                     {/* Like */}
                     <Animated.View
@@ -275,23 +281,31 @@ const Ranking = () => {
                             ]
                         }}
                     >
-                        <FlatList
-                            horizontal={true}
-                            scrollEnabled={false}
-                            showsVerticalScrollIndicator={false}
-                            data={liked}
-                            renderItem={({ item, index }) => {
-                                return renderLikeTop3(item, index)
-                            }}
-                            keyExtractor={(_, index) => index.toString()}
-                        />
-                        <FlatList
-                            data={liked}
-                            renderItem={({ item, index }) => {
-                                return renderListLiked(item, index)
-                            }}
-                            keyExtractor={(_, index) => index.toString()}
-                        />
+                        <SkeletonContent
+                            isLoading={loading}
+                            layout={[
+                                { key: 'someId', width: 280, height: 120, marginBottom: 15 },
+                                { key: 'someOtherId', width: 280, height: 350, marginBottom: 6 }
+                            ]}
+                        >
+                            <FlatList
+                                horizontal={true}
+                                scrollEnabled={false}
+                                showsVerticalScrollIndicator={false}
+                                data={liked}
+                                renderItem={({ item, index }) => {
+                                    return renderLikeTop3(item, index)
+                                }}
+                                keyExtractor={(_, index) => index.toString()}
+                            />
+                            <FlatList
+                                data={liked}
+                                renderItem={({ item, index }) => {
+                                    return renderListLiked(item, index)
+                                }}
+                                keyExtractor={(_, index) => index.toString()}
+                            />
+                        </SkeletonContent>
                     </Animated.View>
                 </ScrollView>
             </View>
@@ -318,7 +332,7 @@ const styles = StyleSheet.create({
         width: '50%',
         height: '100%',
         top: 0,
-        backgroundColor: color.BLUE,
+        backgroundColor: color.PINK,
         borderRadius: 20
     },
     tabOne: {
@@ -326,7 +340,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: color.BLUE,
+        borderColor: color.PINK,
         borderRadius: 20,
         borderRightWidth: 0,
         borderTopRightRadius: 0,
@@ -337,7 +351,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: color.BLUE,
+        borderColor: color.PINK,
         borderRadius: 20,
         borderLeftWidth: 0,
         borderTopLeftRadius: 0,
@@ -348,7 +362,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     top3: {
-        paddingHorizontal: 20,
+        paddingLeft: 26,
         paddingBottom: 10,
         justifyContent: 'flex-end'
     },
@@ -388,7 +402,7 @@ const styles = StyleSheet.create({
         marginVertical: 12,
         borderRadius: 35,
         alignItems: 'center',
-        width: '90%',
+        width: '89%',
         padding: 10,
         elevation: 4
     },
@@ -402,7 +416,7 @@ const styles = StyleSheet.create({
         paddingLeft: 15
     },
     number: {
-        width: '10%',
+        width: '40%',
         color: color.PINK,
         fontWeight: 'bold',
         marginLeft: 5,

@@ -440,8 +440,12 @@ const Home = ({ navigation }) => {
                         {/* Content */}
                         {
                             loading ? <Loading /> : (_.isEmpty(data)
-                                ? <View>
-                                    <Text>caus vl</Text>
+                                ? <View style={styles.emptyPets}>
+                                    <Text style={styles.textEmpty}>There is no new pet compatible around {pet_active.name}</Text>
+                                    <Text style={styles.textEmpty2}>Please choose a different breed to continue swiping</Text>
+                                    <View style={styles.animation}>
+                                        <LottieView source={require('../../utility/constants/down-arrow.json')} />
+                                    </View>
                                 </View>
                                 : <View style={styles.swiperContainer}>
                                     <Swiper
@@ -821,6 +825,28 @@ const styles = StyleSheet.create({
     animationMix: {
         width: 60,
         height: 60
+    },
+    // Empty pets
+    emptyPets: {
+        flex: 0.9,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: color.LIGHT_GRAY,
+        marginTop: '20%',
+        marginBottom: 20,
+        marginHorizontal: 20,
+        borderRadius: 8,
+        elevation: 4
+    },
+    textEmpty: {
+        fontSize: 16,
+        paddingVertical: 12,
+        color: color.DARK_GRAY,
+        marginTop: 40
+    },
+    textEmpty2: {
+        paddingVertical: 12,
+        color: color.WHITE
     }
 });
 

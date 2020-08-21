@@ -102,7 +102,7 @@ const Banking = ({ navigation }) => {
                         <Text style={styles.text}>Vietcombank</Text>
                     </View>
                 </View>
-                <Text style={styles.cf}>Chọn VIP</Text>
+                <Text style={styles.plan}>Choose your plan</Text>
                 <View style={styles.vipTerm}>
                     <TouchableOpacity
                         style={styles.vipItem}
@@ -213,10 +213,16 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         fontSize: 15
     },
+    plan: {
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        paddingVertical: 20
+    },
     cf: {
         textAlign: 'center',
         fontSize: 16,
-        paddingVertical: 20
+        paddingVertical: 18
     },
     imageWrapper: {
         flexDirection: 'row',
@@ -232,10 +238,7 @@ const styles = StyleSheet.create({
 
     },
     add: {
-        // paddingLeft: 10,
-        position: 'absolute',
-        // top: 20,
-        // left: 20,
+        position: 'absolute'
     },
     image: {
         width: 200,
@@ -251,7 +254,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: color.PINK,
         alignItems: 'center',
-        marginTop: 15,
+        marginTop: 10,
         width: '90%',
         alignSelf: 'center',
         marginBottom: 20
