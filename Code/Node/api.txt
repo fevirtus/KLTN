@@ -14,6 +14,10 @@
 	+ GET: - headers:{Authorization: token}
 	=> get current user
 	
+/api/users/vip
+	+ GET: - headers:{Authorization: token}
+	=> get vip status 
+	
 /api/users/:id
 	+ GET: {headers:{Authorization: token}}
 	=> get an user by user_id
@@ -31,6 +35,16 @@
 		- headers:{Authorization: token},
 		- body:{
 			"confirm_img": required
+		}
+		
+	=> upgrade current user to Premium
+	
+/api/users/location
+	+ POST: 
+		- headers:{Authorization: token},
+		- body:{
+			"latitude": required
+			"longitude": required
 		}
 		
 	=> upgrade current user to Premium
@@ -95,6 +109,10 @@
 	+ GET: {headers:{Authorization: token}}
 	=> verified pet_active and pet2 is matched
 	
+/api/pets/nextGeneration?breed=1
+	+ GET: {headers:{Authorization: token}}
+	=> get random child rely on breed
+
 /api/pets
 	+ POST:{
 		headers:{Authorization: token},
@@ -145,6 +163,14 @@
 		}
 	}=> set a pet(pet_id) in active
 	
+/api/pets/uploadMatch
+	+ PUT:{
+		headers:{Authorization: token},
+		body:{
+			"pet_ids":required
+		}
+	}=> plus 1 to matches on pet table
+	
 /api/pets/:id
 	+ DELETE: {headers:{Authorization: token}}
 	=> delete pet by id
@@ -173,3 +199,15 @@
 		}
 	}
 	=> match a pet
+	
+------------- cloudinary -----------------
+
+/cloudinary/upload
+	+ POST:{
+		headers:{Authorization: token},
+		body:{
+			"pictures":required,
+			"breed": required
+		}
+	}
+	=> insert a child to pet_generation table
