@@ -163,7 +163,7 @@
 		}
 	}=> set a pet(pet_id) in active
 	
-/api/pets/uploadMatch
+/api/pets/updateMatch
 	+ PUT:{
 		headers:{Authorization: token},
 		body:{
