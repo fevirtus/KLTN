@@ -814,7 +814,7 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     petResult: {
-        width: 200,
+        width: 150,
         height: 200,
         borderRadius: 12
     },
