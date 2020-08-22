@@ -37,7 +37,7 @@ const Privacy = ({ navigation }) => {
                 hideUser(uuid, false)
             }
             dispatch({ type: 'HIDE_SWIPER' })
-
+            navigation.navigate('Home')
         } catch (error) {
             console.log('ERROR toggleHideUser()', error)
         }

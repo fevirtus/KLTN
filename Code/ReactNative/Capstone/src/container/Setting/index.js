@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { color } from '../../utility'
 import { Container } from '../../components'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const Setting = ({ navigation }) => {
@@ -23,12 +23,16 @@ const Setting = ({ navigation }) => {
                     </View>
                     <Text style={styles.text}>Feedback</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.item}>
+                <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('DeleteAcc')}>
                     <View style={styles.iconWrapper}>
                         <Entypo name="emoji-sad" size={26} color={color.WHITE} />
                     </View>
                     <Text style={styles.text}>Delete Account</Text>
                 </TouchableOpacity>
+                <View style={styles.version}>
+                    <MaterialIcons name="pets" size={45} color={color.PINK} />
+                    <Text style={styles.txtVer}>Version 1.0.0</Text>
+                </View>
             </Container>
         </View>
     )
@@ -63,6 +67,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         alignSelf: 'center',
         paddingLeft: 12
+    },
+    version: {
+        alignItems: 'center',
+        paddingTop: '30%'
+    },
+    txtVer: {
+        paddingTop: 5,
+        color: color.LIGHT_GRAY,
+        fontSize: 16
     }
 })
 

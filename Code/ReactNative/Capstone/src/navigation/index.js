@@ -25,6 +25,7 @@ import {
     Setting,
     Privacy,
     Feedback,
+    DeleteAcc,
     EditPetProfile,
     Match,
     Premium,
@@ -376,7 +377,6 @@ const SettingStackScreen = ({ navigation }) => {
             screenOptions={{
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 22
                 },
                 headerTintColor: color.PINK
@@ -392,6 +392,7 @@ const SettingStackScreen = ({ navigation }) => {
             }} />
             <SettingStack.Screen name="Privacy" component={Privacy} />
             <SettingStack.Screen name="Feedback" component={Feedback} />
+            <SettingStack.Screen name="DeleteAcc" component={DeleteAcc} options={{ title: 'Delete Account' }} />
         </SettingStack.Navigator>
     )
 }

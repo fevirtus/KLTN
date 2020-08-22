@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text, ImageBackground } from 'react-native'
+import * as Animatable from 'react-native-animatable';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { GoogleLogin, FacebookLogin } from '../../components'
 import { color } from '../../utility';
-import * as Animatable from 'react-native-animatable';
 
 const Login = ({ navigation }) => {
     return (
@@ -14,7 +14,7 @@ const Login = ({ navigation }) => {
             >
                 <View style={styles.header}>
                     <View style={styles.icon}>
-                        <MaterialIcons name="pets" size={40} color="white" />
+                        <MaterialIcons name="pets" size={40} color={color.WHITE} />
                         <Text style={styles.name}>
                             PetDating
                         </Text>

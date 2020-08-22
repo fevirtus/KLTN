@@ -5,13 +5,14 @@ import {
     Image,
     TouchableOpacity,
     Text,
-    Alert,
+    Modal,
     FlatList,
     ImageBackground
 } from 'react-native'
 import axios from 'axios'
 import { ScrollView } from 'react-native-gesture-handler';
 import _ from 'lodash'
+import LottieView from 'lottie-react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { color } from '../../../../utility';
@@ -20,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { deletePet } from '../../../../redux/actions/authActions';
 import { startLoading, stopLoading } from '../../../../redux/actions/loadingAction';
 import { convertToAge } from '../../../../network';
+import { Loading } from '../../../../components';
 
 const PetProfile = ({ navigation, route }) => {
     const { petId } = route.params;
@@ -35,6 +37,8 @@ const PetProfile = ({ navigation, route }) => {
         pictures: []
     })
     const dispatch = useDispatch()
+    const [loading, setLoading] = useState(true)
+    const [modalOpen, setModalOpen] = useState(false)
 
     const getPet = () => {
         dispatch(startLoading())
@@ -74,25 +78,6 @@ const PetProfile = ({ navigation, route }) => {
             })
     }
 
-    const _deletePet = () => {
-        Alert.alert(
-            `Delete ${name}?`,
-            `Are you sure to delete ${name}?`,
-            [
-                {
-                    text: 'Cancel',
-                    onPress: () => console.log('User cancel delete!'),
-                    style: 'cancel'
-                },
-                {
-                    text: 'OK',
-                    onPress: _delete
-                }
-            ],
-            { cancelable: false }
-        )
-    }
-
     const onEditPet = () => {
         navigation.navigate('EditPetProfile', { petInfo: info, petId: petId })
     }
@@ -111,71 +96,95 @@ const PetProfile = ({ navigation, route }) => {
     const { name, gender, weight, age, introduction, avatar, breed_name, pictures } = info
     return (
         <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <ImageBackground
-                    style={styles.header}
-                    source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
-                >
-                </ImageBackground>
-                <View style={styles.content}>
-                    <View style={styles.petName}>
-                        <View style={{ flex: 2 }}>
-                            <Text style={styles.name}>{name}</Text>
-                            <Text style={styles.text}>{breed_name}</Text>
+            {
+                loading ? <Loading />
+                    : <ScrollView showsVerticalScrollIndicator={false}>
+                        <ImageBackground
+                            style={styles.header}
+                            source={avatar ? { uri: avatar } : require('../../../../../images/no-image.jpg')}
+                        >
+                        </ImageBackground>
+                        <View style={styles.content}>
+                            <View style={styles.petName}>
+                                <View style={{ flex: 2 }}>
+                                    <Text style={styles.name}>{name}</Text>
+                                    <Text style={styles.text}>{breed_name}</Text>
+                                </View>
+                                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                    <TouchableOpacity
+                                        style={[styles.buttonEdit, { marginRight: 10 }]}
+                                        onPress={onEditPet}
+                                    >
+                                        <FontAwesome name="edit" size={22} color="white" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.buttonDelete}
+                                        onPress={() => setModalOpen(true)}
+                                    >
+                                        <FontAwesome5 name="trash" size={22} color="white" />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View style={styles.information}>
+                                <View style={styles.item}>
+                                    <Text style={styles.subheading}>Weight</Text>
+                                    <Text style={styles.text}>{weight} kg</Text>
+                                </View>
+                                <View style={styles.itemCenter}>
+                                    <Text style={styles.subheading}>Gender</Text>
+                                    <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
+                                </View>
+                                <View style={styles.item}>
+                                    <Text style={styles.subheading}>Age</Text>
+                                    <Text style={styles.text}>{convertToAge(age)}</Text>
+                                </View>
+                            </View>
+                            {
+                                _.isEmpty(introduction)
+                                    ? null
+                                    : <View style={styles.about}>
+                                        <Text style={styles.subheading}>About</Text>
+                                        <Text style={[styles.text, { paddingLeft: 0 }]}>{introduction}</Text>
+                                    </View>
+                            }
+                            {
+                                _.isEmpty(pictures)
+                                    ? <View style={styles.emptyPic}></View>
+                                    : <View style={styles.listImg}>
+                                        <FlatList
+                                            horizontal={true}
+                                            data={pictures}
+                                            renderItem={({ item }) => {
+                                                return renderList(item)
+                                            }}
+                                            keyExtractor={(item, index) => index.toString()}
+                                        />
+                                    </View>
+                            }
                         </View>
-                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                            <TouchableOpacity
-                                style={[styles.buttonEdit, { marginRight: 10 }]}
-                                onPress={onEditPet}
-                            >
-                                <FontAwesome name="edit" size={22} color="white" />
+                    </ScrollView>
+            }
+            <Modal visible={modalOpen} animationType='fade' transparent={true}>
+                <View style={styles.modal}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.animation}>
+                            <LottieView source={require('../../../../utility/constants/error.json')} autoPlay loop />
+                        </View>
+                        <Text style={styles.txtCf}>Delete {name}?</Text>
+                        <Text style={styles.txtDes}>
+                            Are you sure you want to delete this pet?
+                        </Text>
+                        <View style={styles.groupBtn}>
+                            <TouchableOpacity style={styles.btn} onPress={() => setModalOpen(false)}>
+                                <Text style={styles.txt}>CANCEL</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.buttonDelete}
-                                onPress={_deletePet}
-                            >
-                                <FontAwesome5 name="trash" size={22} color="white" />
+                            <TouchableOpacity style={[styles.btn, { backgroundColor: color.RED }]} onPress={_delete}>
+                                <Text style={styles.txt}>DELETE</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={styles.information}>
-                        <View style={styles.item}>
-                            <Text style={styles.subheading}>Weight</Text>
-                            <Text style={styles.text}>{weight} kg</Text>
-                        </View>
-                        <View style={styles.itemCenter}>
-                            <Text style={styles.subheading}>Gender</Text>
-                            <Text style={styles.text}>{gender === 1 ? 'Male' : 'Female'}</Text>
-                        </View>
-                        <View style={styles.item}>
-                            <Text style={styles.subheading}>Age</Text>
-                            <Text style={styles.text}>{convertToAge(age)}</Text>
-                        </View>
-                    </View>
-                    {
-                        _.isEmpty(introduction)
-                            ? null
-                            : <View style={styles.about}>
-                                <Text style={styles.subheading}>About</Text>
-                                <Text style={[styles.text, { paddingLeft: 0 }]}>{introduction}</Text>
-                            </View>
-                    }
-                    {
-                        _.isEmpty(pictures)
-                            ? <View style={styles.emptyPic}></View>
-                            : <View style={styles.listImg}>
-                                <FlatList
-                                    horizontal={true}
-                                    data={pictures}
-                                    renderItem={({ item }) => {
-                                        return renderList(item)
-                                    }}
-                                    keyExtractor={(item, index) => index.toString()}
-                                />
-                            </View>
-                    }
                 </View>
-            </ScrollView>
+            </Modal>
         </View>
     )
 }
@@ -187,7 +196,7 @@ const styles = StyleSheet.create({
     header: {
         alignItems: 'center',
         justifyContent: 'center',
-        height: 225
+        height: 240
     },
     content: {
         flexDirection: 'column',
@@ -206,7 +215,7 @@ const styles = StyleSheet.create({
     },
     information: {
         marginTop: 25,
-        backgroundColor: color.PET_DESCRIPTION,
+        backgroundColor: '#e1f2fb',
         flexDirection: 'row',
         borderRadius: 30,
         justifyContent: 'space-between',
@@ -241,24 +250,21 @@ const styles = StyleSheet.create({
         marginVertical: 15
     },
     listImg: {
-        // height: 100,
-        alignItems: 'center',
-        // paddingHorizontal: 20
+        alignItems: 'center'
     },
     emptyPic: {
         height: 15
     },
     petImageWrapper: {
-        marginTop: 10,
-        marginBottom: 10,
-        marginLeft: 15,
-        marginRight: 10,
+        margin: 10,
+        paddingBottom: 10
     },
     petImage: {
-        height: 200,
-        width: 150,
+        height: 110,
+        width: 100,
         borderRadius: 20,
         borderWidth: 3,
+        borderColor: color.LIGHT_PINK
     },
     buttonDelete: {
         borderRadius: 50,
@@ -292,6 +298,48 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         color: color.WHITE,
+    },
+    // Modal
+    modal: {
+        flex: 1,
+        backgroundColor: '#000000aa'
+    },
+    modalContent: {
+        backgroundColor: color.WHITE,
+        marginHorizontal: 40,
+        marginTop: '50%',
+        paddingHorizontal: 30,
+        paddingTop: 20,
+        paddingBottom: 12,
+        borderRadius: 8,
+        alignItems: 'center'
+    },
+    animation: {
+        width: 80,
+        height: 60
+    },
+    txtCf: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        paddingTop: 12
+    },
+    txtDes: {
+        paddingTop: 5
+    },
+    groupBtn: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '80%',
+        paddingTop: 20
+    },
+    btn: {
+        backgroundColor: color.LIGHT_GRAY,
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 6
+    },
+    txt: {
+        color: color.WHITE
     }
 })
 

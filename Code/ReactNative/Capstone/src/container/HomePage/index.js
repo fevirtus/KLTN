@@ -463,7 +463,6 @@ const Home = ({ navigation }) => {
                                         infinite
                                         disableBottomSwipe
                                         backgroundColor={'transparent'}
-                                        // onSwipedAll={() => console.log('end')}
                                         overlayLabels={{
                                             left: {
                                                 title: 'NOPE',
@@ -705,7 +704,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: 20,
         paddingBottom: 10,
-        borderRadius: 6,
+        borderRadius: 8,
         alignItems: 'center'
     },
     textPre: {
@@ -777,7 +776,7 @@ const styles = StyleSheet.create({
         marginTop: '48%',
         paddingHorizontal: 20,
         paddingVertical: 12,
-        borderRadius: 6,
+        borderRadius: 8,
         alignItems: 'center'
     },
     animation: {
@@ -803,7 +802,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 30,
         marginTop: '20%',
         padding: 20,
-        borderRadius: 6,
+        borderRadius: 8,
         alignItems: 'center'
     },
     nextWrapper: {

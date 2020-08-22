@@ -293,7 +293,6 @@ const Profile = ({ navigation }) => {
                                                 handleChangeInfo('name', name)
                                                 handleValidName(name)
                                             }}
-                                            // onEndEditing={(e) => handleValidName(e.nativeEvent.text)}
                                             style={styles.textInput}
                                         />
                                     </View>
@@ -350,7 +349,6 @@ const Profile = ({ navigation }) => {
                                                 handleChangeInfo('phone', phone)
                                                 handleValidPhone(phone)
                                             }}
-                                        // onEndEditing={(e) => handleValidPhone(e.nativeEvent.text)}
                                         />
                                     </View>
                                     {isValidPhone ? null :
@@ -569,7 +567,7 @@ const styles = StyleSheet.create({
     },
     commandButton: {
         padding: 14,
-        borderRadius: 10,
+        borderRadius: 25,
         backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',

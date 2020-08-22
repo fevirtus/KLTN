@@ -13,6 +13,7 @@ import EditPetProfile from './HomePage/Profile/PetProfile/EditPetProfile'
 import Setting from './Setting'
 import Privacy from './Setting/Privacy'
 import Feedback from './Setting/Feedback'
+import DeleteAcc from './Setting/DeleteAcc'
 import Match from './Match'
 import Premium from './Premium'
 import Payment from './Premium/Payment'
@@ -32,6 +33,7 @@ export {
     ChatDashboard,
     Setting,
     Privacy,
+    DeleteAcc,
     Feedback,
     EditPetProfile,
     Match,
