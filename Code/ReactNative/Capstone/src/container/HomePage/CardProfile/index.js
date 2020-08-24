@@ -122,8 +122,9 @@ const CardProfile = ({ route }) => {
                                         setModalOpen(true)
                                     }}
                                 >
-                                    <Entypo name="dots-three-horizontal"
+                                    <MaterialIcons name="report"
                                         size={28} color={color.PINK}
+
                                     />
                                 </TouchableOpacity>
                             </ImageBackground>
@@ -284,7 +285,7 @@ const styles = StyleSheet.create({
         height: 20,
         marginRight: 10,
         marginTop: 15,
-        zIndex: 100,
+        backgroundColor: 'black'
     },
     pagination: {
         flexDirection: 'row',
