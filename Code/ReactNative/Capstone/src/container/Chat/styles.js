@@ -21,7 +21,7 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-end",
     flexDirection: "row",
-    width: "15%",
+    // width: "15%",
     flex: 1
   },
 });

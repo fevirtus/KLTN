@@ -31,7 +31,8 @@ import {
     Match,
     Premium,
     Payment,
-    Banking
+    Banking,
+    ProfilePetChat
 } from '../container';
 import { color } from '../utility';
 import Chat from '../container/Chat';
@@ -256,7 +257,6 @@ const ChatStackScreen = ({ navigation }) => {
                     ),
                 }}
             />
-            <ChatStack.Screen name="ProfileUserChat" component={ProfileUserChat} />
         </ChatStack.Navigator>
     )
 }
@@ -336,6 +336,8 @@ const ChatboxStackScreen = () => {
             }}
         >
             <ChatboxStack.Screen name="Chat" component={Chat} />
+            <ChatboxStack.Screen name="ProfileUserChat" component={ProfileUserChat} options={{ headerTitle: 'User' }} />
+            <ChatboxStack.Screen name="ProfilePetChat" component={ProfilePetChat} options={{ headerTitle: 'Pet' }} />
         </ChatboxStack.Navigator>
     )
 }

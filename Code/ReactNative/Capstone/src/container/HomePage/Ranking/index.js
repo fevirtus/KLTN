@@ -136,7 +136,7 @@ const Ranking = () => {
                             }
                             <Image
                                 source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
-                                style={index === 1 ? styles.imgTop1 : styles.img23}
+                                style={index === 1 ? styles.imgTop1 : (index === 0 ? styles.img2 : styles.img3)}
                             />
                             <Text style={styles.nameTop}>{item.name}</Text>
                             <View style={styles.orderNumber}>
@@ -164,7 +164,7 @@ const Ranking = () => {
                             }
                             <Image
                                 source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
-                                style={index === 1 ? styles.imgTop1 : styles.img23}
+                                style={index === 1 ? styles.imgTop1 : (index === 0 ? styles.img2 : styles.img3)}
                             />
                             <Text style={styles.nameTop}>{item.name}</Text>
                             <View style={styles.orderNumber}>
@@ -357,17 +357,28 @@ const styles = StyleSheet.create({
     top3: {
         paddingLeft: 26,
         paddingBottom: 10,
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
     },
-    img23: {
+    img2: {
         width: 65,
         height: 65,
-        borderRadius: 50
+        borderRadius: 50,
+        borderWidth: 2,
+        borderColor: '#ececec',
+    },
+    img3: {
+        width: 65,
+        height: 65,
+        borderRadius: 50,
+        borderWidth: 2,
+        borderColor: '#ec823a',
     },
     imgTop1: {
         width: 85,
         height: 85,
-        borderRadius: 50
+        borderRadius: 50,
+        borderWidth: 3,
+        borderColor: '#ffe75e',
     },
     nameTop: {
         alignSelf: 'center',
