@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Alert, FlatList, PermissionsAndroid } from 'react-native'
-import RadioForm from 'react-native-simple-radio-button';
+import LinearGradient from 'react-native-linear-gradient';
 import { color } from '../../../utility'
 import { Slider } from 'react-native-elements';
 import { Container } from '../../../components';
@@ -110,33 +110,40 @@ const Filter = ({ navigation }) => {
                         distance === 100 ? null : <Text style={styles.text}>100km</Text>
                     }
                 </View>
-                <TouchableOpacity style={styles.submit} onPress={onFilter}>
-                    <Text style={styles.textSubmit}>Find</Text>
+                <TouchableOpacity onPress={onFilter}>
+                    <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.submit} >
+                        <Text style={styles.textSubmit}>Find</Text>
+                    </LinearGradient>
                 </TouchableOpacity>
             </View>
             {foundUsers.length > 0 &&
-                <FlatList
-                    alwaysBounceVertical={false}
-                    data={foundUsers}
-                    keyExtractor={(_, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <FoundUsers
-                            item={item}
-                            onNameTap={() => {
-                                console.log(item.name)
-                            }}
-                            onTap={() => {
-                                navigation.navigate('ProfileUserFilter', { uid: item.uid })
-                            }}
-                        />
-                    )}
-                />
+                <View style={styles.container}>
+                    <FlatList
+                        alwaysBounceVertical={false}
+                        data={foundUsers}
+                        keyExtractor={(_, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <FoundUsers
+                                item={item}
+                                onNameTap={() => {
+                                    console.log(item.name)
+                                }}
+                                onTap={() => {
+                                    navigation.navigate('ProfileUserFilter', { uid: item.uid })
+                                }}
+                            />
+                        )}
+                    />
+                </View>
             }
         </Container>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        padding: 8
+    },
     form: {
         paddingHorizontal: 32
     },

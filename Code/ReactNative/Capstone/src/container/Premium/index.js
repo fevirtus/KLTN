@@ -9,6 +9,7 @@ import moment from 'moment';
 import LottieView from 'lottie-react-native'
 import { useSelector } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
+import LinearGradient from 'react-native-linear-gradient'
 import { color } from '../../utility'
 
 const Premium = ({ navigation }) => {
@@ -41,8 +42,10 @@ const Premium = ({ navigation }) => {
                     <PremiumPlus text={'Different search options'} />
                 </View>
                 {vip.status == 'IN_ACTIVE' ?
-                    <TouchableOpacity style={styles.commandButton} onPress={() => navigation.navigate('Payment')}>
-                        <Text style={styles.panelButtonTitle}>Upgrade Premium</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Payment')}>
+                        <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                            <Text style={styles.panelButtonTitle}>Upgrade Premium</Text>
+                        </LinearGradient>
                     </TouchableOpacity>
                     : null
                 }
@@ -108,7 +111,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 25,
         padding: 15,
-        backgroundColor: color.PINK,
         alignItems: 'center',
         marginTop: 20,
         marginBottom: 6

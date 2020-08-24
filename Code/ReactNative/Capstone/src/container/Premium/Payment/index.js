@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     ScrollView
 } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient';
 import { Container } from '../../../components'
 import { color } from '../../../utility'
 
@@ -25,8 +26,10 @@ const Payment = ({ navigation }) => {
                             <View style={styles.iconPayment}>
                                 <Image source={require('../../../../images/icon/vcb.jpg')} style={styles.icon} />
                             </View>
-                            <TouchableOpacity style={styles.commandButton} onPress={() => navigation.navigate('Banking')}>
-                                <Text style={styles.panelButtonTitle}>Dùng Premium</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Banking')}>
+                                <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                                    <Text style={styles.panelButtonTitle}>Dùng Premium</Text>
+                                </LinearGradient>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -46,8 +49,10 @@ const Payment = ({ navigation }) => {
                                 <Image source={require('../../../../images/icon/tpbank.jpg')} style={styles.icon} />
                                 <Image source={require('../../../../images/icon/mbbank.jpg')} style={styles.icon} />
                             </View>
-                            <TouchableOpacity style={styles.commandButton}>
-                                <Text style={styles.panelButtonTitle}>Dùng Premium</Text>
+                            <TouchableOpacity>
+                                <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                                    <Text style={styles.panelButtonTitle}>Dùng Premium</Text>
+                                </LinearGradient>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -109,7 +114,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 25,
         padding: 14,
-        backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 10,

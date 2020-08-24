@@ -284,21 +284,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 5
     },
-    commandButton: {
-        padding: 14,
-        borderRadius: 25,
-        backgroundColor: color.PINK,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        alignSelf: 'center',
-        marginVertical: 10
-    },
-    panelButtonTitle: {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: color.WHITE,
-    },
     // Modal
     modal: {
         flex: 1,

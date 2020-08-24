@@ -8,12 +8,12 @@ import {
     TouchableWithoutFeedback,
     Platform,
     Keyboard,
+    StyleSheet
 } from "react-native";
 import ImagePicker from "react-native-image-picker";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import Ionicons from "react-native-vector-icons/Ionicons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { globalStyle, color, appStyle } from "../../utility";
-import styles from "./styles";
 import { InputField, ChatBox } from "../../components";
 import { senderMsg, recieverMsg, seenMatch } from "../../network";
 import { deviceHeight } from "../../utility/styleHelper/appStyle";
@@ -154,30 +154,31 @@ const Chat = ({ route, navigation }) => {
                                 />
                             )}
                         />
-
                         {/* Send Message */}
                         <View style={styles.sendMessageContainer}>
-                            <View style={styles.sendBtnContainer}>
-                                <MaterialCommunityIcons
-                                    name="camera"
-                                    color={color.LIGHT_BLUE}
-                                    size={appStyle.fieldHeight}
+                            <View style={styles.btnAdd}>
+                                <Ionicons
+                                    name="add"
+                                    color={color.WHITE}
+                                    size={32}
                                     onPress={() => handleCamera()}
                                 />
                             </View>
                             <InputField
-                                placeholder="Type Here"
+                                placeholder="Type your message..."
+                                placeholderTextColor={color.GRAY}
                                 numberOfLines={10}
                                 inputStyle={styles.input}
                                 value={msgValue}
                                 onChangeText={(text) => handleOnChange(text)}
                             />
                             <View style={styles.sendBtnContainer}>
-                                <MaterialCommunityIcons
-                                    name="send-circle"
+                                <FontAwesome
+                                    name="send"
                                     color={color.LIGHT_BLUE}
-                                    size={appStyle.fieldHeight}
+                                    size={28}
                                     onPress={() => handleSend()}
+                                    style={styles.icon}
                                 />
                             </View>
                         </View>
@@ -187,5 +188,41 @@ const Chat = ({ route, navigation }) => {
         </SafeAreaView>
     );
 };
+
+const styles = StyleSheet.create({
+    sendMessageContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        alignContent: "center",
+        paddingHorizontal: 10,
+        marginBottom: 5,
+    },
+    input: {
+        flex: 6,
+        borderTopLeftRadius: 25,
+        borderBottomLeftRadius: 25,
+        marginLeft: 8
+    },
+    sendBtnContainer: {
+        height: appStyle.fieldHeight,
+        backgroundColor: color.LIGHT_LIGHT_GRAY,
+        borderTopRightRadius: 25,
+        borderBottomRightRadius: 25,
+        alignItems: "center",
+        flexDirection: "row"
+    },
+    icon: {
+        paddingRight: '4%'
+    },
+    btnAdd: {
+        height: appStyle.fieldHeight - 5,
+        width: appStyle.fieldHeight - 5,
+        backgroundColor: color.LIGHT_BLUE,
+        alignItems: "center",
+        flexDirection: "row",
+        justifyContent: 'center',
+        borderRadius: 40
+    }
+})
 
 export default Chat;

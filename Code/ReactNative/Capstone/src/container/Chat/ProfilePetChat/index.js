@@ -91,7 +91,7 @@ const ProfilePetChat = ({ navigation, route }) => {
                             name="heart"
                             size={26}
                             color={color.GREEN}
-                            onPress={match}
+                            onPress={() => { }}
                         />
                     </TouchableOpacity>
                 </View>

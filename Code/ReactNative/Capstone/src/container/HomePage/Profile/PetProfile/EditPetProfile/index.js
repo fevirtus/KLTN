@@ -5,28 +5,29 @@ import {
     TextInput, FlatList,
     TouchableOpacity, View
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import Axios from 'axios';
-import mime from 'mime';
-import { ScrollView } from 'react-native-gesture-handler';
-import ImagePicker from 'react-native-image-picker';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { RadioButton } from 'react-native-paper';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useDispatch, useSelector } from 'react-redux';
-import { URL_BASE, token } from '../../../../../api/config';
-import { Container } from '../../../../../components';
-import { color } from '../../../../../utility';
-import { uploadImgToServer, uploadPicturesToServer, validatePet } from '../../../../../network';
 import _ from 'lodash'
-import { updatePet, updateActivePet } from '../../../../../redux/actions/authActions';
-import ImageCropPicker from 'react-native-image-crop-picker';
-import { ActionSheet, Root } from 'native-base'
-import { startLoading, stopLoading } from '../../../../../redux/actions/loadingAction';
+import mime from 'mime';
+import Axios from 'axios';
 import moment from 'moment';
+import { ActionSheet, Root } from 'native-base'
+import { RadioButton } from 'react-native-paper';
+import ImagePicker from 'react-native-image-picker';
+import { useDispatch, useSelector } from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient'
+import DropDownPicker from 'react-native-dropdown-picker';
+import { ScrollView } from 'react-native-gesture-handler';
+import ImageCropPicker from 'react-native-image-crop-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { color } from '../../../../../utility';
+import { Container } from '../../../../../components';
+import { URL_BASE, token } from '../../../../../api/config';
+import { updatePet, updateActivePet } from '../../../../../redux/actions/authActions';
+import { startLoading, stopLoading } from '../../../../../redux/actions/loadingAction';
+import { uploadImgToServer, uploadPicturesToServer, validatePet } from '../../../../../network';
 
 const EditPetProfile = ({ navigation, route }) => {
     const pet_active = useSelector(state => state.auth.pet_active)
@@ -436,8 +437,10 @@ const EditPetProfile = ({ navigation, route }) => {
                                 />
                         }
                         {isChange &&
-                            <TouchableOpacity style={styles.commandButton} onPress={onUpdatePet}>
-                                <Text style={styles.panelButtonTitle}>Save</Text>
+                            <TouchableOpacity onPress={onUpdatePet}>
+                                <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                                    <Text style={styles.panelButtonTitle}>Save</Text>
+                                </LinearGradient>
                             </TouchableOpacity>
                         }
                     </View>
@@ -503,7 +506,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 25,
         padding: 15,
-        backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,

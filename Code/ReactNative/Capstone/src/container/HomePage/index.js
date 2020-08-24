@@ -368,8 +368,10 @@ const Home = ({ navigation }) => {
                         <View style={styles.price}>
                             <Text style={styles.textPrice}>Chỉ 59.000 đ/3 tháng</Text>
                         </View>
-                        <TouchableOpacity style={styles.commandButton} onPress={() => navigation.navigate('Premium')}>
-                            <Text style={styles.panelButtonTitle}>Đăng ký Premium</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('Premium')}>
+                            <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                                <Text style={styles.panelButtonTitle}>Đăng ký Premium</Text>
+                            </LinearGradient>
                         </TouchableOpacity>
                         <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Không phải bây giờ, cảm ơn</Text>
                     </LinearGradient>
@@ -526,14 +528,25 @@ const Home = ({ navigation }) => {
                             )
                         }
                         <Animated.View style={styles.bottom}>
-                            <TouchableOpacity style={styles.btnReturn}>
-                                <MaterialIcons
-                                    name="child-friendly"
-                                    size={24}
-                                    color={color.RED}
-                                    onPress={makeBaby}
-                                />
-                            </TouchableOpacity>
+                            {
+                                vip === 1
+                                    ? <TouchableOpacity style={styles.btnReturn}>
+                                        <MaterialIcons
+                                            name="child-friendly"
+                                            size={24}
+                                            color={color.RED}
+                                            onPress={makeBaby}
+                                        />
+                                    </TouchableOpacity>
+                                    : <TouchableOpacity style={[styles.btnReturn, { backgroundColor: color.LIGHT_LIGHT_GRAY }]}>
+                                        <MaterialIcons
+                                            name="child-friendly"
+                                            size={24}
+                                            color={color.RED}
+                                            onPress={makeBaby}
+                                        />
+                                    </TouchableOpacity>
+                            }
                             <TouchableOpacity style={styles.activePet} onPress={() => bs.current.snapTo(0)}>
                                 <Ionicons name="ios-add-circle" size={30} color={color.PINK} />
                             </TouchableOpacity>
@@ -683,7 +696,6 @@ const styles = StyleSheet.create({
     commandButton: {
         padding: 10,
         borderRadius: 25,
-        backgroundColor: color.PINK,
         alignItems: 'center',
         marginTop: 15,
         width: '90%'

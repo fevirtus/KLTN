@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     Modal, Dimensions
 } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { color } from '../../../utility';
 import { Container } from '../../../components';
@@ -20,8 +21,10 @@ const DeleteAcc = ({ navigation }) => {
                 <Text style={styles.txtDescription}>If you'd like to keep your account but not be shown to others
                 you can pause your account instead. You can turn off in settings.
                 </Text>
-                <TouchableOpacity style={styles.commandButton} onPress={() => navigation.navigate('Privacy')}>
-                    <Text style={styles.panelButtonTitle}>PAUSE MY ACCOUNT</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Privacy')}>
+                    <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                        <Text style={styles.panelButtonTitle}>PAUSE MY ACCOUNT</Text>
+                    </LinearGradient>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setModalOpen(true)}>
                     <Text style={styles.txtDel}>Delete My Account {">"}</Text>
@@ -79,11 +82,10 @@ const styles = StyleSheet.create({
         paddingTop: 5
     },
     commandButton: {
-        width: '90%',
+        width: 320,
         alignSelf: 'center',
         borderRadius: 25,
         padding: 14,
-        backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: '42%',

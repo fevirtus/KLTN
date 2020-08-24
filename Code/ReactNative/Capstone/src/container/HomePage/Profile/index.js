@@ -19,7 +19,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import _ from 'lodash'
+import moment from 'moment';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Carousel from 'react-native-snap-carousel';
+import LinearGradient from 'react-native-linear-gradient';
 import { color } from '../../../utility'
 import { updateUser } from '../../../redux/actions/authActions';
 import { Container, DismissKeyboard } from '../../../components'
@@ -29,8 +32,6 @@ import { RadioButton } from 'react-native-paper';
 import { UpdateUser, UpdateUserName, uploadImgToServer, validateUser } from '../../../network';
 import { uuid } from '../../../utility/constants';
 import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment';
 
 const { width } = Dimensions.get('window')
 const SLIDER_WIDTH = Dimensions.get('window').width;
@@ -381,8 +382,10 @@ const Profile = ({ navigation }) => {
                                     }
                                 </View>
                                 {isChange &&
-                                    <TouchableOpacity style={styles.commandButton} onPress={onUpdateUser}>
-                                        <Text style={styles.panelButtonTitle}>Save</Text>
+                                    <TouchableOpacity onPress={onUpdateUser}>
+                                        <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                                            <Text style={styles.panelButtonTitle}>Save</Text>
+                                        </LinearGradient>
                                     </TouchableOpacity>
                                 }
                             </Animated.View>
@@ -561,11 +564,10 @@ const styles = StyleSheet.create({
     commandButton: {
         padding: 14,
         borderRadius: 25,
-        backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 15,
-        width: '90%',
+        width: '100%',
         alignSelf: 'center'
     },
     panelButtonTitle: {

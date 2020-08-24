@@ -48,7 +48,6 @@ const ProfileUserFilter = ({ navigation, route }) => {
         })
     }
 
-
     useEffect(() => {
         getInfo()
     }, [uid])
@@ -89,25 +88,25 @@ const ProfileUserFilter = ({ navigation, route }) => {
                                 }
                             </View>
                         </View>
-                        <View
-                            style={styles.userName}
-                        >
+                        <View style={styles.userName}>
                             <Text style={styles.name}>{info.name}</Text>
                             {info.gender == null ? null :
                                 (info.gender == 1 ? <Ionicons name={'md-male-sharp'} size={20} color={color.PINK} />
                                     : <Ionicons name={'md-female-sharp'} size={20} color={color.PINK} />)
                             }
                         </View>
+                        {!_.isEmpty(info.birth_date) &&
+                            <View style={styles.birth}>
+                                <FontAwesome name="birthday-cake" size={18} color={color.GRAY} />
+                                <Text style={styles.txtBd}>{info.birth_date}</Text>
+                            </View>
+                        }
                         <View style={styles.numberPet}>
-                            {
-                                info.pets.length === 1
-                                    ? <Text style={styles.text}>{info.pets.length} pet</Text>
-                                    : <Text style={styles.text}>{info.pets.length} pets</Text>
-                            }
+                            <Text style={styles.text}>{info.pets.length} pets</Text>
                         </View>
                         <View style={styles.pet}>
                             <FlatList
-                                horizontal={true}
+                                numColumns={2}
                                 data={info.pets}
                                 renderItem={({ item }) => {
                                     return renderList(item)
@@ -115,15 +114,7 @@ const ProfileUserFilter = ({ navigation, route }) => {
                                 keyExtractor={(_, index) => index.toString()}
                             />
                         </View>
-                        <View style={styles.moreInfo}>
-                            <Text style={{ fontSize: 18, color: color.GRAY }}>MORE INFORMATION:</Text>
-                            {!_.isEmpty(info.birth_date) &&
-                                <View style={styles.info}>
-                                    <Text style={styles.title}>Birthday:</Text>
-                                    <Text style={styles.infoData}>{info.birth_date}</Text>
-                                </View>
-                            }
-                        </View>
+
                     </ScrollView>
             }
         </Container>
@@ -184,12 +175,12 @@ const styles = StyleSheet.create({
         paddingTop: 20
     },
     petImageWrapper: {
-        padding: 5
+        padding: 10
     },
     petImage: {
-        height: 90,
-        width: 90,
-        borderRadius: 50,
+        height: 160,
+        width: 160,
+        borderRadius: 25,
     },
     img_background: {
         alignItems: 'center',

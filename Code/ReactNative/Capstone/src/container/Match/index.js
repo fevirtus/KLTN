@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { color } from '../../utility'
 import { uuid } from '../../utility/constants';
 
@@ -46,14 +48,20 @@ const Match = ({ navigation, route }) => {
                     });
                 }}
             >
-                <Text style={styles.panelButtonTitle}>Chat with {yourName}</Text>
+                <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']}>
+                    <Ionicons name="chatbubbles" size={26} color={color.WHITE} />
+                    <Text style={styles.panelButtonTitle}>Chat with {yourName}</Text>
+                </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity style={styles.commandButton}
                 onPress={() => {
                     navigation.navigate('Home')
                 }}
             >
-                <Text style={styles.panelButtonTitle}>Keep Swiping</Text>
+                <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']}>
+                    <Ionicons name="home" color={color.WHITE} size={26} />
+                    <Text style={styles.panelButtonTitle}>Keep Swiping</Text>
+                </LinearGradient>
             </TouchableOpacity>
         </View>
     )
@@ -66,7 +74,7 @@ const styles = StyleSheet.create({
         backgroundColor: color.WHITE
     },
     matches: {
-        marginBottom: 30
+        marginVertical: 40
     },
     matchText: {
         fontSize: 18,
@@ -80,7 +88,7 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 50,
         borderWidth: 3,
-        borderColor: color.WHITE,
+        borderColor: color.LIGHT_PINK,
         marginHorizontal: 22
     },
     avatarUsers: {
@@ -91,22 +99,25 @@ const styles = StyleSheet.create({
         height: 70,
         borderRadius: 50,
         borderWidth: 2,
-        borderColor: color.WHITE,
-        marginHorizontal: 32
+        borderColor: color.LIGHT_LIGHT_GRAY,
+        marginHorizontal: 32,
+        marginBottom: 18
     },
     commandButton: {
-        padding: 15,
+        padding: 14,
         borderRadius: 25,
         backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
         alignSelf: 'center',
-        marginVertical: 15
+        marginVertical: 10,
+        flexDirection: 'row'
     },
     panelButtonTitle: {
         fontSize: 20,
         color: color.WHITE,
+        marginLeft: 8
     },
     petName: {
         color: color.PINK,
