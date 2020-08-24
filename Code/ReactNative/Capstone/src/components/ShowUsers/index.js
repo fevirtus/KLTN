@@ -5,28 +5,31 @@ import styles from "./styles";
 
 const ShowUsers = ({ name, img, onImgTap, onNameTap, seen }) => {
     return (
-        <Card style={styles.cardStyle}>
-            <CardItem style={styles.cardItemStyle}>
-                <Left>
-                    <TouchableOpacity style={[styles.logoContainer]} onPress={onImgTap}>
-                        {img ? (
-                            <Thumbnail source={{ uri: img }} resizeMode="cover" />
-                        ) : (
-                                <Text style={styles.thumbnailName}>{name.charAt(0)}</Text>
-                            )}
-                    </TouchableOpacity>
+        <TouchableOpacity onPress={onNameTap}>
+            <Card style={styles.cardStyle} >
+                <CardItem style={styles.cardItemStyle}>
+                    <Left style={{ flex: 2 }}>
+                        <TouchableOpacity style={[styles.logoContainer]} onPress={onImgTap}>
+                            {img ? (
+                                <Thumbnail source={{ uri: img }} resizeMode="cover" />
+                            ) : (
+                                    <Text style={styles.thumbnailName}>{name.charAt(0)}</Text>
+                                )}
+                        </TouchableOpacity>
+                        <Body>
+                            <Text style={styles.profileName}>
+                                {name}
+                            </Text>
+                        </Body>
+                        <Text style={styles.newMatch}>New Match</Text>
+                    </Left>
+                    {/* <Right>
+                        {seen ? null : <Text style={styles.newMatch}>New Match</Text>}
+                    </Right> */}
+                </CardItem>
+            </Card>
+        </TouchableOpacity>
 
-                    <Body>
-                        <Text style={styles.profileName} onPress={onNameTap}>
-                            {name}
-                        </Text>
-                    </Body>
-                </Left>
-                <Right>
-                    {seen ? null : <Text style={styles.newMatch}>New Match</Text>}
-                </Right>
-            </CardItem>
-        </Card>
     );
 };
 

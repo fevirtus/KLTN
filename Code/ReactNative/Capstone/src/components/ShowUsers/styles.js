@@ -40,6 +40,8 @@ export default StyleSheet.create({
     borderColor: color.RED,
     borderWidth: 1,
     padding: 3,
-
+    position: 'absolute',
+    right: 0,
+    borderRadius: 10,
   }
 });

@@ -221,13 +221,13 @@ const Ranking = () => {
                         style={styles.tabOne}
                         onPress={() => setActive(0)}
                     >
-                        <Text style={{ color: active === 0 ? color.WHITE : color.PINK }}>Top Matched</Text>
+                        <Text style={{ color: active === 0 ? color.WHITE : color.PINK }}>Top Match</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.tabTwo}
                         onPress={() => setActive(1)}
                     >
-                        <Text style={{ color: active === 1 ? color.WHITE : color.PINK }}>Top Liked</Text>
+                        <Text style={{ color: active === 1 ? color.WHITE : color.PINK }}>Top Like</Text>
                     </TouchableOpacity>
                 </View>
                 {/* Match */}
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     },
     // Top 4
     order: {
-        width: '10%',
+        width: '7%',
         alignSelf: 'center',
         fontSize: 15,
         fontWeight: 'bold'
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
         marginVertical: 12,
         borderRadius: 35,
         alignItems: 'center',
-        width: '89%',
+        width: '93%',
         padding: 10,
         elevation: 4
     },
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
         borderRadius: 30
     },
     name: {
-        width: '70%',
+        width: '60%',
         paddingLeft: 15
     },
     number: {
