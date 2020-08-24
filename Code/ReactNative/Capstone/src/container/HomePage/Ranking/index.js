@@ -221,13 +221,13 @@ const Ranking = () => {
                         style={styles.tabOne}
                         onPress={() => setActive(0)}
                     >
-                        <Text style={{ color: active === 0 ? color.WHITE : color.PINK }}>Top Match</Text>
+                        <Text style={[styles.txtTab, { color: active === 0 ? color.PINK : color.WHITE }]}>Top Matched</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.tabTwo}
                         onPress={() => setActive(1)}
                     >
-                        <Text style={{ color: active === 1 ? color.WHITE : color.PINK }}>Top Like</Text>
+                        <Text style={[styles.txtTab, { color: active === 1 ? color.PINK : color.WHITE }]}>Top Liked</Text>
                     </TouchableOpacity>
                 </View>
                 {/* Match */}
@@ -322,40 +322,33 @@ const styles = StyleSheet.create({
     },
     tabContent: {
         flexDirection: 'row',
-        marginTop: 20,
-        marginBottom: 20,
+        marginTop: 15,
+        marginBottom: 22,
         height: 36,
         position: 'relative'
     },
     sliding: {
         position: 'absolute',
-        width: '50%',
+        top: 2,
+        width: '30%',
         height: '100%',
-        top: 0,
-        backgroundColor: color.PINK,
-        borderRadius: 20
+        borderBottomWidth: 4,
+        borderBottomColor: color.PINK,
+        marginHorizontal: 33
     },
     tabOne: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: color.PINK,
-        borderRadius: 20,
-        borderRightWidth: 0,
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0
+        alignItems: 'center'
     },
     tabTwo: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: color.PINK,
-        borderRadius: 20,
-        borderLeftWidth: 0,
-        borderTopLeftRadius: 0,
-        borderBottomLeftRadius: 0
+        alignItems: 'center'
+    },
+    txtTab: {
+        fontWeight: 'bold',
+        fontSize: 16
     },
     // Content
     content: {

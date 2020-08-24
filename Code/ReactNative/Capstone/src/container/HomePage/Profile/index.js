@@ -248,13 +248,13 @@ const Profile = ({ navigation }) => {
                                 style={styles.tabOne}
                                 onPress={() => setActive(0)}
                             >
-                                <Text style={{ color: active === 0 ? color.WHITE : color.BLUE }}>My Profile</Text>
+                                <Text style={[styles.txtTab, { color: active === 0 ? color.PINK : color.WHITE }]}>My Profile</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.tabTwo}
                                 onPress={() => setActive(1)}
                             >
-                                <Text style={{ color: active === 1 ? color.WHITE : color.BLUE }}>My Pets</Text>
+                                <Text style={[styles.txtTab, { color: active === 1 ? color.PINK : color.WHITE }]}>My Pets</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -456,40 +456,33 @@ const styles = StyleSheet.create({
     },
     tabContent: {
         flexDirection: 'row',
-        marginTop: 20,
+        marginTop: 15,
         marginBottom: 20,
         height: 36,
         position: 'relative'
     },
     sliding: {
         position: 'absolute',
-        width: '50%',
+        top: 2,
+        width: '30%',
         height: '100%',
-        top: 0,
-        backgroundColor: color.BLUE,
-        borderRadius: 4
+        borderBottomWidth: 4,
+        borderBottomColor: color.PINK,
+        marginHorizontal: 33
     },
     tabOne: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: color.BLUE,
-        borderRadius: 4,
-        borderRightWidth: 0,
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0
+        alignItems: 'center'
     },
     tabTwo: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: color.BLUE,
-        borderRadius: 4,
-        borderLeftWidth: 0,
-        borderTopLeftRadius: 0,
-        borderBottomLeftRadius: 0
+        alignItems: 'center'
+    },
+    txtTab: {
+        fontWeight: 'bold',
+        fontSize: 16
     },
     // Content
     profilePicWrap: {

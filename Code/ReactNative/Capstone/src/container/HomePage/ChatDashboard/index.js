@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, SafeAreaView, FlatList } from 'react-native'
-import { ShowUsers, Loading } from '../../../components';
+import { StyleSheet, View, FlatList } from 'react-native'
+import { ShowUsers, Container } from '../../../components';
 import database from '@react-native-firebase/database';
 import { uuid } from '../../../utility/constants';
 import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
 import { useDispatch } from 'react-redux';
 
 const ChatDashboard = ({ navigation }) => {
-
     const [allUsers, setAllUsers] = useState([]);
     const dispatch = useDispatch()
 
     useEffect(() => {
-
         try {
             dispatch(startLoading())
             database().ref('users').on('value', dataSnapshot => {
@@ -33,12 +31,10 @@ const ChatDashboard = ({ navigation }) => {
                                     seen: has[0].seen
                                 });
                             }
-
                         });
                         setAllUsers(users);
                         dispatch(stopLoading())
                     })
-
             })
         } catch (error) {
             dispatch(stopLoading())
@@ -84,28 +80,31 @@ const ChatDashboard = ({ navigation }) => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, }}>
-            <FlatList
-                alwaysBounceVertical={false}
-                data={allUsers}
-                keyExtractor={(_, index) => index.toString()}
-                renderItem={({ item }) => (
-                    <ShowUsers
-                        name={item.name}
-                        img={item.profileImg}
-                        seen={item.seen}
-                        onImgTap={() => imgTap(item.profileImg, item.name)}
-                        onNameTap={() => nameTap(item.profileImg, item.name, item.id)}
-                    />
-                )}
-            />
-        </SafeAreaView>
-
+        <Container>
+            <View style={styles.container}>
+                <FlatList
+                    alwaysBounceVertical={false}
+                    data={allUsers}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <ShowUsers
+                            name={item.name}
+                            img={item.profileImg}
+                            seen={item.seen}
+                            onImgTap={() => imgTap(item.profileImg, item.name)}
+                            onNameTap={() => nameTap(item.profileImg, item.name, item.id)}
+                        />
+                    )}
+                />
+            </View>
+        </Container>
     )
 }
 
 const styles = StyleSheet.create({
-
+    container: {
+        padding: 8
+    }
 })
 
 export default ChatDashboard;

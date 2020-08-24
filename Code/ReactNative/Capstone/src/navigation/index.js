@@ -22,6 +22,7 @@ import {
     CardProfile,
     PetProfile,
     ChatDashboard,
+    ProfileUserChat,
     Setting,
     Privacy,
     Feedback,
@@ -229,14 +230,7 @@ const MainTabScreen = ({ navigation }) => {
 
 const LoginStack = () => {
     return (
-        <Stack.Navigator
-            screenOptions={{
-                headerTitleAlign: 'center',
-                headerTitleStyle: {
-                    fontSize: 22
-                },
-                headerTintColor: color.PINK
-            }}>
+        <Stack.Navigator>
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
@@ -262,6 +256,7 @@ const ChatStackScreen = ({ navigation }) => {
                     ),
                 }}
             />
+            <ChatStack.Screen name="ProfileUserChat" component={ProfileUserChat} />
         </ChatStack.Navigator>
     )
 }
@@ -278,7 +273,7 @@ const ProfileStackScreen = ({ navigation }) => {
             }}>
             <ProfileStack.Screen name="Profile" component={Profile}
                 options={{
-                    title: 'Profile',
+                    title: 'My Profile',
                     headerLeft: () => (
                         <Ionicons.Button name='md-menu' size={28} backgroundColor={color.TRANSPARENT} color={color.PINK}
                             onPress={() => navigation.openDrawer()}

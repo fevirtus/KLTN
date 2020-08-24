@@ -220,10 +220,10 @@ const Home = ({ navigation }) => {
             <FlatList
                 horizontal={true}
                 data={my_pets}
+                keyExtractor={(_, index) => index.toString()}
                 renderItem={({ item }) => {
                     return renderList(item)
                 }}
-                keyExtractor={(_, index) => index.toString()}
             />
         </View>
     )

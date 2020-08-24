@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import {
     StyleSheet, View,
-    Text, Alert,
+    Text, Image,
     ScrollView, TouchableOpacity,
-    Dimensions, ImageBackground
+    Dimensions, ImageBackground,
 } from 'react-native'
 import _ from 'lodash'
 import axios from 'axios'
@@ -11,17 +11,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useDispatch, useSelector } from 'react-redux';
-import { color } from '../../../../utility'
-import { URL_BASE, token } from '../../../../api/config';
-import { startLoading, stopLoading } from '../../../../redux/actions/loadingAction';
-import { Container } from '../../../../components';
-import { saveMatch, systemMsg, updateMatches, convertToAge } from '../../../../network';
-import { uuid } from '../../../../utility/constants';
+import { useDispatch } from 'react-redux';
+import { color } from '../../../utility'
+import { URL_BASE, token } from '../../../api/config';
+import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
+import { Container } from '../../../components';
+import { convertToAge } from '../../../network';
 
 const { width } = Dimensions.get('window')
 
-const ProfilePetFilter = ({ navigation, route }) => {
+const ProfilePetChat = ({ navigation, route }) => {
     const [info, setInfo] = useState({
         name: '',
         gender: '',
@@ -37,10 +36,6 @@ const ProfilePetFilter = ({ navigation, route }) => {
     const { petID } = route.params;
     const dispatch = useDispatch()
     const [active, setActive] = useState(0)
-    const [isMatch, setIsMatch] = useState(false)
-    const pet_active = useSelector(state => state.auth.pet_active)
-    const user = useSelector(state => state.auth.user)
-    const vip = useSelector(state => state.vip.vip)
 
     const images = _.concat(info.avatar, info.pictures)
 
@@ -63,85 +58,14 @@ const ProfilePetFilter = ({ navigation, route }) => {
         })
     }
 
-    const getIsMatch = () => {
-        axios.get(`${URL_BASE}pets/isMatch?pet_active=${pet_active.id}&pet2=${petID}`, {
-            headers: {
-                Authorization: token
-            }
-        }).then(res => {
-            // Set info
-            console.log('IS MATCH', res.data)
-            setIsMatch(res.data.isMatch)
-        }).catch(e => {
-            console.log("ERROR isMatch:", e)
-        })
-    }
-
     useEffect(() => {
         getInfo()
-        getIsMatch()
     }, [petID])
 
     const change = ({ nativeEvent }) => {
         const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width)
         if (slide != active) {
             setActive(slide)
-        }
-    }
-
-    const match = () => {
-
-        if (isMatch) return
-
-        if (vip == 0) {
-            alert('You need to upgrade to Premium to do this')
-            return
-        }
-
-        if (pet_active.id) {
-            let body = {
-                pet_id1: pet_active.id,
-                pet_id2: petID,
-                user2: info.user_id
-            }
-            axios.post(`${URL_BASE}common/match`, body, { headers: { Authorization: token } })
-                .then(res => {
-                    console.log('match', res.data)
-                    setIsMatch(true)
-                    if (res.data.result === 'ok') {
-                        console.log('OK', res.data.data)
-                        const { guestUid, guestAvatar, guestName } = res.data.data;
-                        saveMatch(uuid, guestUid);
-                        saveMatch(guestUid, uuid);
-
-                        //send msg to currentUser
-                        let msg = `NOTIFICATION: ${pet_active.name} and ${info.name} have matched each other!`
-                        systemMsg(msg, uuid, guestUid, '')
-
-                        //send msg to guest
-                        let msg2 = `NOTIFICATION: ${info.name} and ${pet_active.name} have matched each other!`
-                        systemMsg(msg2, guestUid, uuid, '')
-
-                        // plus matches + 1
-                        updateMatches([pet_active.id, petID])
-
-                        navigation.navigate('Match', {
-                            myPet: pet_active.name,
-                            myPetAvatar: pet_active.avatar,
-                            myAvatar: info.user_avatar,
-                            yourPet: info.name,
-                            yourPetAvatar: info.avatar,
-                            yourAvatar: guestAvatar,
-                            yourName: guestName,
-                            yourUid: guestUid,
-                        })
-                    } else {
-                        Alert.alert('Successfull', 'Matched successfull, waiting for response!')
-                    }
-                })
-                .catch(e => console.error(e))
-        } else {
-            Alert.alert('Error', 'You have to choose pet active below to do match')
         }
     }
 
@@ -166,7 +90,7 @@ const ProfilePetFilter = ({ navigation, route }) => {
                         <AntDesign
                             name="heart"
                             size={26}
-                            color={isMatch ? color.RED : color.GREEN}
+                            color={color.GREEN}
                             onPress={match}
                         />
                     </TouchableOpacity>
@@ -305,4 +229,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ProfilePetFilter
+export default ProfilePetChat

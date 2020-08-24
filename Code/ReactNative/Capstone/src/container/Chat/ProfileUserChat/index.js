@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {
     StyleSheet, View,
-    Text, Image, Dimensions,
+    Text, Image,
     FlatList, TouchableOpacity,
     ScrollView,
     ImageBackground
@@ -9,15 +9,15 @@ import {
 import axios from 'axios'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { useDispatch } from 'react-redux';
-import { color } from '../../../../utility'
-import { URL_BASE, token } from '../../../../api/config';
-import { startLoading, stopLoading } from '../../../../redux/actions/loadingAction';
-import { Container, Loading } from '../../../../components';
+import { color } from '../../../utility'
+import { URL_BASE, token } from '../../../api/config';
+import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
+import { Container, Loading } from '../../../components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash'
 
-const ProfileUserFilter = ({ navigation, route }) => {
-    const { uid } = route.params;
+const ProfileUserChat = ({ navigation, route }) => {
+    const { uuid } = route.params;
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState({
@@ -33,7 +33,8 @@ const ProfileUserFilter = ({ navigation, route }) => {
 
     const getInfo = () => {
         dispatch(startLoading())
-        axios.get(`${URL_BASE}users/${uid}/allInfo`, {
+        console.log(`${URL_BASE}users/${uuid}/allInfo`)
+        axios.get(`${URL_BASE}users/${uuid}/allInfo`, {
             headers: {
                 Authorization: token
             }
@@ -48,17 +49,16 @@ const ProfileUserFilter = ({ navigation, route }) => {
         })
     }
 
-
     useEffect(() => {
         getInfo()
-    }, [uid])
+    }, [uuid])
 
     const renderList = ((item) => {
         return (
             <View style={styles.petImageWrapper}>
                 <TouchableOpacity onPress={() => navigation.navigate('ProfilePetFilter', { petID: item.id })}>
                     <Image
-                        source={item.avatar ? { uri: item.avatar } : require('../../../../../images/no-image.jpg')}
+                        source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
                         style={styles.petImage}
                     />
                 </TouchableOpacity>
@@ -74,11 +74,11 @@ const ProfileUserFilter = ({ navigation, route }) => {
                         <View style={styles.header}>
                             <ImageBackground
                                 style={styles.img_background}
-                                source={info.avatar ? { uri: info.avatar } : require('../../../../../images/no-image.jpg')}
+                                source={info.avatar ? { uri: info.avatar } : require('../../../../images/no-image.jpg')}
                             />
                             <View style={styles.profilePicWrap}>
                                 <Image
-                                    source={info.avatar ? { uri: info.avatar } : require('../../../../../images/no-image.jpg')}
+                                    source={info.avatar ? { uri: info.avatar } : require('../../../../images/no-image.jpg')}
                                     style={styles.imageUser}
                                 />
                                 {
@@ -89,25 +89,25 @@ const ProfileUserFilter = ({ navigation, route }) => {
                                 }
                             </View>
                         </View>
-                        <View
-                            style={styles.userName}
-                        >
+                        <View style={styles.userName}>
                             <Text style={styles.name}>{info.name}</Text>
                             {info.gender == null ? null :
                                 (info.gender == 1 ? <Ionicons name={'md-male-sharp'} size={20} color={color.PINK} />
                                     : <Ionicons name={'md-female-sharp'} size={20} color={color.PINK} />)
                             }
                         </View>
+                        {!_.isEmpty(info.birth_date) &&
+                            <View style={styles.birth}>
+                                <FontAwesome name="birthday-cake" size={18} color={color.GRAY} />
+                                <Text style={styles.txtBd}>{info.birth_date}</Text>
+                            </View>
+                        }
                         <View style={styles.numberPet}>
-                            {
-                                info.pets.length === 1
-                                    ? <Text style={styles.text}>{info.pets.length} pet</Text>
-                                    : <Text style={styles.text}>{info.pets.length} pets</Text>
-                            }
+                            <Text style={styles.text}>{info.pets.length} pets</Text>
                         </View>
                         <View style={styles.pet}>
                             <FlatList
-                                horizontal={true}
+                                numColumns={2}
                                 data={info.pets}
                                 renderItem={({ item }) => {
                                     return renderList(item)
@@ -115,15 +115,7 @@ const ProfileUserFilter = ({ navigation, route }) => {
                                 keyExtractor={(_, index) => index.toString()}
                             />
                         </View>
-                        <View style={styles.moreInfo}>
-                            <Text style={{ fontSize: 18, color: color.GRAY }}>MORE INFORMATION:</Text>
-                            {!_.isEmpty(info.birth_date) &&
-                                <View style={styles.info}>
-                                    <Text style={styles.title}>Birthday:</Text>
-                                    <Text style={styles.infoData}>{info.birth_date}</Text>
-                                </View>
-                            }
-                        </View>
+
                     </ScrollView>
             }
         </Container>
@@ -164,11 +156,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 22,
         fontWeight: 'bold',
-        color: color.BLACK,
-        paddingRight: 2
+        color: color.BLACK
     },
     numberPet: {
-        backgroundColor: color.LIGHT_BLUE,
+        backgroundColor: '#3282b8',
         alignSelf: 'center',
         padding: 8,
         marginTop: 15,
@@ -184,12 +175,12 @@ const styles = StyleSheet.create({
         paddingTop: 20
     },
     petImageWrapper: {
-        padding: 5
+        padding: 10
     },
     petImage: {
-        height: 90,
-        width: 90,
-        borderRadius: 50,
+        height: 160,
+        width: 160,
+        borderRadius: 25,
     },
     img_background: {
         alignItems: 'center',
@@ -204,29 +195,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center'
     },
-    moreInfo: {
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 40,
-    },
     email: {
         textAlign: 'center',
         fontSize: 15,
         color: color.GRAY
     },
-    info: {
-        flex: 1,
+    birth: {
         flexDirection: 'row',
+        alignSelf: 'center',
+        width: '24%',
+        justifyContent: 'space-between',
         paddingVertical: 5
     },
-    title: {
-        flex: 1,
+    txtBd: {
         color: color.GRAY,
-    },
-    infoData: {
-        flex: 3,
-        color: color.GRAY,
+        fontSize: 15
     }
 })
 
-export default ProfileUserFilter
+export default ProfileUserChat

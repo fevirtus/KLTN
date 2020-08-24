@@ -10,6 +10,8 @@ import ProfileUserFilter from './HomePage/Filter/ProfileUserFilter'
 import ProfilePetFilter from './HomePage/Filter/ProfilePetFilter'
 import PetProfile from './HomePage/Profile/PetProfile'
 import EditPetProfile from './HomePage/Profile/PetProfile/EditPetProfile'
+import ProfileUserChat from './Chat/ProfileUserChat'
+import ProfilePetChat from './Chat/ProfilePetChat'
 import Setting from './Setting'
 import Privacy from './Setting/Privacy'
 import Feedback from './Setting/Feedback'
@@ -31,6 +33,8 @@ export {
     ProfilePetFilter,
     PetProfile,
     ChatDashboard,
+    ProfileUserChat,
+    ProfilePetChat,
     Setting,
     Privacy,
     DeleteAcc,
