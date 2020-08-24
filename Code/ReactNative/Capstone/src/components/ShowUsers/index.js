@@ -21,7 +21,7 @@ const ShowUsers = ({ name, img, onImgTap, onNameTap, seen }) => {
                                 {name}
                             </Text>
                         </Body>
-                        <Text style={styles.newMatch}>New Match</Text>
+                        {seen ? null : <Text style={styles.newMatch}>New Match</Text>}
                     </Left>
                     {/* <Right>
                         {seen ? null : <Text style={styles.newMatch}>New Match</Text>}
