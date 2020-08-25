@@ -3,7 +3,7 @@ import {
     StyleSheet, View,
     Text, Alert,
     ScrollView, TouchableOpacity,
-    Dimensions, ImageBackground
+    Dimensions, ImageBackground, Modal
 } from 'react-native'
 import _ from 'lodash'
 import axios from 'axios'
@@ -18,6 +18,7 @@ import { startLoading, stopLoading } from '../../../../redux/actions/loadingActi
 import { Container } from '../../../../components';
 import { saveMatch, systemMsg, updateMatches, convertToAge } from '../../../../network';
 import { uuid } from '../../../../utility/constants';
+import LinearGradient from 'react-native-linear-gradient';
 
 const { width } = Dimensions.get('window')
 
@@ -38,6 +39,7 @@ const ProfilePetFilter = ({ navigation, route }) => {
     const dispatch = useDispatch()
     const [active, setActive] = useState(0)
     const [isMatch, setIsMatch] = useState(false)
+    const [modalOpen, setModalOpen] = useState(false)
     const pet_active = useSelector(state => state.auth.pet_active)
     const user = useSelector(state => state.auth.user)
     const vip = useSelector(state => state.vip.vip)
@@ -94,7 +96,7 @@ const ProfilePetFilter = ({ navigation, route }) => {
         if (isMatch) return
 
         if (vip == 0) {
-            alert('You need to upgrade to Premium to do this')
+            setModalOpen(true)
             return
         }
 
@@ -147,6 +149,39 @@ const ProfilePetFilter = ({ navigation, route }) => {
 
     return (
         <Container>
+            <Modal visible={modalOpen} animationType='fade' transparent={true}>
+                <View style={styles.modalContent}>
+                    <LinearGradient colors={[color.YELLOW, color.WHITE, color.WHITE]} style={styles.modal}>
+                        <Text style={styles.textPre}>Upgrade To Premium</Text>
+                        <TouchableOpacity style={styles.btnReturnAds}>
+                            <AntDesign
+                                name="heart"
+                                size={30}
+                                color={color.GREEN}
+                            />
+                        </TouchableOpacity>
+                        <Text style={styles.textPre2}>You need to upgrade to Premium to do this</Text>
+                        {/* <Text style={styles.textPre3}>Nếu lỡ vuốt nhầm cũng chớ lo, bạn có thể sửa chữa ngay và luôn</Text> */}
+                        <View style={styles.price}>
+                            <Text style={styles.textPrice}>29k / month</Text>
+                            <Text style={styles.textPrice}>69k / 3 months</Text>
+                            <Text style={styles.textPrice}>240k / year</Text>
+                        </View>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setModalOpen(false)
+                                navigation.navigate('PremiumStackScreen', { screen: 'Premium' })
+                            }}
+                        >
+                            <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                                <Text style={styles.panelButtonTitle}>Upgrade To Premium</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                        <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Not now, thanks</Text>
+                    </LinearGradient>
+                    {/* <Text style={styles.textCancel}>Thanh toán định kỳ, hủy bỏ bất cứ lúc nào.</Text> */}
+                </View>
+            </Modal>
             <View style={styles.container}>
                 <View>
                     <ScrollView
@@ -302,6 +337,94 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 10,
         bottom: 10,
+    },
+    commandButton: {
+        padding: 10,
+        borderRadius: 25,
+        alignItems: 'center',
+        marginTop: 15,
+        width: '90%'
+    },
+    panelButtonTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: color.WHITE,
+    },
+    modalContent: {
+        flex: 1,
+        backgroundColor: '#000000aa'
+    },
+    modal: {
+        backgroundColor: color.WHITE,
+        marginHorizontal: 40,
+        marginTop: '20%',
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 10,
+        borderRadius: 8,
+        alignItems: 'center'
+    },
+    textPre: {
+        color: color.WHITE,
+        fontWeight: 'bold',
+        fontSize: 18
+    },
+    btnReturnAds: {
+        borderRadius: 25,
+        elevation: 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 48,
+        height: 48,
+        backgroundColor: color.WHITE,
+        marginTop: 10,
+        marginBottom: 18
+    },
+    textPre2: {
+        fontWeight: '700',
+        textAlign: 'center',
+        paddingBottom: 5,
+        fontSize: 16,
+        lineHeight: 22
+    },
+    textPre3: {
+        textAlign: 'center',
+        color: color.DARK_GRAY,
+        lineHeight: 20,
+        fontSize: 13
+    },
+    price: {
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: color.LIGHT_PINK,
+        alignItems: 'center',
+        marginTop: 15,
+        width: '70%',
+        elevation: 3
+    },
+    textPrice: {
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        fontSize: 15
+    },
+    textPre4: {
+        color: color.LIGHT_GRAY,
+        fontSize: 15,
+        fontWeight: 'bold',
+        paddingTop: 18,
+        letterSpacing: 1.2
+    },
+    textCancel: {
+        textAlign: 'center',
+        color: color.WHITE,
+        marginTop: 10,
+        fontSize: 11,
+        letterSpacing: 0.6
+    },
+    buttonText: {
+        color: color.PINK,
+        fontSize: 60,
+        paddingBottom: '35%'
     },
 })
 

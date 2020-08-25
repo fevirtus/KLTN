@@ -17,10 +17,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash'
 
 const ProfileUserChat = ({ navigation, route }) => {
-    const { uuid } = route.params;
+    const { guest } = route.params;
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(true)
-    const [info, setInfo] = useState({
+    const [user, setUser] = useState({
         name: '',
         avatar: '',
         vip: '',
@@ -28,30 +28,45 @@ const ProfileUserChat = ({ navigation, route }) => {
         gender: null,
         birth_date: null,
         phone: '',
-        pets: []
     })
+    const [pets, setPets] = useState([])
 
-    const getInfo = () => {
+    const getUser = () => {
         dispatch(startLoading())
-        console.log(`${URL_BASE}users/${uuid}/allInfo`)
-        axios.get(`${URL_BASE}users/${uuid}/allInfo`, {
+        console.log(`${URL_BASE}users/${guest}`)
+        axios.get(`${URL_BASE}users/${guest}`, {
             headers: {
                 Authorization: token
             }
         }).then(res => {
             // Set info
-            setInfo(res.data)
+            setUser(res.data[0])
             dispatch(stopLoading())
             setLoading(false)
         }).catch(e => {
-            console.log("Api call error!", e)
+            console.log("ERROR getUser()", e)
             dispatch(stopLoading())
         })
     }
 
+    const getPet = () => {
+        console.log(`${URL_BASE}pets/petMatch?guest=${guest}`)
+        axios.get(`${URL_BASE}pets/petMatch?guest=${guest}`, {
+            headers: {
+                Authorization: token
+            }
+        }).then(res => {
+            // Set info
+            setPets(res.data)
+        }).catch(e => {
+            console.log("ERROR getPet()", e)
+        })
+    }
+
     useEffect(() => {
-        getInfo()
-    }, [uuid])
+        getUser()
+        getPet()
+    }, [guest])
 
     const renderList = ((item) => {
         return (
@@ -74,15 +89,15 @@ const ProfileUserChat = ({ navigation, route }) => {
                         <View style={styles.header}>
                             <ImageBackground
                                 style={styles.img_background}
-                                source={info.avatar ? { uri: info.avatar } : require('../../../../images/no-image.jpg')}
+                                source={user.avatar ? { uri: user.avatar } : require('../../../../images/no-image.jpg')}
                             />
                             <View style={styles.profilePicWrap}>
                                 <Image
-                                    source={info.avatar ? { uri: info.avatar } : require('../../../../images/no-image.jpg')}
+                                    source={user.avatar ? { uri: user.avatar } : require('../../../../images/no-image.jpg')}
                                     style={styles.imageUser}
                                 />
                                 {
-                                    info.vip === 1
+                                    user.vip === 1
                                         ? <TouchableOpacity style={styles.diamond}>
                                             <FontAwesome name="diamond" size={18} color={color.WHITE} />
                                         </TouchableOpacity> : null
@@ -90,25 +105,25 @@ const ProfileUserChat = ({ navigation, route }) => {
                             </View>
                         </View>
                         <View style={styles.userName}>
-                            <Text style={styles.name}>{info.name}</Text>
-                            {info.gender == null ? null :
-                                (info.gender == 1 ? <Ionicons name={'md-male-sharp'} size={20} color={color.PINK} />
+                            <Text style={styles.name}>{user.name}</Text>
+                            {user.gender == null ? null :
+                                (user.gender == 1 ? <Ionicons name={'md-male-sharp'} size={20} color={color.PINK} />
                                     : <Ionicons name={'md-female-sharp'} size={20} color={color.PINK} />)
                             }
                         </View>
-                        {!_.isEmpty(info.birth_date) &&
+                        {!_.isEmpty(user.birth_date) &&
                             <View style={styles.birth}>
                                 <FontAwesome name="birthday-cake" size={18} color={color.GRAY} />
-                                <Text style={styles.txtBd}>{info.birth_date}</Text>
+                                <Text style={styles.txtBd}>{user.birth_date}</Text>
                             </View>
                         }
                         <View style={styles.numberPet}>
-                            <Text style={styles.text}>{info.pets.length} pets</Text>
+                            <Text style={styles.text}>{pets.length} match</Text>
                         </View>
                         <View style={styles.pet}>
                             <FlatList
                                 numColumns={2}
-                                data={info.pets}
+                                data={pets}
                                 renderItem={({ item }) => {
                                     return renderList(item)
                                 }}

@@ -355,7 +355,7 @@ const Home = ({ navigation }) => {
             <Modal visible={modalOpen} animationType='fade' transparent={true}>
                 <View style={styles.modalContent}>
                     <LinearGradient colors={[color.YELLOW, color.WHITE, color.WHITE]} style={styles.modal}>
-                        <Text style={styles.textPre}>Đăng ký Premium</Text>
+                        <Text style={styles.textPre}>Upgrade To Premium</Text>
                         <TouchableOpacity style={styles.btnReturnAds}>
                             <MaterialCommunityIcons
                                 name="reload"
@@ -363,19 +363,26 @@ const Home = ({ navigation }) => {
                                 color={color.ORANGE}
                             />
                         </TouchableOpacity>
-                        <Text style={styles.textPre2}>Bạn có thể Quay lại bao nhiêu lần tùy ý</Text>
-                        <Text style={styles.textPre3}>Nếu lỡ vuốt nhầm cũng chớ lo, bạn có thể sửa chữa ngay và luôn</Text>
+                        <Text style={styles.textPre2}>You need to upgrade to Premium to do this</Text>
+                        {/* <Text style={styles.textPre3}>Nếu lỡ vuốt nhầm cũng chớ lo, bạn có thể sửa chữa ngay và luôn</Text> */}
                         <View style={styles.price}>
-                            <Text style={styles.textPrice}>Chỉ 59.000 đ/3 tháng</Text>
+                            <Text style={styles.textPrice}>29k / month</Text>
+                            <Text style={styles.textPrice}>69k / 3 months</Text>
+                            <Text style={styles.textPrice}>240k / year</Text>
                         </View>
-                        <TouchableOpacity onPress={() => navigation.navigate('Premium')}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setModalOpen(false)
+                                navigation.navigate('PremiumStackScreen', { screen: 'Premium' })
+                            }}
+                        >
                             <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
-                                <Text style={styles.panelButtonTitle}>Đăng ký Premium</Text>
+                                <Text style={styles.panelButtonTitle}>Upgrade To Premium</Text>
                             </LinearGradient>
                         </TouchableOpacity>
-                        <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Không phải bây giờ, cảm ơn</Text>
+                        <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Not now, thanks</Text>
                     </LinearGradient>
-                    <Text style={styles.textCancel}>Thanh toán định kỳ, hủy bỏ bất cứ lúc nào.</Text>
+                    {/* <Text style={styles.textCancel}>Thanh toán định kỳ, hủy bỏ bất cứ lúc nào.</Text> */}
                 </View>
             </Modal>
             {/* Modal pet active */}
@@ -543,7 +550,7 @@ const Home = ({ navigation }) => {
                                             name="child-friendly"
                                             size={24}
                                             color={color.RED}
-                                            onPress={makeBaby}
+                                            onPress={() => setModalOpen(true)}
                                         />
                                     </TouchableOpacity>
                             }

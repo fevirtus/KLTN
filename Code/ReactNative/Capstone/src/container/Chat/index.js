@@ -37,7 +37,7 @@ const Chat = ({ route, navigation }) => {
             headerRight: () => (
                 <Ionicons.Button
                     name='information-circle-outline' backgroundColor={color.WHITE} size={29} color={color.PINK}
-                    onPress={() => navigation.navigate('ProfileUserChat', { uuid: guestUserId })}
+                    onPress={() => navigation.navigate('ProfileUserChat', { guest: guestUserId })}
                 />
             )
         });

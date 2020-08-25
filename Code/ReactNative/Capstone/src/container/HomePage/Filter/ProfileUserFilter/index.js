@@ -217,6 +217,17 @@ const styles = StyleSheet.create({
     infoData: {
         flex: 3,
         color: color.GRAY,
+    },
+    birth: {
+        flexDirection: 'row',
+        alignSelf: 'center',
+        width: '24%',
+        justifyContent: 'space-between',
+        paddingVertical: 5
+    },
+    txtBd: {
+        color: color.GRAY,
+        fontSize: 15
     }
 })
 

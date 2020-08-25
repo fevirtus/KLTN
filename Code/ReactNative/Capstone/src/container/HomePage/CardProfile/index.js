@@ -122,9 +122,8 @@ const CardProfile = ({ route }) => {
                                         setModalOpen(true)
                                     }}
                                 >
-                                    <MaterialIcons name="report"
+                                    <MaterialIcons name="report-problem"
                                         size={28} color={color.PINK}
-
                                     />
                                 </TouchableOpacity>
                             </ImageBackground>
@@ -276,16 +275,15 @@ const styles = StyleSheet.create({
         width: width,
         height: 260,
         resizeMode: 'cover',
-        flexDirection: 'row',
+        // flexDirection: 'row',
         justifyContent: 'flex-end',
     },
     iconProfile: {
-        // backgroundColor: 'red',
         justifyContent: 'center',
-        height: 20,
-        marginRight: 10,
-        marginTop: 15,
-        backgroundColor: 'black'
+        // backgroundColor: 'black',
+        position: 'absolute',
+        top: 15,
+        right: 10,
     },
     pagination: {
         flexDirection: 'row',
