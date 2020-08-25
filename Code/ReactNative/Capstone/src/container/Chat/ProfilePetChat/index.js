@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import {
     StyleSheet, View,
-    Text, Image,
+    Text, ImageBackground,
     ScrollView, TouchableOpacity,
-    Dimensions, ImageBackground,
+    Dimensions, Modal
 } from 'react-native'
 import _ from 'lodash'
 import axios from 'axios'
+import LottieView from 'lottie-react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch } from 'react-redux';
@@ -36,7 +36,7 @@ const ProfilePetChat = ({ navigation, route }) => {
     const { petID } = route.params;
     const dispatch = useDispatch()
     const [active, setActive] = useState(0)
-
+    const [modalOpen, setModalOpen] = useState(false)
     const images = _.concat(info.avatar, info.pictures)
 
     const WIDTH = Dimensions.get('screen').width - 20;
@@ -49,7 +49,6 @@ const ProfilePetChat = ({ navigation, route }) => {
             }
         }).then(res => {
             // Set info
-            console.log('DATA', res.data)
             setInfo(res.data)
             dispatch(stopLoading())
         }).catch(e => {
@@ -86,14 +85,6 @@ const ProfilePetChat = ({ navigation, route }) => {
                             ))
                         }
                     </ScrollView>
-                    <TouchableOpacity style={styles.iconContainer}>
-                        <AntDesign
-                            name="heart"
-                            size={26}
-                            color={color.GREEN}
-                            onPress={() => { }}
-                        />
-                    </TouchableOpacity>
                 </View>
                 <View style={styles.pagination}>
                     {
@@ -139,6 +130,31 @@ const ProfilePetChat = ({ navigation, route }) => {
                             </View>
                     }
                 </View>
+                <TouchableOpacity style={styles.unmatch} onPress={() => setModalOpen(true)}>
+                    <Text style={styles.txtUnmatch}>UNMATCH {info.name}</Text>
+                </TouchableOpacity>
+                {/* Modal */}
+                <Modal visible={modalOpen} animationType='fade' transparent={true}>
+                    <View style={styles.modal}>
+                        <View style={styles.modalContent}>
+                            <View style={styles.animation}>
+                                <LottieView source={require('../../../utility/constants/error.json')} autoPlay loop />
+                            </View>
+                            <Text style={styles.txtCf}>Unmatch {info.name}?</Text>
+                            <Text style={styles.txtDes}>
+                                Are you sure you want to unmatch this pet?
+                        </Text>
+                            <View style={styles.groupBtn}>
+                                <TouchableOpacity style={styles.btn} onPress={() => setModalOpen(false)}>
+                                    <Text style={styles.txt}>CANCEL</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.btn, { backgroundColor: color.RED }]}>
+                                    <Text style={styles.txt}>UNMATCH</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         </Container>
     )
@@ -216,17 +232,61 @@ const styles = StyleSheet.create({
         color: color.PINK,
         fontSize: 16
     },
-    iconContainer: {
-        borderRadius: 30,
-        justifyContent: 'center',
+    unmatch: {
         alignItems: 'center',
-        width: 40,
-        height: 40,
-        backgroundColor: color.WHITE,
-        position: 'absolute',
-        right: 10,
-        bottom: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#dddddd',
+        borderBottomWidth: 1,
+        borderBottomColor: '#dddddd',
+        paddingVertical: 14
     },
+    txtUnmatch: {
+        color: color.LIGHT_GRAY,
+        fontSize: 16,
+        fontWeight: 'bold'
+    },
+    // Modal
+    modal: {
+        flex: 1,
+        backgroundColor: '#000000aa'
+    },
+    modalContent: {
+        backgroundColor: color.WHITE,
+        marginHorizontal: 40,
+        marginTop: '50%',
+        paddingHorizontal: 30,
+        paddingTop: 20,
+        paddingBottom: 12,
+        borderRadius: 8,
+        alignItems: 'center'
+    },
+    animation: {
+        width: 80,
+        height: 60
+    },
+    txtCf: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        paddingTop: 12
+    },
+    txtDes: {
+        paddingTop: 5
+    },
+    groupBtn: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '80%',
+        paddingTop: 20
+    },
+    btn: {
+        backgroundColor: color.LIGHT_GRAY,
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 6
+    },
+    txt: {
+        color: color.WHITE
+    }
 })
 
 export default ProfilePetChat

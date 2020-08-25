@@ -56,7 +56,7 @@ const ProfileUserChat = ({ navigation, route }) => {
     const renderList = ((item) => {
         return (
             <View style={styles.petImageWrapper}>
-                <TouchableOpacity onPress={() => navigation.navigate('ProfilePetFilter', { petID: item.id })}>
+                <TouchableOpacity onPress={() => navigation.navigate('ProfilePetChat', { petID: item.id })}>
                     <Image
                         source={item.avatar ? { uri: item.avatar } : require('../../../../images/no-image.jpg')}
                         style={styles.petImage}
@@ -115,7 +115,6 @@ const ProfileUserChat = ({ navigation, route }) => {
                                 keyExtractor={(_, index) => index.toString()}
                             />
                         </View>
-
                     </ScrollView>
             }
         </Container>
