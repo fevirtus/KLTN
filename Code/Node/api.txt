@@ -113,6 +113,10 @@
 	+ GET: {headers:{Authorization: token}}
 	=> get random child rely on breed
 
+/api/pets/petMatch?pet_active=1011&user2=BYIa5Frwn7beTRTZfegjY9gB9Lf1
+	+ GET: {headers:{Authorization: token}}
+	=> get all matched pets depend on pet_active
+
 /api/pets
 	+ POST:{
 		headers:{Authorization: token},
@@ -171,6 +175,23 @@
 			"pet_ids":required
 		}
 	}=> plus 1 to matches on pet table
+	
+/api/pets/minusMatch
+	+ PUT:{
+		headers:{Authorization: token},
+		body:{
+			"pet_ids":required
+		}
+	}=> minus 1 to matches on pet table
+	
+/api/pets/unmatch
+	+ PUT:{
+		headers:{Authorization: token},
+		body:{
+			"pet_active":required,
+			"pet2":required
+		}
+	}=> unmatch pet
 	
 /api/pets/:id
 	+ DELETE: {headers:{Authorization: token}}
