@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import axios from 'axios'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { color } from '../../../utility'
 import { URL_BASE, token } from '../../../api/config';
 import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
@@ -20,6 +20,7 @@ const ProfileUserChat = ({ navigation, route }) => {
     const { guest } = route.params;
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(true)
+    const pet_active = useSelector(state => state.auth.pet_active)
     const [user, setUser] = useState({
         name: '',
         avatar: '',
@@ -50,8 +51,8 @@ const ProfileUserChat = ({ navigation, route }) => {
     }
 
     const getPet = () => {
-        console.log(`${URL_BASE}pets/petMatch?guest=${guest}`)
-        axios.get(`${URL_BASE}pets/petMatch?guest=${guest}`, {
+        console.log(`${URL_BASE}pets/petMatch?user2=${guest}&pet_active=${pet_active.id}`)
+        axios.get(`${URL_BASE}pets/petMatch?user2=${guest}&pet_active=${pet_active.id}`, {
             headers: {
                 Authorization: token
             }
@@ -65,8 +66,14 @@ const ProfileUserChat = ({ navigation, route }) => {
 
     useEffect(() => {
         getUser()
-        getPet()
     }, [guest])
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getPet()
+        });
+        return unsubscribe;
+    }, [guest, pet_active])
 
     const renderList = ((item) => {
         return (
@@ -118,7 +125,7 @@ const ProfileUserChat = ({ navigation, route }) => {
                             </View>
                         }
                         <View style={styles.numberPet}>
-                            <Text style={styles.text}>{pets.length} match</Text>
+                            <Text style={styles.text}>{pets.length} match with {pet_active.name}</Text>
                         </View>
                         <View style={styles.pet}>
                             <FlatList

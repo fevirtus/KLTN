@@ -11,7 +11,7 @@ import LottieView from 'lottie-react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { color } from '../../../utility'
 import { URL_BASE, token } from '../../../api/config';
 import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
@@ -38,6 +38,7 @@ const ProfilePetChat = ({ navigation, route }) => {
     const [active, setActive] = useState(0)
     const [modalOpen, setModalOpen] = useState(false)
     const images = _.concat(info.avatar, info.pictures)
+    const pet_active = useSelector(state => state.auth.pet_active)
 
     const WIDTH = Dimensions.get('screen').width - 20;
 
@@ -66,6 +67,36 @@ const ProfilePetChat = ({ navigation, route }) => {
         if (slide != active) {
             setActive(slide)
         }
+    }
+
+    const minusMatch = () => {
+        axios.put(`${URL_BASE}pets/minusMatch`, {
+            pet_ids: [petID, pet_active.id]
+        }, { headers: { Authorization: token } })
+            .then(res => {
+
+            })
+            .catch(error => console.log('ERROR minusMatch()', error))
+    }
+
+    const unmatch = () => {
+        setModalOpen(false)
+        dispatch(startLoading())
+        axios.put(`${URL_BASE}pets/unmatch`, {
+            pet_active: pet_active.id,
+            pet2: petID
+        }, { headers: { Authorization: token } })
+            .then(res => {
+                if (res.data.result == 'ok') {
+                    minusMatch()
+                }
+                dispatch(stopLoading())
+                navigation.goBack()
+            })
+            .catch(error => {
+                dispatch(stopLoading())
+                console.log('ERROR unmatch()', error)
+            })
     }
 
     return (
@@ -148,8 +179,8 @@ const ProfilePetChat = ({ navigation, route }) => {
                                 <TouchableOpacity style={styles.btn} onPress={() => setModalOpen(false)}>
                                     <Text style={styles.txt}>CANCEL</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.btn, { backgroundColor: color.RED }]}>
-                                    <Text style={styles.txt}>UNMATCH</Text>
+                                <TouchableOpacity style={[styles.btn, { backgroundColor: color.RED }]} onPress={unmatch}>
+                                    <Text style={styles.txt} >UNMATCH</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
