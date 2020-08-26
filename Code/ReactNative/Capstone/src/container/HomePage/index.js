@@ -705,7 +705,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         alignItems: 'center',
         marginTop: 15,
-        width: '90%'
+        width: Dimensions.get('window').width - 150
     },
     panelButtonTitle: {
         fontSize: 16,
@@ -719,7 +719,7 @@ const styles = StyleSheet.create({
     modal: {
         backgroundColor: color.WHITE,
         marginHorizontal: 40,
-        marginTop: '20%',
+        marginTop: '25%',
         paddingHorizontal: 20,
         paddingTop: 20,
         paddingBottom: 10,
