@@ -14,33 +14,29 @@ const Payment = ({ navigation }) => {
         <Container>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.container}>
-                    <Text style={styles.title}>Chọn gói Premium</Text>
-                    <Text style={styles.title2}>Chúng tôi có gói cực phù hợp cho bạn</Text>
+                    <Text style={styles.title}>Choose Premium package</Text>
+                    <Text style={styles.title2}>We have the perfect package for you</Text>
                     <View style={styles.payment}>
-                        <Text style={styles.titlePayment}>Đăng ký bằng chuyển khoản</Text>
+                        <Text style={styles.titlePayment}>Sign up by bank transfer</Text>
                         <View style={styles.div}>
                             <Text style={styles.name}>PetDating Premium</Text>
-                            <Text>
-                                Đăng ký với giá 59000₫/3tháng. Hủy bất kỳ lúc nào.
-                        </Text>
+                            <Text>Everything you want with Premium, no strings attached.</Text>
                             <View style={styles.iconPayment}>
                                 <Image source={require('../../../../images/icon/vcb.jpg')} style={styles.icon} />
                             </View>
                             <TouchableOpacity onPress={() => navigation.navigate('Banking')}>
                                 <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
-                                    <Text style={styles.panelButtonTitle}>Dùng Premium</Text>
+                                    <Text style={styles.panelButtonTitle}>Use Premium</Text>
                                 </LinearGradient>
                             </TouchableOpacity>
                         </View>
                     </View>
 
                     <View style={[styles.payment, { paddingBottom: 20 }]}>
-                        <Text style={styles.titlePayment}>Trả bằng ví Momo</Text>
+                        <Text style={styles.titlePayment}>Pay with Momo wallet</Text>
                         <View style={styles.div}>
                             <Text style={styles.name}>PetDating Premium</Text>
-                            <Text>
-                                Đủ mọi thứ bạn thích khi dùng Premium, không hề ràng buộc.
-                            </Text>
+                            <Text>Everything you want with Premium, no strings attached.</Text>
                             <View style={styles.iconPayment}>
                                 <Image source={require('../../../../images/icon/momo.jpg')} style={styles.icon} />
                                 <Image source={require('../../../../images/icon/vcb.jpg')} style={styles.icon} />
@@ -51,7 +47,7 @@ const Payment = ({ navigation }) => {
                             </View>
                             <TouchableOpacity>
                                 <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
-                                    <Text style={styles.panelButtonTitle}>Dùng Premium</Text>
+                                    <Text style={styles.panelButtonTitle}>Use Premium</Text>
                                 </LinearGradient>
                             </TouchableOpacity>
                         </View>
@@ -69,7 +65,7 @@ const styles = StyleSheet.create({
     title: {
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: 30,
+        fontSize: 28,
         paddingTop: 10
     },
     title2: {
@@ -113,7 +109,7 @@ const styles = StyleSheet.create({
         width: '95%',
         alignSelf: 'center',
         borderRadius: 25,
-        padding: 14,
+        padding: 13,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 10,

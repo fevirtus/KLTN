@@ -1,30 +1,30 @@
-import AsyncStorage from '@react-native-community/async-storage';
-import Axios from 'axios';
-import mime from 'mime';
 import React, { useEffect, useState } from 'react';
 import {
     Dimensions, ScrollView, StyleSheet,
     Text, Image,
     TextInput, TouchableOpacity, View
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import ImagePicker from 'react-native-image-picker';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { RadioButton } from 'react-native-paper';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import _ from 'lodash'
+import mime from 'mime';
+import Axios from 'axios';
+import moment from 'moment';
 import { useDispatch } from 'react-redux';
+import { RadioButton } from 'react-native-paper';
+import ImagePicker from 'react-native-image-picker';
+import * as Animatable from 'react-native-animatable';
+import LinearGradient from 'react-native-linear-gradient'
+import DropDownPicker from 'react-native-dropdown-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { color } from '../../utility';
 import { token, URL_BASE } from '../../api/config';
 import { Container, Loading } from '../../components';
-import { color } from '../../utility';
 import { addPet } from '../../redux/actions/authActions';
-import _ from 'lodash'
 import { uploadImgToServer, validatePet } from '../../network';
 import { startLoading, stopLoading } from '../../redux/actions/loadingAction';
-import moment from 'moment';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import * as Animatable from 'react-native-animatable';
 
 const PetSetting = ({ navigation }) => {
     const [info, setInfo] = useState({
@@ -132,7 +132,6 @@ const PetSetting = ({ navigation }) => {
                 dispatch(stopLoading())
                 alert(error)
             }
-
         }
     }
 
@@ -141,7 +140,7 @@ const PetSetting = ({ navigation }) => {
             <Container>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.profilePicWrap}>
-                        <Image source={info.avatar ? { uri: info.avatar } : require('../../../images/avatar.jpg')} style={styles.profileImage} />
+                        <Image source={info.avatar ? { uri: info.avatar } : require('../../../images/default_pet.jpg')} style={styles.profileImage} />
                         <TouchableOpacity onPress={handlePicker} style={styles.camera}>
                             <MaterialIcons name="add-a-photo" size={22} color="#DFD8C8" />
                         </TouchableOpacity>
@@ -272,13 +271,10 @@ const PetSetting = ({ navigation }) => {
                                 style={styles.textInput}
                             />
                         </View>
-                        {/* <View style={styles.imagePicker}>
-                                <ImagePick />
-                                <ImagePick />
-                                <ImagePick />
-                            </View> */}
-                        <TouchableOpacity style={styles.commandButton} onPress={onCreateNewPet}>
-                            <Text style={styles.panelButtonTitle}>Submit</Text>
+                        <TouchableOpacity onPress={onCreateNewPet}>
+                            <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                                <Text style={styles.panelButtonTitle}>Submit</Text>
+                            </LinearGradient>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
@@ -343,7 +339,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 25,
         padding: 15,
-        backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,

@@ -483,8 +483,8 @@ const Home = ({ navigation }) => {
                         <Text style={styles.textPre3}>Its looks you don't have any pets</Text>
                         <TouchableOpacity
                             onPress={() => {
-                                // setModalOpen(false)
-                                navigation.navigate('ProfileStackScreen', { screen: 'PetSetting' })
+                                setModalNoPet(false)
+                                navigation.navigate('Profile')
                             }}
                         >
                             <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>

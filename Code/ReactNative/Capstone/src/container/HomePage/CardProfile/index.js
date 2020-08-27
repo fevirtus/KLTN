@@ -123,7 +123,7 @@ const CardProfile = ({ route }) => {
                                     }}
                                 >
                                     <MaterialIcons name="report-problem"
-                                        size={28} color={color.PINK}
+                                        size={30} color={color.PINK}
                                     />
                                 </TouchableOpacity>
                             </ImageBackground>

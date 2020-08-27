@@ -88,7 +88,7 @@ const Banking = ({ navigation }) => {
     return (
         <Container>
             <ScrollView>
-                <Text style={styles.title}>Chuyển khoản để thanh toán</Text>
+                <Text style={styles.title}>Transfer to pay</Text>
                 <Text style={styles.title2}>Chuyển khoản tới STK này để nâng cấp Premium.</Text>
                 <View style={styles.information}>
                     <View style={styles.left}>
