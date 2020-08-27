@@ -30,17 +30,16 @@ const DrawerContent = (props) => {
     const dispatch = useDispatch()
 
     const logout = () => {
-
         if (auth().currentUser.providerData.providerId == 'facebook.com') {
             LoginManager.logOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR FB logout()', e))
         } else {
             GoogleSignin.signOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR GG logout()', e))
         }
-
         auth().signOut()
             .then(() => {
                 dispatch(clearToken())
                 dispatch(clearAuth())
+                props.navigation.closeDrawer()
             })
             .catch(e => {
                 alert(e)

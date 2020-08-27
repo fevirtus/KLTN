@@ -151,7 +151,7 @@ const ProfilePetFilter = ({ navigation, route }) => {
         <Container>
             <Modal visible={modalOpen} animationType='fade' transparent={true}>
                 <View style={styles.modalContent}>
-                    <LinearGradient colors={[color.YELLOW, color.WHITE, color.WHITE]} style={styles.modal}>
+                    <LinearGradient colors={[color.GREEN, color.WHITE, color.WHITE]} style={styles.modal}>
                         <Text style={styles.textPre}>Upgrade To Premium</Text>
                         <TouchableOpacity style={styles.btnReturnAds}>
                             <AntDesign
@@ -160,8 +160,7 @@ const ProfilePetFilter = ({ navigation, route }) => {
                                 color={color.GREEN}
                             />
                         </TouchableOpacity>
-                        <Text style={styles.textPre2}>You need to upgrade to Premium to do this</Text>
-                        {/* <Text style={styles.textPre3}>Nếu lỡ vuốt nhầm cũng chớ lo, bạn có thể sửa chữa ngay và luôn</Text> */}
+                        <Text style={styles.textPre2}>You can match other pets on this site</Text>
                         <View style={styles.price}>
                             <Text style={styles.textPrice}>29k / month</Text>
                             <Text style={styles.textPrice}>69k / 3 months</Text>
@@ -179,7 +178,6 @@ const ProfilePetFilter = ({ navigation, route }) => {
                         </TouchableOpacity>
                         <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Not now, thanks</Text>
                     </LinearGradient>
-                    {/* <Text style={styles.textCancel}>Thanh toán định kỳ, hủy bỏ bất cứ lúc nào.</Text> */}
                 </View>
             </Modal>
             <View style={styles.container}>
@@ -343,7 +341,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         alignItems: 'center',
         marginTop: 15,
-        width: '90%'
+        width: Dimensions.get('window').width - 150
     },
     panelButtonTitle: {
         fontSize: 16,
@@ -357,7 +355,7 @@ const styles = StyleSheet.create({
     modal: {
         backgroundColor: color.WHITE,
         marginHorizontal: 40,
-        marginTop: '20%',
+        marginTop: '30%',
         paddingHorizontal: 20,
         paddingTop: 20,
         paddingBottom: 10,
@@ -387,12 +385,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 22
     },
-    textPre3: {
-        textAlign: 'center',
-        color: color.DARK_GRAY,
-        lineHeight: 20,
-        fontSize: 13
-    },
     price: {
         padding: 10,
         borderRadius: 10,
@@ -413,19 +405,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingTop: 18,
         letterSpacing: 1.2
-    },
-    textCancel: {
-        textAlign: 'center',
-        color: color.WHITE,
-        marginTop: 10,
-        fontSize: 11,
-        letterSpacing: 0.6
-    },
-    buttonText: {
-        color: color.PINK,
-        fontSize: 60,
-        paddingBottom: '35%'
-    },
+    }
 })
 
 export default ProfilePetFilter
