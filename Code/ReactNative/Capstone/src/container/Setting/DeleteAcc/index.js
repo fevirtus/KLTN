@@ -18,12 +18,14 @@ import { clearToken } from '../../../redux/actions/tokenAction';
 import { clearAuth } from '../../../redux/actions/authActions';
 import { LoginManager } from 'react-native-fbsdk';
 import { GoogleSignin } from '@react-native-community/google-signin';
+import { deleteUser } from '../../../network';
+import { uuid } from '../../../utility/constants';
 
 const DeleteAcc = ({ navigation }) => {
     const [modalOpen, setModalOpen] = useState(false)
     const dispatch = useDispatch()
 
-    const deleteAccount = async () => {
+    const deleteAccount = () => {
         setModalOpen(false)
         dispatch(startLoading())
         if (auth().currentUser.providerData.providerId == 'facebook.com') {
@@ -31,6 +33,10 @@ const DeleteAcc = ({ navigation }) => {
         } else {
             GoogleSignin.signOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR GG logout()', e))
         }
+        //delete user in firebase 
+        deleteUser(uuid).then().catch(e => console.log('ERROR deleteUser()', e))
+
+        //delete user in db
         deleteInDB()
             .then(res => {
                 console.log(res.data)
@@ -68,7 +74,7 @@ const DeleteAcc = ({ navigation }) => {
                 <Text style={styles.txtDescription}>If you'd like to keep your account but not be shown to others
                 you can pause your account instead. You can turn off in settings.
                 </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Privacy')}>
+                <TouchableOpacity onPress={() => navigation.navigate('SettingStackScreen', { screen: 'Privacy' })}>
                     <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
                         <Text style={styles.panelButtonTitle}>PAUSE MY ACCOUNT</Text>
                     </LinearGradient>

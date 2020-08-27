@@ -31,7 +31,7 @@ const GoogleLogin = () => {
             const googleCredential = auth.GoogleAuthProvider.credential(idToken);
             // Sign-in the user with the credential
             const userInfo = await auth().signInWithCredential(googleCredential);
-            console.log(userInfo.user)
+            console.log('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO', userInfo.additionalUserInfo.isNewUser)
             const { displayName, email, uid } = userInfo.user;
             setUniqueValue(uid);
             if (userInfo.additionalUserInfo.isNewUser) {

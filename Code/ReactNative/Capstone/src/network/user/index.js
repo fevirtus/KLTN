@@ -50,3 +50,13 @@ export const hideUser = async (uuid, hide) => {
         return error;
     }
 };
+
+export const deleteUser = async (uuid) => {
+    try {
+        return await database()
+            .ref("users/" + uuid)
+            .remove()
+    } catch (error) {
+        return error;
+    }
+};
