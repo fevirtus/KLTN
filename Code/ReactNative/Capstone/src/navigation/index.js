@@ -310,14 +310,14 @@ const FilterStackScreen = ({ navigation }) => {
             />
             <FilterStack.Screen name="ProfileUserFilter" component={ProfileUserFilter}
                 options={{
-                    headerTitle: 'User',
-                    // headerTransparent: true,
+                    headerTitle: null,
+                    headerTransparent: true,
                     headerTintColor: color.PINK
                 }} />
             <FilterStack.Screen name="ProfilePetFilter" component={ProfilePetFilter}
                 options={{
-                    headerTitle: 'Pet',
-                    // headerTransparent: true,
+                    headerTitle: null,
+                    headerTransparent: true,
                     headerTintColor: color.PINK
                 }}
             />
@@ -339,15 +339,15 @@ const ChatboxStackScreen = () => {
             <ChatboxStack.Screen name="Chat" component={Chat} />
             <ChatboxStack.Screen name="ProfileUserChat" component={ProfileUserChat}
                 options={{
-                    headerTitle: 'User',
-                    // headerTransparent: true,
+                    headerTitle: null,
+                    headerTransparent: true,
                     headerTintColor: color.PINK
                 }}
             />
             <ChatboxStack.Screen name="ProfilePetChat" component={ProfilePetChat}
                 options={{
-                    headerTitle: 'Pet',
-                    // headerTransparent: true,
+                    headerTitle: null,
+                    headerTransparent: true,
                     headerTintColor: color.PINK
                 }}
             />

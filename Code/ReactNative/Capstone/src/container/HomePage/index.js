@@ -26,7 +26,7 @@ import { token, URL_BASE } from '../../api/config';
 import { Container, Loading } from '../../components';
 import { color } from '../../utility';
 import { uuid } from '../../utility/constants';
-import { saveMatch, senderMsg, recieverMsg, systemMsg, updateMatches } from '../../network';
+import { saveMatch, systemMsg, updateMatches } from '../../network';
 import _ from 'lodash'
 import { saveActivePet } from '../../redux/actions/authActions';
 import { startLoading, stopLoading } from '../../redux/actions/loadingAction';
@@ -49,6 +49,7 @@ const Home = ({ navigation }) => {
     const [modalOpen, setModalOpen] = useState(false)
     const [modalActive, setModalActive] = useState(false)
     const [modalMix, setModalMix] = useState(false)
+    const [modalNext, setModalNext] = useState(false)
     const [nextGeneration, setNextGeneration] = useState('')
 
     const bs = useRef(null)
@@ -363,8 +364,7 @@ const Home = ({ navigation }) => {
                                 color={color.ORANGE}
                             />
                         </TouchableOpacity>
-                        <Text style={styles.textPre2}>You need to upgrade to Premium to do this</Text>
-                        {/* <Text style={styles.textPre3}>Nếu lỡ vuốt nhầm cũng chớ lo, bạn có thể sửa chữa ngay và luôn</Text> */}
+                        <Text style={styles.textPre2}>You can return as many times as you want</Text>
                         <View style={styles.price}>
                             <Text style={styles.textPrice}>29k / month</Text>
                             <Text style={styles.textPrice}>69k / 3 months</Text>
@@ -382,7 +382,38 @@ const Home = ({ navigation }) => {
                         </TouchableOpacity>
                         <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Not now, thanks</Text>
                     </LinearGradient>
-                    {/* <Text style={styles.textCancel}>Thanh toán định kỳ, hủy bỏ bất cứ lúc nào.</Text> */}
+                </View>
+            </Modal>
+            {/* Modal next generation */}
+            <Modal visible={modalNext} animationType='fade' transparent={true}>
+                <View style={styles.modalContent}>
+                    <LinearGradient colors={[color.RED, color.WHITE, color.WHITE]} style={styles.modal}>
+                        <Text style={styles.textPre}>Upgrade To Premium</Text>
+                        <TouchableOpacity style={styles.btnReturnAds}>
+                            <MaterialCommunityIcons
+                                name="child-friendly"
+                                size={30}
+                                color={color.RED}
+                            />
+                        </TouchableOpacity>
+                        <Text style={styles.textPre2}>You can be predicting children of {pet_active.name} và {_.isEmpty(data) ? null : data[index].name}</Text>
+                        <View style={styles.price}>
+                            <Text style={styles.textPrice}>29k / month</Text>
+                            <Text style={styles.textPrice}>69k / 3 months</Text>
+                            <Text style={styles.textPrice}>240k / year</Text>
+                        </View>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setModalOpen(false)
+                                navigation.navigate('PremiumStackScreen', { screen: 'Premium' })
+                            }}
+                        >
+                            <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                                <Text style={styles.panelButtonTitle}>Upgrade To Premium</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                        <Text style={styles.textPre4} onPress={() => setModalNext(false)}>Not now, thanks</Text>
+                    </LinearGradient>
                 </View>
             </Modal>
             {/* Modal pet active */}
@@ -392,7 +423,7 @@ const Home = ({ navigation }) => {
                         <View style={styles.animation}>
                             <LottieView source={require('../../utility/constants/success.json')} autoPlay loop />
                         </View>
-                        <Text style={styles.textSuccess}>Bạn đã chọn pet active thành công</Text>
+                        <Text style={styles.textSuccess}>You have successfully activated your pet</Text>
                         <View style={styles.ok}>
                             <Text style={styles.okStyle} onPress={() => setModalActive(false)}>OK</Text>
                         </View>
@@ -418,7 +449,7 @@ const Home = ({ navigation }) => {
                             <LottieView source={require('../../utility/constants/result.json')} autoPlay />
                         </View>
                         <Image source={_.isEmpty(nextGeneration) ? require('../../../images/no-image.jpg') : { uri: nextGeneration }} style={styles.petResult} />
-                        <Text style={styles.textSuccess}>Đây có thể sẽ là con của {pet_active.name} và {_.isEmpty(data) ? null : data[index].name}</Text>
+                        <Text style={styles.textSuccess}>This will probably be the child of {pet_active.name} and {_.isEmpty(data) ? null : data[index].name}</Text>
                         <View style={[styles.ok, { marginTop: 10 }]}>
                             <Text style={styles.okStyle} onPress={() => setModalMix(false)}>OK</Text>
                         </View>
@@ -550,7 +581,7 @@ const Home = ({ navigation }) => {
                                             name="child-friendly"
                                             size={24}
                                             color={color.RED}
-                                            onPress={() => setModalOpen(true)}
+                                            onPress={() => setModalNext(true)}
                                         />
                                     </TouchableOpacity>
                             }

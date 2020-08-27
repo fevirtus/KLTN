@@ -35,7 +35,7 @@ const Match = ({ navigation, route }) => {
                     style={styles.avatarUser}
                 />
             </View>
-            <TouchableOpacity style={styles.commandButton}
+            <TouchableOpacity
                 onPress={() => {
                     navigation.navigate("ChatboxStackScreen", {
                         screen: 'Chat',
@@ -48,17 +48,17 @@ const Match = ({ navigation, route }) => {
                     });
                 }}
             >
-                <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']}>
+                <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
                     <Ionicons name="chatbubbles" size={26} color={color.WHITE} />
                     <Text style={styles.panelButtonTitle}>Chat with {yourName}</Text>
                 </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.commandButton}
+            <TouchableOpacity
                 onPress={() => {
                     navigation.navigate('Home')
                 }}
             >
-                <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']}>
+                <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
                     <Ionicons name="home" color={color.WHITE} size={26} />
                     <Text style={styles.panelButtonTitle}>Keep Swiping</Text>
                 </LinearGradient>
@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
     commandButton: {
         padding: 14,
         borderRadius: 25,
-        backgroundColor: color.PINK,
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
