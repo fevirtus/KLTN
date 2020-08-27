@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Image, StyleSheet,
-    Text, ScrollView,
+    Text, Dimensions,
     TouchableOpacity, View,
     YellowBox, FlatList,
     Alert, ImageBackground,
-    Modal,
-    Dimensions
+    Modal
 } from 'react-native';
+import _ from 'lodash'
 import Axios from 'axios';
-import Swiper from 'react-native-deck-swiper';
 import Swipe from 'react-native-swiper'
 import LottieView from 'lottie-react-native'
+import Swiper from 'react-native-deck-swiper';
 import Animated from 'react-native-reanimated';
+import BottomSheet from 'reanimated-bottom-sheet'
+import { useSelector, useDispatch } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -20,15 +22,12 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import BottomSheet from 'reanimated-bottom-sheet'
-import { useSelector, useDispatch } from 'react-redux';
-import { token, URL_BASE } from '../../api/config';
-import { Container, Loading } from '../../components';
 import { color } from '../../utility';
 import { uuid } from '../../utility/constants';
-import { saveMatch, systemMsg, updateMatches } from '../../network';
-import _ from 'lodash'
+import { token, URL_BASE } from '../../api/config';
+import { Container, Loading } from '../../components';
 import { saveActivePet } from '../../redux/actions/authActions';
+import { saveMatch, systemMsg, updateMatches } from '../../network';
 import { startLoading, stopLoading } from '../../redux/actions/loadingAction';
 
 const Home = ({ navigation }) => {
@@ -50,6 +49,7 @@ const Home = ({ navigation }) => {
     const [modalActive, setModalActive] = useState(false)
     const [modalMix, setModalMix] = useState(false)
     const [modalNext, setModalNext] = useState(false)
+    const [modalNoPet, setModalNoPet] = useState(false)
     const [nextGeneration, setNextGeneration] = useState('')
 
     const bs = useRef(null)
@@ -322,16 +322,27 @@ const Home = ({ navigation }) => {
                                         }}
                                     />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.iconContainer}>
-                                    <AntDesign
-                                        name="heart"
-                                        size={32}
-                                        color={color.GREEN}
-                                        onPress={() => {
-                                            swiperRef.current.swipeTop()
-                                        }}
-                                    />
-                                </TouchableOpacity>
+                                {
+                                    _.isEmpty(my_pets)
+                                        ? <TouchableOpacity style={styles.iconContainer}>
+                                            <AntDesign
+                                                name="heart"
+                                                size={32}
+                                                color={color.GREEN}
+                                                onPress={() => setModalNoPet(true)}
+                                            />
+                                        </TouchableOpacity>
+                                        : <TouchableOpacity style={styles.iconContainer}>
+                                            <AntDesign
+                                                name="heart"
+                                                size={32}
+                                                color={color.GREEN}
+                                                onPress={() => {
+                                                    swiperRef.current.swipeTop()
+                                                }}
+                                            />
+                                        </TouchableOpacity>
+                                }
                                 <TouchableOpacity style={styles.iconContainer}>
                                     <AntDesign
                                         name="like1"
@@ -456,7 +467,34 @@ const Home = ({ navigation }) => {
                     </View>
                 </View>
             </Modal>
-
+            {/* Modal for no pet */}
+            <Modal visible={modalNoPet} animationType='fade' transparent={true}>
+                <View style={styles.modalContent}>
+                    <View style={[styles.modalViewMix, { marginTop: '32%', paddingTop: 0 }]}>
+                        <View style={styles.aniWrap}>
+                            <View style={styles.animationPet}>
+                                <LottieView source={require('../../utility/constants/dog.json')} autoPlay />
+                            </View>
+                            <View style={styles.animationPet}>
+                                <LottieView source={require('../../utility/constants/cat.json')} autoPlay />
+                            </View>
+                        </View>
+                        <Text style={styles.textPre2}>You cannot match pets</Text>
+                        <Text style={styles.textPre3}>Its looks you don't have any pets</Text>
+                        <TouchableOpacity
+                            onPress={() => {
+                                // setModalOpen(false)
+                                navigation.navigate('ProfileStackScreen', { screen: 'PetSetting' })
+                            }}
+                        >
+                            <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                                <Text style={styles.panelButtonTitle}>Add a new pet</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                        <Text style={styles.textPre4} onPress={() => setModalNoPet(false)}>Not now, thanks</Text>
+                    </View>
+                </View>
+            </Modal>
             {hide ?
                 (<Container>
                     <View style={styles.container}>
@@ -896,6 +934,13 @@ const styles = StyleSheet.create({
     textEmpty2: {
         paddingVertical: 12,
         color: color.WHITE
+    },
+    aniWrap: {
+        flexDirection: 'row'
+    },
+    animationPet: {
+        width: 150,
+        height: 150
     }
 });
 
