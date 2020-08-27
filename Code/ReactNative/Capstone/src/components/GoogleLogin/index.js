@@ -22,6 +22,7 @@ const GoogleLogin = () => {
 
     const _signIn = async () => {
         try {
+            await GoogleSignin.hasPlayServices();
             // Get the users ID token
             const { idToken } = await GoogleSignin.signIn();
             // Create a Google credential with the token

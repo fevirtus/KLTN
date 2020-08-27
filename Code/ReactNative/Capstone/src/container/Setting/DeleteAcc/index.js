@@ -9,9 +9,56 @@ import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { color } from '../../../utility';
 import { Container } from '../../../components';
+import auth from '@react-native-firebase/auth'
+import Axios from 'axios';
+import { URL_BASE, token } from '../../../api/config';
+import { useDispatch } from 'react-redux';
+import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
+import { clearToken } from '../../../redux/actions/tokenAction';
+import { clearAuth } from '../../../redux/actions/authActions';
+import { LoginManager } from 'react-native-fbsdk';
+import { GoogleSignin } from '@react-native-community/google-signin';
 
 const DeleteAcc = ({ navigation }) => {
     const [modalOpen, setModalOpen] = useState(false)
+    const dispatch = useDispatch()
+
+    const deleteAccount = async () => {
+        setModalOpen(false)
+        dispatch(startLoading())
+        if (auth().currentUser.providerData.providerId == 'facebook.com') {
+            LoginManager.logOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR FB logout()', e))
+        } else {
+            GoogleSignin.signOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR GG logout()', e))
+        }
+        deleteInDB()
+            .then(res => {
+                console.log(res.data)
+                return auth().currentUser.delete()
+            })
+            .then(() => {
+                dispatch(clearToken())
+                dispatch(clearAuth())
+                dispatch(stopLoading())
+            })
+            .catch(e => {
+                dispatch(stopLoading())
+                console.log(e)
+            })
+    }
+
+    const deleteInDB = async () => {
+        try {
+            return await Axios.put(`${URL_BASE}users`, {
+                updateFields: {
+                    is_delete: 1
+                }
+            }, { headers: { Authorization: token } })
+        } catch (error) {
+            throw error
+        }
+    }
+
 
     return (
         <Container>
@@ -46,14 +93,17 @@ const DeleteAcc = ({ navigation }) => {
                         <Text style={styles.txtDes}>
                             Are you sure you want to delete your account?
                         </Text>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={[styles.btn, { marginTop: 24 }]}
-                            onPress={() => navigation.navigate('Privacy')}
+                            onPress={() => {
+                                setModalOpen(false)
+                                navigation.navigate('Privacy')
+                            }}
                         >
                             <Text style={styles.text}>HIDE MY ACCOUNT</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.btn}>
-                            <Text style={styles.text}>DELETE MY ACCOUNT</Text>
+                        </TouchableOpacity> */}
+                        <TouchableOpacity style={styles.btn} onPress={deleteAccount}>
+                            <Text style={styles.text}>DELETE</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.cancel} onPress={() => setModalOpen(false)}>
                             <Text style={styles.txtCancel}>CANCEL</Text>

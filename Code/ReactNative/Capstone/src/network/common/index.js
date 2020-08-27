@@ -13,7 +13,7 @@ export const validateUser = (user) => {
         return false;
     }
 
-    if (user.phone.length != 10 && user.phone.length != 0) {
+    if (user.phone && user.phone.length != 10 && user.phone.length != 0) {
         Alert.alert('Error', 'Phone must have 10 figures')
         return false;
     }

@@ -1,4 +1,4 @@
-import { SAVE_USER, UPDATE_USER, ADD_PET, UPDATE_PET, SAVE_PETS, DELETE_PET, SAVE_ACTIVE_PET, SAVE_TOKEN, CLEAR_ALL } from './types'
+import { SAVE_USER, UPDATE_USER, ADD_PET, UPDATE_PET, SAVE_PETS, DELETE_PET, SAVE_ACTIVE_PET, SAVE_TOKEN, CLEAR_ALL, CLEAR_AUTH } from './types'
 
 
 export const saveUser = (user) => ({
@@ -39,6 +39,10 @@ export const saveActivePet = (pet) => ({
 export const updateActivePet = (pet) => ({
     type: SAVE_ACTIVE_PET,
     pet
+})
+
+export const clearAuth = () => ({
+    type: CLEAR_AUTH
 })
 
 

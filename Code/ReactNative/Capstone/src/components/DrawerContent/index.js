@@ -21,11 +21,32 @@ import { GoogleSignin } from '@react-native-community/google-signin';
 import { LoginManager } from 'react-native-fbsdk';
 import { clearToken } from '../../redux/actions/tokenAction';
 import { color } from '../../utility'
+import auth from '@react-native-firebase/auth';
+import { clearAuth } from '../../redux/actions/authActions';
 
 const DrawerContent = (props) => {
     const user = useSelector(state => state.auth.user)
     const vip = useSelector(state => state.vip.vip)
     const dispatch = useDispatch()
+
+    const logout = () => {
+
+        if (auth().currentUser.providerData.providerId == 'facebook.com') {
+            LoginManager.logOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR FB logout()', e))
+        } else {
+            GoogleSignin.signOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR GG logout()', e))
+        }
+
+        auth().signOut()
+            .then(() => {
+                dispatch(clearToken())
+                dispatch(clearAuth())
+            })
+            .catch(e => {
+                alert(e)
+                console.log(e)
+            })
+    }
 
     return (
         <LinearGradient colors={vip == 1 ? [color.YELLOW, color.WHITE, '#fafdcb'] : [color.WHITE, color.WHITE]} style={styles.drawerContent}>
@@ -135,11 +156,7 @@ const DrawerContent = (props) => {
                         />
                     )}
                     label="Sign Out"
-                    onPress={() => {
-                        GoogleSignin.signOut();
-                        LoginManager.logOut();
-                        dispatch(clearToken())
-                    }}
+                    onPress={logout}
                 />
             </Drawer.Section>
         </LinearGradient>

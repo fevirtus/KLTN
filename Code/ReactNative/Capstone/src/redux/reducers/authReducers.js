@@ -1,4 +1,4 @@
-import { SAVE_USER, UPDATE_USER, SAVE_PETS, UPDATE_PET, DELETE_PET, SAVE_ACTIVE_PET, ADD_PET, UPDATE_ACTIVE_PET, } from "../actions/types";
+import { SAVE_USER, UPDATE_USER, SAVE_PETS, UPDATE_PET, DELETE_PET, SAVE_ACTIVE_PET, ADD_PET, UPDATE_ACTIVE_PET, CLEAR_AUTH, } from "../actions/types";
 
 
 const initialState = {
@@ -64,6 +64,8 @@ const authReducer = (state = initialState, action) => {
                 ...state,
                 pet_active: newPetActive
             }
+        case CLEAR_AUTH:
+            return initialState
         default:
             return state;
     }

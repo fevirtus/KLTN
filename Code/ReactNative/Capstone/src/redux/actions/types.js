@@ -35,3 +35,4 @@ export const CLEAR_TOKEN = "CLEAR_TOKEN";
 //for VIP
 export const SAVE_VIP = "SAVE_VIP";
 
+export const CLEAR_AUTH = "CLEAR_AUTH";
