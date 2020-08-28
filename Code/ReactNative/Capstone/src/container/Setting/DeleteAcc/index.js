@@ -25,13 +25,13 @@ const DeleteAcc = ({ navigation }) => {
     const [modalOpen, setModalOpen] = useState(false)
     const dispatch = useDispatch()
 
-    const deleteAccount = () => {
+    const deleteAccount = async () => {
         setModalOpen(false)
         dispatch(startLoading())
-        if (auth().currentUser.providerData.providerId == 'facebook.com') {
-            LoginManager.logOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR FB logout()', e))
+        if (auth().currentUser && auth().currentUser.providerData.providerId == 'facebook.com') {
+            await LoginManager.logOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR FB logout()', e))
         } else {
-            GoogleSignin.signOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR GG logout()', e))
+            await GoogleSignin.signOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR GG logout()', e))
         }
         //delete user in firebase 
         deleteUser(uuid).then().catch(e => console.log('ERROR deleteUser()', e))

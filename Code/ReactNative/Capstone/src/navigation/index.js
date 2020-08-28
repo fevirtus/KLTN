@@ -396,11 +396,12 @@ const SettingStackScreen = ({ navigation }) => {
                 headerLeft: () => (
                     <Ionicons.Button
                         name='arrow-back' backgroundColor={color.WHITE} size={25} color={color.PINK}
-                        onPress={() => navigation.navigate('Home')}
+                        onPress={() => navigation.navigate('MainTabScreen')}
                     />
                 )
             }} />
             <SettingStack.Screen name="Privacy" component={Privacy} />
+            <SettingStack.Screen name="MainTabScreen" component={MainTabScreen} />
             <SettingStack.Screen name="Feedback" component={Feedback} />
             <SettingStack.Screen name="DeleteAcc" component={DeleteAcc} options={{ title: 'Delete Account' }} />
         </SettingStack.Navigator>

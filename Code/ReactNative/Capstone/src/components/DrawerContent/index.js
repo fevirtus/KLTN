@@ -29,11 +29,13 @@ const DrawerContent = (props) => {
     const vip = useSelector(state => state.vip.vip)
     const dispatch = useDispatch()
 
-    const logout = () => {
-        if (auth().currentUser.providerData.providerId == 'facebook.com') {
-            LoginManager.logOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR FB logout()', e))
+    const logout = async () => {
+        console.log(auth().currentUser)
+
+        if (auth().currentUser && auth().currentUser.providerData.providerId == 'facebook.com') {
+            await LoginManager.logOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR FB logout()', e))
         } else {
-            GoogleSignin.signOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR GG logout()', e))
+            await GoogleSignin.signOut().then(() => { console.log('Logout') }).catch(e => console.log('ERROR GG logout()', e))
         }
         auth().signOut()
             .then(() => {
@@ -42,7 +44,9 @@ const DrawerContent = (props) => {
                 props.navigation.closeDrawer()
             })
             .catch(e => {
-                alert(e)
+                // alert(e)
+                dispatch(clearToken())
+                dispatch(clearAuth())
                 console.log(e)
             })
     }
