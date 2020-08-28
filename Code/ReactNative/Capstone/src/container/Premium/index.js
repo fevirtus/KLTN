@@ -37,9 +37,9 @@ const Premium = ({ navigation }) => {
                 <Text style={styles.premium}>Premium Plus</Text>
                 <View style={styles.plus}>
                     <PremiumPlus text={'Unlimited matches'} />
-                    <PremiumPlus text={'Unlimited likes'} />
                     <PremiumPlus text={'Unlimited returns'} />
-                    <PremiumPlus text={'Different search options'} />
+                    <PremiumPlus text={'Use next generation'} />
+                    <PremiumPlus text={'Match other pets on the filter page'} />
                 </View>
                 {vip.status == 'IN_ACTIVE' ?
                     <TouchableOpacity onPress={() => navigation.navigate('Payment')}>

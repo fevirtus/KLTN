@@ -273,7 +273,7 @@ const ProfileStackScreen = ({ navigation }) => {
             }}>
             <ProfileStack.Screen name="Profile" component={Profile}
                 options={{
-                    title: 'My Profile',
+                    title: 'Profile',
                     headerLeft: () => (
                         <Ionicons.Button name='md-menu' size={28} backgroundColor={color.TRANSPARENT} color={color.PINK}
                             onPress={() => navigation.openDrawer()}

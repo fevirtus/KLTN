@@ -7,6 +7,7 @@ import {
 import axios from 'axios'
 import LottieView from 'lottie-react-native'
 import { CheckBox } from 'react-native-elements'
+import LinearGradient from 'react-native-linear-gradient'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { color } from '../../../utility'
 import { Container } from '../../../components'
@@ -54,73 +55,72 @@ const Feedback = ({ navigation }) => {
     }
 
     return (
-        <KeyboardAwareScrollView>
-            <Container>
-                <View style={styles.container}>
-                    <View style={styles.form}>
-                        <View style={styles.checkbox}>
-                            <CheckBox
-                                size={35}
-                                checkedIcon='dot-circle-o'
-                                uncheckedIcon='circle-o'
-                                checkedColor={color.PINK}
-                                uncheckedColor={color.PINK}
-                                checked={checked1}
-                                onPress={onePressed}
-                            />
-                            <Text style={styles.text}>Suggestion</Text>
-                        </View>
-                        <View style={styles.checkbox}>
-                            <CheckBox
-                                size={35}
-                                checkedIcon='dot-circle-o'
-                                uncheckedIcon='circle-o'
-                                checkedColor={color.PINK}
-                                uncheckedColor={color.PINK}
-                                checked={checked2}
-                                onPress={twoPressed}
-                            />
-                            <Text style={styles.text}>Complain</Text>
-                        </View>
-                        <View style={styles.checkbox}>
-                            <CheckBox
-                                size={35}
-                                checkedIcon='dot-circle-o'
-                                uncheckedIcon='circle-o'
-                                checkedColor={color.PINK}
-                                uncheckedColor={color.PINK}
-                                checked={checked3}
-                                onPress={threePressed}
-                            />
-                            <Text style={styles.text}>Bug</Text>
-                        </View>
-                        <TextInput
-                            multiline
-                            style={styles.textInput}
-                            value={feedback}
-                            onChangeText={setFeedback}
+        <Container>
+            <KeyboardAwareScrollView>
+                <View style={styles.form}>
+                    <View style={styles.checkbox}>
+                        <CheckBox
+                            size={35}
+                            checkedIcon='dot-circle-o'
+                            uncheckedIcon='circle-o'
+                            checkedColor={color.PINK}
+                            uncheckedColor={color.PINK}
+                            checked={checked1}
+                            onPress={onePressed}
                         />
-                        <TouchableOpacity style={styles.submit} onPress={handleSubmit}>
+                        <Text style={styles.text}>Suggestion</Text>
+                    </View>
+                    <View style={styles.checkbox}>
+                        <CheckBox
+                            size={35}
+                            checkedIcon='dot-circle-o'
+                            uncheckedIcon='circle-o'
+                            checkedColor={color.PINK}
+                            uncheckedColor={color.PINK}
+                            checked={checked2}
+                            onPress={twoPressed}
+                        />
+                        <Text style={styles.text}>Complain</Text>
+                    </View>
+                    <View style={styles.checkbox}>
+                        <CheckBox
+                            size={35}
+                            checkedIcon='dot-circle-o'
+                            uncheckedIcon='circle-o'
+                            checkedColor={color.PINK}
+                            uncheckedColor={color.PINK}
+                            checked={checked3}
+                            onPress={threePressed}
+                        />
+                        <Text style={styles.text}>Bug</Text>
+                    </View>
+                    <TextInput
+                        multiline
+                        style={styles.textInput}
+                        value={feedback}
+                        onChangeText={setFeedback}
+                    />
+                    <TouchableOpacity onPress={handleSubmit}>
+                        <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.submit}>
                             <Text style={styles.textSubmit}>Submit</Text>
-                        </TouchableOpacity>
-                    </View>
+                        </LinearGradient>
+                    </TouchableOpacity>
                 </View>
-            </Container>
-
-            <Modal visible={modalOpen} animationType='fade' transparent={true}>
-                <View style={styles.modal}>
-                    <View style={styles.modalView}>
-                        <View style={styles.animation}>
-                            <LottieView source={require('../../../utility/constants/success.json')} autoPlay loop />
-                        </View>
-                        <Text style={styles.textSuccess}>You have feedback successful!</Text>
-                        <View style={styles.ok}>
-                            <Text style={styles.okStyle} onPress={() => setModalOpen(false)}>OK</Text>
+                <Modal visible={modalOpen} animationType='fade' transparent={true}>
+                    <View style={styles.modal}>
+                        <View style={styles.modalView}>
+                            <View style={styles.animation}>
+                                <LottieView source={require('../../../utility/constants/success.json')} autoPlay loop />
+                            </View>
+                            <Text style={styles.textSuccess}>You have feedback successful!</Text>
+                            <View style={styles.ok}>
+                                <Text style={styles.okStyle} onPress={() => setModalOpen(false)}>OK</Text>
+                            </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
-        </KeyboardAwareScrollView>
+                </Modal>
+            </KeyboardAwareScrollView>
+        </Container>
     )
 }
 
@@ -150,12 +150,10 @@ const styles = StyleSheet.create({
     },
     submit: {
         height: 48,
-        backgroundColor: color.PINK,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 12,
-        marginBottom: 12,
-        borderRadius: 8
+        marginTop: 20,
+        borderRadius: 25
     },
     textSubmit: {
         fontSize: 18,

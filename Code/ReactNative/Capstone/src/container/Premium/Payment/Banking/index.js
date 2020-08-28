@@ -6,18 +6,19 @@ import {
     Modal,
     ScrollView,
 } from 'react-native'
+import axios from 'axios'
+import { useDispatch } from 'react-redux';
 import LottieView from 'lottie-react-native'
 import ImagePicker from 'react-native-image-picker';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import axios from 'axios'
-import { Container } from '../../../../components'
-import { color } from '../../../../utility'
-import { uploadImgToServer2 } from '../../../../network';
-import { URL_BASE, token } from '../../../../api/config'
-import { useDispatch } from 'react-redux';
-import { stopLoading, startLoading } from '../../../../redux/actions/loadingAction';
+import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { color } from '../../../../utility'
+import { Container } from '../../../../components'
+import { URL_BASE, token } from '../../../../api/config'
+import { uploadImgToServer2 } from '../../../../network';
 import { saveVip } from '../../../../redux/actions/vipAction';
+import { stopLoading, startLoading } from '../../../../redux/actions/loadingAction';
 
 const Banking = ({ navigation }) => {
     const [image, setImage] = useState('')
@@ -89,12 +90,12 @@ const Banking = ({ navigation }) => {
         <Container>
             <ScrollView>
                 <Text style={styles.title}>Transfer to pay</Text>
-                <Text style={styles.title2}>Chuyển khoản tới STK này để nâng cấp Premium.</Text>
+                <Text style={styles.title2}>Transfer to this account number for Premium upgrade.</Text>
                 <View style={styles.information}>
                     <View style={styles.left}>
-                        <Text style={styles.text}>Chủ TK:</Text>
-                        <Text style={styles.text}>STK:</Text>
-                        <Text style={styles.text}>Ngân hàng:</Text>
+                        <Text style={[styles.text, { color: color.PINK }]}>Account holder:</Text>
+                        <Text style={[styles.text, { color: color.PINK }]}>Account number:</Text>
+                        <Text style={[styles.text, { color: color.PINK }]}>Bank:</Text>
                     </View>
                     <View style={styles.right}>
                         <Text style={styles.text}>Nguyễn Hoàng Phong</Text>
@@ -138,7 +139,7 @@ const Banking = ({ navigation }) => {
                         {check == 2 ? <Ionicons name='checkmark-circle-outline' size={24} style={styles.iconCheck} /> : null}
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.cf}>Gửi hóa đơn điện tử để chúng tôi xác nhận!</Text>
+                <Text style={styles.cf}>Send an electronic invoice for us to confirm!</Text>
                 <View style={styles.imageWrapper}>
                     {
                         image.length == 0
@@ -150,11 +151,10 @@ const Banking = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 {isChange &&
-                    <TouchableOpacity
-                        style={styles.commandButton}
-                        onPress={upgradePremium}
-                    >
-                        <Text style={styles.panelButtonTitle}>Upgrade Premium</Text>
+                    <TouchableOpacity onPress={upgradePremium}>
+                        <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                            <Text style={styles.panelButtonTitle}>Upgrade Premium</Text>
+                        </LinearGradient>
                     </TouchableOpacity>
                 }
             </ScrollView>
@@ -204,10 +204,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     left: {
-        width: '35%'
+        width: '40%'
     },
     right: {
-        width: '65%'
+        width: '60%'
     },
     text: {
         paddingBottom: 5,
@@ -252,7 +252,6 @@ const styles = StyleSheet.create({
     commandButton: {
         padding: 14,
         borderRadius: 25,
-        backgroundColor: color.PINK,
         alignItems: 'center',
         marginTop: 10,
         width: '90%',

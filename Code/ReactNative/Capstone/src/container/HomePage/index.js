@@ -62,7 +62,6 @@ const Home = ({ navigation }) => {
                     Authorization: token
                 },
             }).then(res => {
-                // console.log('DATA', res.data)
                 setData(res.data)
                 if (res.data.length == 0) {
                     fetchDataAll()
@@ -83,7 +82,6 @@ const Home = ({ navigation }) => {
                 Authorization: token
             },
         }).then(res => {
-            console.log(res.data)
             setData(res.data)
             setIndex(0)
             setLoading(false)

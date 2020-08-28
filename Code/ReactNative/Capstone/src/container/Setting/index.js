@@ -19,7 +19,7 @@ const Setting = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Feedback')}>
                     <View style={styles.iconWrapper}>
-                        <MaterialIcons name="feedback" size={28} color={color.WHITE} />
+                        <MaterialIcons name="feedback" size={26} color={color.WHITE} />
                     </View>
                     <Text style={styles.text}>Feedback</Text>
                 </TouchableOpacity>
