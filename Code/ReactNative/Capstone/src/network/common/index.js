@@ -8,7 +8,7 @@ export const convertToAge = (birthday) => {
 }
 
 export const validateUser = (user) => {
-    if (user.name.trim().length < 2 || user.name.trim().length > 15) {
+    if (_.isEmpty(user.name) || user.name.trim().length < 2 || user.name.trim().length > 15) {
         Alert.alert('Error', 'Name must have 2-15 characters')
         return false;
     }
@@ -21,7 +21,7 @@ export const validateUser = (user) => {
 }
 
 export const validatePet = (pet) => {
-    if (pet.name.trim().length < 2 || pet.name.trim().length > 15) {
+    if (_.isEmpty(pet.name) || pet.name.trim().length < 2 || pet.name.trim().length > 15) {
         Alert.alert('Error', 'Name must have 2-15 characters')
         return false;
     }
@@ -36,7 +36,7 @@ export const validatePet = (pet) => {
         return false;
     }
 
-    if (pet.breed === '-1') {
+    if (_.isEmpty(pet.breed) || pet.breed == '-1') {
         Alert.alert('Error', 'Must choose breed of pet')
         return false;
     }

@@ -60,3 +60,7 @@ export const deleteUser = async (uuid) => {
         return error;
     }
 };
+
+export const deleteChatFriend = (uid) => {
+
+}

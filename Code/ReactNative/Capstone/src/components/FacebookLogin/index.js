@@ -33,7 +33,6 @@ const FacebookLogin = () => {
             const facebookCredential = auth.FacebookAuthProvider.credential(data1.accessToken);
             // Sign-in the user with the credential
             const userInfo = await auth().signInWithCredential(facebookCredential);
-            console.log(userInfo)
 
             const { displayName, email, uid } = userInfo.user;
             setUniqueValue(uid);

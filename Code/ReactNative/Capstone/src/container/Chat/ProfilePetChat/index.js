@@ -88,7 +88,7 @@ const ProfilePetChat = ({ navigation, route }) => {
         }, { headers: { Authorization: token } })
             .then(res => {
                 if (res.data.result == 'ok') {
-                    minusMatch()
+                    // minusMatch()
                 }
                 dispatch(stopLoading())
                 navigation.goBack()

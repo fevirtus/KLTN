@@ -31,7 +31,6 @@ const GoogleLogin = () => {
             const googleCredential = auth.GoogleAuthProvider.credential(idToken);
             // Sign-in the user with the credential
             const userInfo = await auth().signInWithCredential(googleCredential);
-            console.log('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO', userInfo.additionalUserInfo.isNewUser)
             const { displayName, email, uid } = userInfo.user;
             setUniqueValue(uid);
             if (userInfo.additionalUserInfo.isNewUser) {
@@ -39,16 +38,6 @@ const GoogleLogin = () => {
             }
 
             const res = await Axios.post(`${URL_BASE}register`, { name: displayName, email: email, uid: uid })
-            console.log(res.data)
-
-            // if (res.data.data.is_block == 1) {
-            //     Alert.alert('Error!', `Your account has been locked, the remaining time is ${res.data.data.remainTime}`)
-            // } else {
-            //     const { pd_token, data } = res.data
-            //     setAuthToken(pd_token)
-            //     dispatch(saveUser(data))
-            //     dispatch(saveToken(pd_token))
-            // }
             const { pd_token, data } = res.data
             setAuthToken(pd_token)
             dispatch(saveUser(data))
