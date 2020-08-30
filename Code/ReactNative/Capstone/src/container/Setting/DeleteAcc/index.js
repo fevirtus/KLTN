@@ -74,14 +74,19 @@ const DeleteAcc = ({ navigation }) => {
                 <Text style={styles.txtDescription}>If you'd like to keep your account but not be shown to others
                 you can pause your account instead. You can turn off in settings.
                 </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('SettingStackScreen', { screen: 'Privacy' })}>
+                {/* <TouchableOpacity onPress={() => navigation.navigate('SettingStackScreen', { screen: 'Privacy' })}>
                     <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
                         <Text style={styles.panelButtonTitle}>PAUSE MY ACCOUNT</Text>
                     </LinearGradient>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity onPress={() => setModalOpen(true)}>
-                    <Text style={styles.txtDel}>Delete My Account {">"}</Text>
+                    <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                        <Text style={styles.panelButtonTitle}>DELETE ACCOUNT</Text>
+                    </LinearGradient>
                 </TouchableOpacity>
+                {/* <TouchableOpacity onPress={() => setModalOpen(true)}>
+                    <Text style={styles.txtDel}>Delete My Account {">"}</Text>
+                </TouchableOpacity> */}
             </View>
 
             <Modal visible={modalOpen} animationType='fade' transparent={true}>
