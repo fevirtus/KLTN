@@ -277,7 +277,7 @@ const Home = ({ navigation }) => {
                             height: 5,
                             width: dotWidth,
                             borderRadius: 5,
-                            backgroundColor: color.PINK,
+                            backgroundColor: color.LIGHT_PINK,
                             marginHorizontal: 2
                         }}
                     />

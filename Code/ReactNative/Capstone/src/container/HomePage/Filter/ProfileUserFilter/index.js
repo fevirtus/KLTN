@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import {
     StyleSheet, View,
-    Text, Image, Dimensions,
+    Text, Image,
     FlatList, TouchableOpacity,
-    ScrollView,
+    ScrollView, Dimensions,
     ImageBackground
 } from 'react-native'
 import axios from 'axios'
@@ -15,6 +15,8 @@ import { startLoading, stopLoading } from '../../../../redux/actions/loadingActi
 import { Container, Loading } from '../../../../components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash'
+
+const WIDTH = Dimensions.get('window').width / 2.6
 
 const ProfileUserFilter = ({ navigation, route }) => {
     const { uid } = route.params;
@@ -178,9 +180,9 @@ const styles = StyleSheet.create({
         padding: 10
     },
     petImage: {
-        height: 160,
-        width: 160,
-        borderRadius: 25,
+        width: WIDTH,
+        height: WIDTH,
+        borderRadius: 25
     },
     img_background: {
         alignItems: 'center',
@@ -221,13 +223,13 @@ const styles = StyleSheet.create({
     birth: {
         flexDirection: 'row',
         alignSelf: 'center',
-        width: '24%',
         justifyContent: 'space-between',
         paddingVertical: 5
     },
     txtBd: {
         color: color.GRAY,
-        fontSize: 15
+        fontSize: 15,
+        paddingLeft: 6
     }
 })
 

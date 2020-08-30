@@ -92,7 +92,6 @@ const ProfilePetFilter = ({ navigation, route }) => {
     }
 
     const match = () => {
-
         if (isMatch) return
 
         if (vip == 0) {
@@ -259,7 +258,7 @@ const styles = StyleSheet.create({
     },
     imageProfile: {
         width: width,
-        height: 250,
+        height: 350,
         resizeMode: 'cover',
         flexDirection: 'row',
         justifyContent: 'flex-end'
@@ -282,7 +281,7 @@ const styles = StyleSheet.create({
         height: 5,
         width: 70,
         borderRadius: 5,
-        backgroundColor: color.WHITE,
+        backgroundColor: color.LIGHT_PINK,
         marginTop: 6,
         marginHorizontal: 2
     },
