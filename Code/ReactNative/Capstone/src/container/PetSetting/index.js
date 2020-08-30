@@ -50,7 +50,6 @@ const PetSetting = ({ navigation }) => {
     useEffect(() => {
         Axios.get(`${URL_BASE}pets/breeds`, { headers: { Authorization: token } })
             .then(res => {
-                console.log(res.data)
                 let listBreeds = res.data.map(item => ({ label: item.name, value: `${item.id}` }));
                 console.log(listBreeds)
                 setBreeds(listBreeds)
@@ -70,8 +69,6 @@ const PetSetting = ({ navigation }) => {
             maxHeight: 500,
         };
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response);
-
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else {

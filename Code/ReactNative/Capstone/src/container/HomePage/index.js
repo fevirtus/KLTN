@@ -50,6 +50,7 @@ const Home = ({ navigation }) => {
     const [modalMix, setModalMix] = useState(false)
     const [modalNext, setModalNext] = useState(false)
     const [modalNoPet, setModalNoPet] = useState(false)
+    const [modalNoPetActive, setModalNoPetActive] = useState(false)
     const [nextGeneration, setNextGeneration] = useState('')
 
     const bs = useRef(null)
@@ -330,16 +331,25 @@ const Home = ({ navigation }) => {
                                                 onPress={() => setModalNoPet(true)}
                                             />
                                         </TouchableOpacity>
-                                        : <TouchableOpacity style={styles.iconContainer}>
-                                            <AntDesign
-                                                name="heart"
-                                                size={32}
-                                                color={color.GREEN}
-                                                onPress={() => {
-                                                    swiperRef.current.swipeTop()
-                                                }}
-                                            />
-                                        </TouchableOpacity>
+                                        : _.isEmpty(pet_active) ?
+                                            <TouchableOpacity style={styles.iconContainer}>
+                                                <AntDesign
+                                                    name="heart"
+                                                    size={32}
+                                                    color={color.GREEN}
+                                                    onPress={() => setModalNoPetActive(true)}
+                                                />
+                                            </TouchableOpacity> :
+                                            <TouchableOpacity style={styles.iconContainer}>
+                                                <AntDesign
+                                                    name="heart"
+                                                    size={32}
+                                                    color={color.GREEN}
+                                                    onPress={() => {
+                                                        swiperRef.current.swipeTop()
+                                                    }}
+                                                />
+                                            </TouchableOpacity>
                                 }
                                 <TouchableOpacity style={styles.iconContainer}>
                                     <AntDesign
@@ -491,6 +501,20 @@ const Home = ({ navigation }) => {
                         </TouchableOpacity>
                         <Text style={styles.textPre4} onPress={() => setModalNoPet(false)}>Not now, thanks</Text>
                     </View>
+                </View>
+            </Modal>
+            {/* Modal for no pet active */}
+            <Modal visible={modalNoPetActive} animationType='fade' transparent={true}>
+                <View style={styles.modalContent}>
+                    <Text style={styles.textPre}>Upgrade To Premium</Text>
+                    <TouchableOpacity style={styles.btnReturnAds}>
+                        <MaterialCommunityIcons
+                            name="child-friendly"
+                            size={30}
+                            color={color.RED}
+                        />
+                    </TouchableOpacity>
+                    <Text style={styles.textPre4} onPress={() => setModalNoPetActive(false)}>Not now, thanks</Text>
                 </View>
             </Modal>
             {hide ?
