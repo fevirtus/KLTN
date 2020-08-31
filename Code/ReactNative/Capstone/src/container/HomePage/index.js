@@ -337,7 +337,7 @@ const Home = ({ navigation }) => {
                                                     name="heart"
                                                     size={32}
                                                     color={color.GREEN}
-                                                    onPress={() => setModalNoPetActive(true)}
+                                                    onPress={() => { setModalNoPetActive(true); bs.current.snapTo(0) }}
                                                 />
                                             </TouchableOpacity> :
                                             <TouchableOpacity style={styles.iconContainer}>
@@ -506,15 +506,16 @@ const Home = ({ navigation }) => {
             {/* Modal for no pet active */}
             <Modal visible={modalNoPetActive} animationType='fade' transparent={true}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.textPre}>Upgrade To Premium</Text>
-                    <TouchableOpacity style={styles.btnReturnAds}>
-                        <MaterialCommunityIcons
-                            name="child-friendly"
-                            size={30}
-                            color={color.RED}
-                        />
-                    </TouchableOpacity>
-                    <Text style={styles.textPre4} onPress={() => setModalNoPetActive(false)}>Not now, thanks</Text>
+                    <View style={[styles.modalViewMix, { marginTop: '40%' }]}>
+                        <TouchableOpacity style={styles.btnClose} onPress={() => setModalNoPetActive(false)}>
+                            <AntDesign name="closecircle" size={26} color={color.PINK} />
+                        </TouchableOpacity>
+                        <Text style={styles.txtPet}>No Pet Active</Text>
+                        <Text style={[styles.textPre3, { fontSize: 16 }]}>Please choose 1 pet as your active pet to Match another pet</Text>
+                        <View style={styles.animation}>
+                            <LottieView source={require('../../utility/constants/down-arrow.json')} autoPlay loop />
+                        </View>
+                    </View>
                 </View>
             </Modal>
             {hide ?
@@ -963,6 +964,15 @@ const styles = StyleSheet.create({
     animationPet: {
         width: 150,
         height: 150
+    },
+    btnClose: {
+        alignSelf: 'flex-end'
+    },
+    txtPet: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        paddingBottom: 20,
+        color: color.RED
     }
 });
 
