@@ -3,18 +3,20 @@ import {
     StyleSheet, View,
     Text, Image,
     FlatList, TouchableOpacity,
-    ScrollView,
+    ScrollView, Dimensions,
     ImageBackground
 } from 'react-native'
+import _ from 'lodash'
 import axios from 'axios'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { useDispatch, useSelector } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { color } from '../../../utility'
 import { URL_BASE, token } from '../../../api/config';
-import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
 import { Container, Loading } from '../../../components';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import _ from 'lodash'
+import { startLoading, stopLoading } from '../../../redux/actions/loadingAction';
+
+const WIDTH = Dimensions.get('window').width / 2.6
 
 const ProfileUserChat = ({ navigation, route }) => {
     const { guest } = route.params;
@@ -199,8 +201,8 @@ const styles = StyleSheet.create({
         padding: 10
     },
     petImage: {
-        height: 160,
-        width: 160,
+        height: WIDTH,
+        width: WIDTH,
         borderRadius: 25,
     },
     img_background: {

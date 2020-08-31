@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     },
     imageProfile: {
         width: width,
-        height: 250,
+        height: 350,
         resizeMode: 'cover',
         flexDirection: 'row',
         justifyContent: 'flex-end'
