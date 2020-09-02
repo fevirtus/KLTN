@@ -23,6 +23,9 @@
           </a></h4>
           <div class="buttonLogOut" style=" font-size: large">
             <p>
+              <a href="/listpet" style="color: orange;">
+                List pet report
+              </a>
                 <a href="/logout" style="color: orange;">
                   Logout <span class="glyphicon glyphicon-log-out"></span>
                 </a>
@@ -38,10 +41,12 @@
         <table class="table table-striped table-bordered table-list"> 
          <thead> 
           <tr> 
+            <th><em class="fa fa-cog"></em>
            <th class="hidden-xs">ID</th> 
            <th>UserName</th>
            <th>Content</th>
            <th>Date of feedback</th>
+           <th>Status</th>
           </tr> 
          </thead> 
          <tbody>
@@ -52,10 +57,16 @@
         %>
         <tr>
           <tr>
+            <td align="center">
+              <form action="statusfeedback" method="POST">
+                <a class="btn btn-default" href="/statusfeedback?id=<%=data.id %>" type="submit" name="aaa"><em class="fa fa-pencil" ></em></a>
+              </form>
+            </td>
             <td class="hidden-xs"><%=data.id %></td>
             <td><input type="text" value="<%= data.name %>" name="name" readonly/></td>
             <td><textarea readonly><%=data.content %></textarea></td>
             <td><%=data.feedbacktime %></td>
+            <td><input style="background-color: aqua;" type="text" value="<%= data.status %>" name="name" readonly/></td>
            </tr>
         </tr>
         <%  i++; }) %>

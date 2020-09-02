@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <body style="background-image: url(https://geniusmindgraphics.com/wp-content/uploads/2017/11/mobile-app-background.jpeg);">
+<h1 style="padding-left: 560px">Update Image URL</h1>
+<%
+        if(userData.length!=0){
+        var i=1;
+        userData.forEach(function(data){
+
+        %>
+        <form action="updateURL" method="POST" style="padding-left: 500px;">
+            <!-- ID:<br><input type="text" style="width: 212px;" name="idUpdate" value="<%=data.uid %>" readonly><br> -->
+            <input style="background-color: aqua; width: 50px;" type="text" value="Image <%=i %>:"><br>
+            <input style="width: 120px; height: 120px;;" type="image" src="<%=data.img %>">
+            <input type="text" style="width: 212px;" value="<%=data.img %>" name="avatarUpdate"><br>
+            <input type="submit" value="Update" style="margin-left: 20px;">
+          </form>
+        <%  i++; }) %>
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+</body>
+</html>

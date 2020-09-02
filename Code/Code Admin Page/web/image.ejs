@@ -2,14 +2,14 @@
 <html>
 <body style="background-image: url(https://geniusmindgraphics.com/wp-content/uploads/2017/11/mobile-app-background.jpeg);">
 
-<h2 style="padding-left: 520px; color:black; font-size: 60px;">List Image</h2>
+<h2 style="padding-left: 520px; color:black; font-size: 60px;">List Pet</h2>
 <%
         if(userData.length!=0){
         var i=1;
         userData.forEach(function(data){
         %>
         <form action="image" method="POST" style="padding-left: 300px;">
-            <input name="pet_id" value="<%=data.id %>" style="background-color: chartreuse; width: 22px; height: 10px; " readonly>
+            <input name="pet_id" value="<%=data.id %>" style="background-color: chartreuse; width: 22px; height: 10px; " readonly><input name="pet_name" value="<%=data.name %>" style="background-color: chartreuse; width: 70px; height: 10px; " readonly>
             <br><img style="width: 120px; height: 120px;" src="<%=data.avatar %>"><input type="text" style="width: 600px; height: 20px; margin-top: 70px;" name="textareaImage" value="<%=data.avatar %>"><br>
             <input type="submit" value="Update" style="margin-left: 400px;">
           </form>

@@ -3,15 +3,18 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="js/jquery-1.11.1.min.js"></script>
 <body style="background-image: url(https://geniusmindgraphics.com/wp-content/uploads/2017/11/mobile-app-background.jpeg);">
+
 <div class="container" style="margin-right: 180px;"> 
     <div class="row"> 
-     <h1 class="text-center" style="color: black;">List Confirm</h1> 
+     <h1 class="text-center" style="color: black;">List Image Pet Report</h1> 
      <div class="col-md-10 col-md-offset-1"> 
-      <div class="panel panel-default panel-table" style="width: 1220px"> 
+      <div class="panel panel-default panel-table" style="width: 1220px;"> 
        <div class="panel-heading"> 
         <div class="row"> 
          <div class="col col-xs-6"> 
-          <h3 class="panel-title"><form action="vip" method="POST"><input type="submit" value="Search"><input type="text" name="searchValue" ></form></h3>
+          <div class="buttonLogOut" style=" font-size: large">
+         </div>
+         <h3 class="panel-title"><form action="listpet" method="POST"><input type="submit" value="Search" ><input type="text" name="searchValue" placeholder="Search" ></form></h3>
          </div> 
          <div class="col col-xs-6 text-right"> 
          </div>   
@@ -21,46 +24,45 @@
         <table class="table table-striped table-bordered table-list"> 
          <thead> 
           <tr> 
-            <th><em class="fa fa-cog"></em>
+          <th><em class="fa fa-cog"></em>
            <th class="hidden-xs">ID</th> 
-           <th>Name</th>
-           <th>Confirm Image</th>
-           <th>From Date</th>
-           <th>To Date</th>
+           <th>Pet ID</th>
+           <th>Image Report</th>
+           <th>Reason</th>
+           <th>Reported By</th>
            <th>Status</th>
           </tr> 
          </thead> 
          <tbody>
           <%
-        if(vip.length!=0){
+        if(userData.length!=0){
         var i=1;
-        vip.forEach(function(data){
+        userData.forEach(function(data){
         %>
         <tr>
           <tr>
             <td align="center">
-              <form action="updateStatus" method="POST">
-                <a class="btn btn-default" href="/updateStatus?id=<%=data.id %>" type="submit" name="aaa"><em class="fa fa-pencil" ></em></a>
+              <form action="updateURL" method="POST">
+                <a class="btn btn-default" href="/updateURL?id=<%=data.pet_id %>" type="submit" name="aaa"><em class="fa fa-pencil" ></em></a>
               </form>
             </td>
             <td class="hidden-xs"><%=data.id %></td>
-            <td><input type="text" value="<%= data.name %>" name="name" readonly/></td>
-            <td><img style="width: 200px;height: 150px" src="<%=data.confirm_img %>"></td>
-            <td><input type="text" value="<%=data.from_date %>" name="from_date" readonly/></td>
-            <td><input type="text" value="<%=data.to_date %>" name="to_date" readonly/></td>
-            <td><input style="background-color: aqua;" type="text" value="<%=data.status %>" name="to_date" readonly/></td>
+            <td><input type="text" value="<%= data.pet_id %>" name="petid" readonly/></td>
+            <td><img style="width: 200px;height: 150px" src="<%=data.img %>"></td>
+            <td><input type="text" value="<%= data.reason %>" name="reason" readonly/></td>
+            <td><input type="text" value="<%= data.name %>" name="username" readonly/></td>
+            <td><input style="background-color: aquamarine;;" type="text" value="<%= data.status %>" name="status" readonly/></td>
            </tr>
         </tr>
-        
         <%  i++; }) %>
         <% } else{ %>
             <tr>
                 <td colspan="7">No Data Found</td>
             </tr>
         <% } %>
-            <% for(var j = 1; j < 10; j++) {%>
-              <a href="/vip?page=<%= j %>"><label style="margin: 5px;"><%= j %></label></a>
-           <% } %>
+        <% for(var j = 1; j < 10; j++) {%>
+          <a href="/listpet?page=<%= j %>"><label style="margin: 5px;"><%= j %></label></a>
+       <% } %>
         </tbody></table>
        </div>
       </div> 

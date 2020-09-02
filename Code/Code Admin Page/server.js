@@ -7,6 +7,7 @@ var mysql = require('mysql');
 const { response, query } = require('express');
 const PORT = process.env.PORT || 3000;
 var url = require('url');
+const { Console } = require('console');
 
 //connection
 var connection = mysql.createPool({
@@ -183,21 +184,27 @@ app.get('/manager', function (req, res, next) {
 app.post('/manager', function (request, response) {
 	let id = request.body.idUpdate;
 	var privacy = request.body.privacy;
-	console.log("ISVip:", privacy);
 	var enable = request.body.enableUpdate;
 	var enableFrom = request.body.enableFromUpdate;
 	var avatar = request.body.avatarUpdate;
 	var Image = request.body.ImageUpdate;
+	let flat = true;
+	if(request.session.loggedin === true){
 		connection.query('UPDATE user SET is_vip = ?, avatar = ?, is_block = ?, block_deadline = ? WHERE uid = ?', [privacy, avatar, enable, enableFrom, id], function (error, results) {
 			if (error) {
+				flat = false;
 				console.log(error.message)
 				response.send('No column update ')
 			} else {
 				console.log(results.affectedRows + " record(s) updated");
-				response.redirect('account');
+				response.redirect("account")
 			}
 			response.end();
 		});
+	}
+	else {
+		response.redirect("You must loggedin");
+	}
 });
 //get report
 app.get('/report', function (req, res, next) {
@@ -209,7 +216,7 @@ app.get('/report', function (req, res, next) {
 		var offset;
 		offset = (limit * pageNumber) - limit;
 		if(offset < 0) offset = 0;
-		let query = `SELECT * FROM feedback ORDER BY id ASC LIMIT 5 OFFSET ${offset}`;
+		let query = `select fb.id, u.name, fb.content, fb.feedbacktime, fb.img, fb.status from feedback fb inner join user u on fb.uid = u.uid ORDER BY id ASC LIMIT 5 OFFSET ${offset}`;
 			connection.query(query, function (error, data, fields) {
 				if (error) {
 					console.log(error.message);
@@ -224,9 +231,9 @@ app.get('/report', function (req, res, next) {
 app.post('/report', function (req, res, next) {
 	if(req.session.loggedin){
 		let searchValue = req.body.searchValue;
-		let query = 'SELECT * FROM feedback';
+		let query = 'select fb.id, u.name, fb.content, fb.feedbacktime, fb.img, fb.status from feedback fb inner join user u on fb.uid = u.uid';
 		if (searchValue === undefined) {
-			query = 'SELECT * FROM feedback';
+			query = 'select fb.id, u.name, fb.content, fb.feedbacktime, fb.img, fb.status from feedback fb inner join user u on fb.uid = u.uid';
 			connection.query(query, function (error, data, fields) {
 				if (error) {
 					console.log(error.message);
@@ -235,7 +242,7 @@ app.post('/report', function (req, res, next) {
 			});
 		}
 		else {
-			query = 'SELECT * FROM feedback WHERE name LIKE "%' + searchValue + '%"';
+			query = 'select fb.id, u.name, fb.content, fb.feedbacktime, fb.img, fb.status from feedback fb inner join user u on fb.uid = u.uid WHERE name LIKE "%' + searchValue + '%"';
 			connection.query(query, function (error, data, fields) {
 				if (error) {
 					console.log(error.message);
@@ -252,7 +259,7 @@ let id;
 app.get('/image', function (req, res, next) {
 	if(req.session.loggedin){
 		id = req.query.id;
-		let query = 'SELECT u.name, p.avatar, p.id FROM USER u INNER JOIN pet p ON u.uid = p.user_id WHERE uid = ?';
+		let query = 'SELECT p.name, p.avatar, p.id FROM USER u INNER JOIN pet p ON u.uid = p.user_id WHERE uid = ?';
 			connection.query(query, id, function (error, data, fields) {
 				if (error) {
 					console.log(error.message);
@@ -401,7 +408,7 @@ app.post('/addPet', function (request, response) {
 	}
 });
 //get vip
-app.get('/vip', function (req, res, next) {
+app.get('/vip', function (req, res) {
 	if(req.session.loggedin){
 		var url_parts = url.parse(req.url, true);
 		var pageNumber = url_parts.query.page;
@@ -410,7 +417,7 @@ app.get('/vip', function (req, res, next) {
 		var offset;
 		offset = (limit * pageNumber) - limit;
 		if(offset < 0) offset = 0;
-		let query = `SELECT u.id, u.name, uv.confirm_img, uv.send_time FROM USER u INNER JOIN user_vip uv ON u.uid = uv.uid ORDER BY u.id ASC LIMIT 5 OFFSET ${offset}` ;
+		let query = `SELECT uv.id, u.name, uv.confirm_img, uv.from_date, uv.to_date, uv.status FROM USER u INNER JOIN user_vip uv ON u.uid = uv.uid ORDER BY u.id ASC LIMIT 5 OFFSET ${offset}` ;
 			connection.query(query, function (error, data, fields) {
 				if (error) {
 					console.log(error.message);
@@ -422,26 +429,26 @@ app.get('/vip', function (req, res, next) {
 	}
 });
 // post data from mySql to fetch to vip page
-app.post('/vip', function (req, res, next) {
+app.post('/vip', function (req, res) {
 	if(req.session.loggedin){
 		let searchValue = req.body.searchValue;
-		let query = 'SELECT u.id, u.name, uv.confirm_img, uv.send_time FROM USER u INNER JOIN user_vip uv ON u.uid = uv.uid';
+		let query = 'SELECT uv.id, u.name, uv.confirm_img, uv.from_date, uv.to_date, uv.status FROM USER u INNER JOIN user_vip uv ON u.uid = uv.uid';
 		if (searchValue === undefined) {
-			query = 'SELECT u.id, u.name, uv.confirm_img, uv.send_time FROM USER u INNER JOIN user_vip uv ON u.uid = uv.uid';
+			query = 'SELECT uv.id, u.name, uv.confirm_img, uv.from_date, uv.to_date, uv.status FROM USER u INNER JOIN user_vip uv ON u.uid = uv.uid';
 			connection.query(query, function (error, data, fields) {
 				if (error) {
 					console.log(error.message);
 				}
-				res.render(__dirname + "/web/vip.ejs", { userData: data })
+				res.render(__dirname + "/web/vip.ejs", { vip: data })
 			});
 		}
 		else {
-			query = 'SELECT u.id, u.name, uv.confirm_img, uv.send_time FROM USER u INNER JOIN user_vip uv ON u.uid = uv.uid WHERE name LIKE "%' + searchValue + '%"';
+			query = 'SELECT uv.id, u.name, uv.confirm_img, uv.from_date, uv.to_date, uv.status FROM USER u INNER JOIN user_vip uv ON u.uid = uv.uid WHERE name LIKE "%' + searchValue + '%"';
 			connection.query(query, function (error, data, fields) {
 				if (error) {
 					console.log(error.message);
 				}
-				res.render(__dirname + "/web/account.ejs", { userData: data })
+				res.render(__dirname + "/web/vip.ejs", { vip: data })
 			});
 		}
 	} else {
@@ -452,6 +459,159 @@ app.post('/vip', function (req, res, next) {
 
 
 
+app.get('/listpet', function (req, res, next) {
+	if(req.session.loggedin){
+		var url_parts = url.parse(req.url, true);
+		var pageNumber = url_parts.query.page;
+		if(pageNumber === undefined) pageNumber = 0;
+		var limit = 5;
+		var offset;
+		offset = (limit * pageNumber) - limit;
+		if(offset < 0) offset = 0;
+		let query = `SELECT rp.id, rp.pet_id, rp.reason, rp.img, rp.created_time, u.name, rp.status FROM report
+		 rp INNER JOIN user u ON rp.report_by = u.uid ORDER BY id ASC LIMIT 5 OFFSET ${offset}`;
+			connection.query(query, function (error, data, fields) {
+				if (error) {
+					console.log(error.message);
+				}
+				res.render(__dirname + "/web/ListPet.ejs", { userData: data })
+			});
+	} else {
+		res.redirect('/');
+	}
+});
+// post data from mySql to fetch to report page
+app.post('/listpet', function (req, res, next) {
+	if(req.session.loggedin){
+		let searchValue = req.body.searchValue;
+		let query = 'SELECT rp.id, rp.pet_id, rp.reason, rp.created_time, u.name, rp.status FROM report rp INNER JOIN `user` u ON rp.report_by = u.uid';
+		if (searchValue === undefined) {
+			query = 'SELECT rp.id, rp.pet_id, rp.reason, rp.created_time, u.name, rp.status FROM report rp INNER JOIN `user` u ON rp.report_by = u.uid';
+			connection.query(query, function (error, data, fields) {
+				if (error) {
+					console.log(error.message);
+				}
+				res.render(__dirname + "/web/ListPet.ejs", { userData: data })
+			});
+		}
+		else {
+			query = 'SELECT rp.id, rp.pet_id, rp.reason, rp.created_time, u.name, rp.status FROM report rp INNER JOIN `user` u ON rp.report_by = u.uid WHERE name LIKE "%' + searchValue + '%"';
+			connection.query(query, function (error, data, fields) {
+				if (error) {
+					console.log(error.message);
+				}
+				res.render(__dirname + "/web/ListPet.ejs", { userData: data })
+			});
+		}
+	} else {
+		res.redirect('/');
+	}
+});
+
+
+
+
+
+// Fill data for user manager
+app.get('/updateURL', function (req, res, next) {
+	let id = req.query.id;
+	if(req.session.loggedin){
+		connection.query('SELECT img FROM report WHERE pet_id = ?', id, function (error, data, fields) {
+			if (error) {
+				console.log(error.message);
+			}
+			listUser = data;
+			res.render(__dirname + "/web/updateURL.ejs", { userData: data })
+		});
+	} else {
+		res.redirect('/');
+	}
+})
+//Update user
+app.post('/updateURL', function (request, response) {
+	let flat = true;
+	var avatar = request.body.avatarUpdate;
+		if(request.session.loggedin === true){
+			connection.query('Delete from pet_feature WHERE img_url = ?', [avatar], function (error, results) {
+				if (error) {
+					flat = false;
+					console.log(error.message)
+					response.send('No column update ')
+				} else {
+					if(results.affectedRows < 1){
+						flat = false;
+					}
+					console.log(results.affectedRows + " record(s) deleted!");
+				}
+			});
+			if(flat === true){
+				let done = "DONE";
+				connection.query('UPDATE report SET status = ? WHERE img = ?', [done, avatar], function (error, results) {
+					if (error) {
+						console.log(error.message)
+						response.send('No column update ')
+					} else {
+						console.log(results.affectedRows + " record(s) updated");
+						response.redirect('/listpet');
+					}
+					response.end();
+				});
+			} else {
+				response.redirect("Can't UPDATE");
+			}
+		} else {
+			response.redirect("You must loggedin!")
+		}
+});
+let ids;
+app.get('/statusfeedback', function (req, res) {
+	ids = req.query.id;
+	res.sendFile(path.join(__dirname + '/web/statusFeedback.html'));
+})
+app.post('/statusfeedback', function (req, res) {
+	let status = req.body.status;
+	console.log(ids);
+	if(req.session.loggedin === true){
+		connection.query('UPDATE feedback SET status = ? WHERE id = ?', [status, ids], function (error, results) {
+			if (error) {
+				console.log(error.message)
+				res.send('No column update ')
+			} else {
+				console.log(results.affectedRows + " record(s) updated");
+				res.redirect("report")
+			}
+			res.end();
+		});
+	}
+	else {
+		res.redirect("You must loggedin");
+	}
+});
+let idd;
+app.get('/updateStatus', function (req, res) {
+	idd = req.query.id;
+	res.sendFile(path.join(__dirname + '/web/updateStatus.html'));
+})
+app.post('/updateStatus', function (req, res) {
+	let status = req.body.statusVip;
+	console.log(status);
+	console.log(idd);
+	if(req.session.loggedin === true){
+		connection.query('UPDATE user_vip SET status = ? WHERE id = ?', [status, idd], function (error, results) {
+			if (error) {
+				console.log(error.message)
+				res.send('No column update ')
+			} else {
+				console.log(results.affectedRows + " record(s) updated");
+				res.redirect("vip")
+			}
+			res.end();
+		});
+	}
+	else {
+		res.redirect("You must loggedin");
+	}
+});
 // SERVER
 var server = app.listen(PORT, function () {
 
