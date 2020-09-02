@@ -511,7 +511,7 @@ const Home = ({ navigation }) => {
                             <AntDesign name="closecircle" size={26} color={color.PINK} />
                         </TouchableOpacity>
                         <Text style={styles.txtPet}>No Pet Active</Text>
-                        <Text style={[styles.textPre3, { fontSize: 16 }]}>Please choose 1 pet as your active pet to Match another pet</Text>
+                        <Text style={[styles.textPre3, { fontSize: 16 }]}>Please CLICK on image 1 pet to set your active pet to Match another pet</Text>
                         <View style={styles.animation}>
                             <LottieView source={require('../../utility/constants/down-arrow.json')} autoPlay loop />
                         </View>
@@ -536,7 +536,8 @@ const Home = ({ navigation }) => {
                             renderContent={renderInner}
                             renderHeader={renderHeader}
                             initialSnap={1}
-                            enabledGestureInteraction={true}
+                            enabledInnerScrolling={true}
+                            enabledContentGestureInteraction={false}
                         />
                         {/* Content */}
                         {
