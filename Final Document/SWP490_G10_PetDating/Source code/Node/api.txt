@@ -1,0 +1,235 @@
+
+------------- user -----------------
+
+/api/register
+	+ POST: 
+		- body:{
+			"uid": required
+			...
+		}
+		
+	=> insert new user and return a token
+
+/api/users/currentUser
+	+ GET: - headers:{Authorization: token}
+	=> get current user
+	
+/api/users/vip
+	+ GET: - headers:{Authorization: token}
+	=> get vip status 
+	
+/api/users/:id
+	+ GET: {headers:{Authorization: token}}
+	=> get an user by user_id
+	
+/api/users/:id/allInfo
+	+ GET: {headers:{Authorization: token}}
+	=> get an user with his pets
+
+/api/users/filter?distance=2&latitude=20.3333&longitude=0.3333
+	+ GET: {headers:{Authorization: token}}
+	=> get all users distance <= given distance
+
+/api/users/toPremium
+	+ POST: 
+		- headers:{Authorization: token},
+		- body:{
+			"confirm_img": required
+		}
+		
+	=> upgrade current user to Premium
+	
+/api/users/location
+	+ POST: 
+		- headers:{Authorization: token},
+		- body:{
+			"latitude": required
+			"longitude": required
+		}
+		
+	=> upgrade current user to Premium
+	
+/api/users/feedback
+	+ POST: 
+		- headers:{Authorization: token},
+		- body:{
+			"content": required
+		}
+		
+	=> feedback to admin
+	
+/api/users/
+	+ PUT: {
+		headers:{Authorization: token},
+		body:{
+			"updateFields":{
+				"name":"Vanh TV 48692",
+				"phone":"12323243243"
+			}
+		}
+	}
+	=>update current user
+
+
+------------- pet -----------------	
+
+/api/pets
+	+ GET: {headers:{Authorization: token}}
+	=> get all pets of the current user
+	
+/api/pets/breeds
+	+ GET: {headers:{Authorization: token}}
+	=> get all breeds of pets
+	
+/api/pets/allOthers
+	+ GET: {headers:{Authorization: token}}
+	=> get all pets of the others user
+	
+/api/pets/others?breed=&gender=&pet_active=
+	+ GET: {headers:{Authorization: token}}
+	=> get all pets of the other user depend on pet_active
+	
+/api/pets/:id
+	+ GET: {headers:{Authorization: token}}
+	=> get pet by id
+
+/api/pets/:id/allInfo
+	+ GET: {headers:{Authorization: token}}
+	=> get pet by id with info of owner
+	
+/api/pets/topLike
+	+ GET: {headers:{Authorization: token}}
+	=> get top 10 pets having most likes
+	
+/api/pets/topMatch
+	+ GET: {headers:{Authorization: token}}
+	=> get top 10 pets having most matches
+	
+/api/pets/isMatch?pet_active=12&pet2=99
+	+ GET: {headers:{Authorization: token}}
+	=> verified pet_active and pet2 is matched
+	
+/api/pets/nextGeneration?breed=1
+	+ GET: {headers:{Authorization: token}}
+	=> get random child rely on breed
+
+/api/pets/petMatch?pet_active=1011&user2=BYIa5Frwn7beTRTZfegjY9gB9Lf1
+	+ GET: {headers:{Authorization: token}}
+	=> get all matched pets depend on pet_active
+
+/api/pets
+	+ POST:{
+		headers:{Authorization: token},
+		body:{
+			fields ...
+		}
+	}
+	=> create a new pet of the login user
+
+/api/pets/report
+	+ POST:{
+		headers:{Authorization: token},
+		body:{
+			"pet_id":required,
+			"reason":required,
+			"img":required,
+		}
+	}
+	=> insert pictures of pet
+
+/api/pets/:id/pictures
+	+ POST:{
+		headers:{Authorization: token},
+		body:{
+			"pictures":[]
+		}
+	}
+	=> insert pictures of pet
+	
+
+/api/pets/:id
+	+ PUT:{
+		headers:{Authorization: token},
+		data:{
+			"updateFields":{
+				"name":"phong doggy",
+				"dob":"2020-01-01",
+				"introduction":"4 chan"
+				...
+			}
+		}
+	}=> update a pet(:id) of the login user
+
+/api/pets/setActive
+	+ PUT:{
+		headers:{Authorization: token},
+		body:{
+			"pet_id":required
+		}
+	}=> set a pet(pet_id) in active
+	
+/api/pets/updateMatch
+	+ PUT:{
+		headers:{Authorization: token},
+		body:{
+			"pet_ids":required
+		}
+	}=> plus 1 to matches on pet table
+	
+/api/pets/minusMatch
+	+ PUT:{
+		headers:{Authorization: token},
+		body:{
+			"pet_ids":required
+		}
+	}=> minus 1 to matches on pet table
+	
+/api/pets/unmatch
+	+ PUT:{
+		headers:{Authorization: token},
+		body:{
+			"pet_active":required,
+			"pet2":required
+		}
+	}=> unmatch pet
+	
+/api/pets/:id
+	+ DELETE: {headers:{Authorization: token}}
+	=> delete pet by id
+	
+
+------------- common -----------------
+
+/api/common/react
+	+ POST:{
+		headers:{Authorization: token},
+		body:{
+			"pet_id":required,
+			"reaction": required
+		}
+	}
+	=> react a pet
+
+
+/api/common/match
+	+ POST:{
+		headers:{Authorization: token},
+		body:{
+			"pet_id1":required,
+			"user2":required,
+			"pet_id2":required,
+		}
+	}
+	=> match a pet
+	
+------------- cloudinary -----------------
+
+/cloudinary/upload
+	+ POST:{
+		headers:{Authorization: token},
+		body:{
+			"pictures":required,
+			"breed": required
+		}
+	}
+	=> insert a child to pet_generation table
