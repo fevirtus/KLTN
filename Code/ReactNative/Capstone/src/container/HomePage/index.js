@@ -409,7 +409,7 @@ const Home = ({ navigation }) => {
                     <LinearGradient colors={[color.RED, color.WHITE, color.WHITE]} style={styles.modal}>
                         <Text style={styles.textPre}>Upgrade To Premium</Text>
                         <TouchableOpacity style={styles.btnReturnAds}>
-                            <MaterialCommunityIcons
+                            <MaterialIcons
                                 name="child-friendly"
                                 size={30}
                                 color={color.RED}
