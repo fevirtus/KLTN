@@ -49,7 +49,7 @@ const Payment = ({ navigation }) => {
                                 <Image source={require('../../../../images/icon/tpbank.jpg')} style={styles.icon} />
                                 <Image source={require('../../../../images/icon/mbbank.jpg')} style={styles.icon} />
                             </View>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => navigation.navigate('Banking')}>
                                 <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
                                     <Text style={styles.panelButtonTitle}>Use Premium</Text>
                                 </LinearGradient>

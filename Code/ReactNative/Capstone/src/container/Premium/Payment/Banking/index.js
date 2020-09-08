@@ -75,7 +75,7 @@ const Banking = ({ navigation }) => {
                     dispatch(saveVip(vip))
                     dispatch(stopLoading())
                     setIsChange(false)
-                    setModalOpen(true)
+                    // setModalOpen(true)
                 })
                 .catch(error => {
                     dispatch(stopLoading())
@@ -158,7 +158,7 @@ const Banking = ({ navigation }) => {
                     </TouchableOpacity>
                 }
             </ScrollView>
-            <Modal visible={modalOpen} animationType='fade' transparent={true}>
+            {/* <Modal visible={modalOpen} animationType='fade' transparent={true}>
                 <View style={styles.modal}>
                     <View style={styles.modalView}>
                         <View style={styles.animation}>
@@ -175,7 +175,7 @@ const Banking = ({ navigation }) => {
                         </View>
                     </View>
                 </View>
-            </Modal>
+            </Modal> */}
         </Container>
     )
 }
