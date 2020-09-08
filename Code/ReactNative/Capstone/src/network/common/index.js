@@ -26,7 +26,7 @@ export const validatePet = (pet) => {
         return false;
     }
 
-    if (pet.weight.length > 3) {
+    if (pet.weight && pet.weight.length > 3) {
         Alert.alert('Error', 'Weight must have less than 3 figures')
         return false;
     }
