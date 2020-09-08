@@ -14,7 +14,7 @@ const Login = ({ navigation }) => {
             >
                 <View style={styles.header}>
                     <View style={styles.icon}>
-                        <MaterialIcons name="pets" size={40} color={color.WHITE} />
+                        <MaterialIcons name="pets" size={38} color={color.WHITE} />
                         <Text style={styles.name}>
                             PetDating
                         </Text>
@@ -72,7 +72,8 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
     },
     header: {
-        flex: 1.35
+        flex: 1.35,
+        marginHorizontal: 10
     },
     footer: {
         flex: 0.65,
@@ -91,13 +92,13 @@ const styles = StyleSheet.create({
     },
     name: {
         color: color.WHITE,
-        fontSize: 30
+        fontSize: 28
     },
     title: {
         fontWeight: '700',
         fontSize: 40,
         color: color.WHITE,
-        letterSpacing: 0.5,
+        letterSpacing: 0.3,
         opacity: 0.9,
         alignSelf: 'center',
         paddingVertical: 160
@@ -105,7 +106,8 @@ const styles = StyleSheet.create({
     textPrivate: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginTop: 8
+        marginTop: 8,
+        paddingHorizontal: 5
     },
     color_textPrivate: {
         color: color.GRAY

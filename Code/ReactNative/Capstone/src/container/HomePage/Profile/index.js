@@ -296,6 +296,7 @@ const Profile = ({ navigation }) => {
                                             }}
                                             style={styles.textInput}
                                         />
+                                        <Text style={styles.required}>{"*"}</Text>
                                     </View>
                                     {isValidName ? null :
                                         <Animatable.View animation="fadeInLeft" duration={500}>
@@ -687,6 +688,10 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         marginBottom: 15
+    },
+    required: {
+        color: color.RED,
+        fontSize: 16
     }
 })
 

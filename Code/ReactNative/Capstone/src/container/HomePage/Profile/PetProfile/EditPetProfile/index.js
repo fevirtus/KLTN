@@ -288,6 +288,7 @@ const EditPetProfile = ({ navigation, route }) => {
                                 }}
                                 style={styles.textInput}
                             />
+                            <Text style={styles.required}>{"*"}</Text>
                         </View>
                         {isValidName ? null :
                             <Animatable.View animation="fadeInLeft" duration={500}>
@@ -297,24 +298,27 @@ const EditPetProfile = ({ navigation, route }) => {
                         <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 20, }}>
                             <MaterialIcons name="pets" color={color.GRAY} size={20} style={{ marginTop: 10 }} />
                             {breeds.length > 0 &&
-                                <DropDownPicker
-                                    items={breeds}
-                                    defaultValue={info.breed}
-                                    containerStyle={{ width: '87%', marginLeft: 10 }}
-                                    style={{ backgroundColor: '#fafafa', marginLeft: 10 }}
-                                    itemStyle={{
-                                        justifyContent: 'flex-start'
-                                    }}
-                                    dropDownStyle={{ backgroundColor: '#fafafa' }}
-                                    onChangeItem={item => { handleChangeInfo('breed', item.value) }}
-                                    searchable={true}
-                                    searchablePlaceholder="Search for an item"
-                                    searchablePlaceholderTextColor="gray"
-                                    seachableStyle={{}}
-                                    searchableError={() => <Text>Not Found</Text>}
-                                    style={{}}
-                                    zIndex={5000}
-                                />}
+                                <>
+                                    <DropDownPicker
+                                        items={breeds}
+                                        defaultValue={info.breed}
+                                        containerStyle={{ width: '80%', marginLeft: 10 }}
+                                        itemStyle={{
+                                            justifyContent: 'flex-start'
+                                        }}
+                                        dropDownStyle={{ backgroundColor: '#fafafa' }}
+                                        onChangeItem={item => { handleChangeInfo('breed', item.value) }}
+                                        searchable={true}
+                                        searchablePlaceholder="Search for an item"
+                                        searchablePlaceholderTextColor="gray"
+                                        seachableStyle={{}}
+                                        searchableError={() => <Text>Not Found</Text>}
+                                        style={{}}
+                                        zIndex={5000}
+                                    />
+                                    <Text style={[styles.required, { paddingLeft: 22 }]}>{"*"}</Text>
+                                </>
+                            }
                         </View>
                         <View style={[styles.action, {
                             borderTopColor: '#f2f2f2',
@@ -585,6 +589,11 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
         marginRight: 'auto',
         paddingLeft: 20,
+    },
+    required: {
+        color: color.RED,
+        paddingRight: 20,
+        fontSize: 16
     }
 })
 
