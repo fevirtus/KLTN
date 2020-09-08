@@ -355,9 +355,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     top3: {
-        paddingLeft: 26,
+        paddingLeft: 24,
         paddingBottom: 10,
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-end'
+    },
+    imgTop1: {
+        width: 85,
+        height: 85,
+        borderRadius: 50,
+        borderWidth: 3,
+        borderColor: '#ffe75e',
     },
     img2: {
         width: 65,
@@ -372,13 +379,6 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         borderWidth: 2,
         borderColor: '#ec823a',
-    },
-    imgTop1: {
-        width: 85,
-        height: 85,
-        borderRadius: 50,
-        borderWidth: 3,
-        borderColor: '#ffe75e',
     },
     nameTop: {
         alignSelf: 'center',

@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     ScrollView
 } from 'react-native'
+import LottieView from 'lottie-react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import { Container } from '../../../components'
 import { color } from '../../../utility'
@@ -14,6 +15,9 @@ const Payment = ({ navigation }) => {
         <Container>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.container}>
+                    <View style={styles.animation}>
+                        <LottieView source={require('../../../utility/constants/diamond.json')} autoPlay loop />
+                    </View>
                     <Text style={styles.title}>Choose Premium package</Text>
                     <Text style={styles.title2}>We have the perfect package for you</Text>
                     <View style={styles.payment}>
@@ -65,8 +69,7 @@ const styles = StyleSheet.create({
     title: {
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: 28,
-        paddingTop: 10
+        fontSize: 28
     },
     title2: {
         textAlign: 'center',
@@ -120,6 +123,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: color.WHITE,
     },
+    animation: {
+        width: 100,
+        height: 90,
+        alignSelf: 'center'
+    }
 })
 
 export default Payment
