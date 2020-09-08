@@ -45,6 +45,7 @@ const GoogleLogin = () => {
             dispatch(stopLoading())
 
         } catch (error) {
+            alert(error)
             console.log(error)
             if (error.code === 'auth/email-already-in-use') {
                 Alert.alert('Error', 'That email address is already in use!')
