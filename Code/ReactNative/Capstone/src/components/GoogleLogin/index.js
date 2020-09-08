@@ -38,10 +38,14 @@ const GoogleLogin = () => {
             }
 
             const res = await Axios.post(`${URL_BASE}register`, { name: displayName, email: email, uid: uid })
-            const { pd_token, data } = res.data
-            setAuthToken(pd_token)
-            dispatch(saveUser(data))
-            dispatch(saveToken(pd_token))
+            if (res.data.data.is_block == 1) {
+                Alert.alert('Error!', `Your account has been locked, the remaining time is ${res.data.data.remainTime}`)
+            } else {
+                const { pd_token, data } = res.data
+                setAuthToken(pd_token)
+                dispatch(saveUser(data))
+                dispatch(saveToken(pd_token))
+            }
             dispatch(stopLoading())
 
         } catch (error) {
