@@ -155,6 +155,7 @@ const PetSetting = ({ navigation }) => {
                                 }}
                                 style={styles.textInput}
                             />
+                            <Text style={styles.required}>{"*"}</Text>
                         </View>
                         {isValidName ? null :
                             <Animatable.View animation="fadeInLeft" duration={500}>
@@ -166,8 +167,7 @@ const PetSetting = ({ navigation }) => {
                             <DropDownPicker
                                 items={breeds}
                                 defaultValue={info.breed}
-                                containerStyle={{ width: '87%', marginLeft: 10 }}
-                                style={{ backgroundColor: '#fafafa', marginLeft: 10 }}
+                                containerStyle={{ width: '80%', marginLeft: 10 }}
                                 itemStyle={{
                                     justifyContent: 'flex-start'
                                 }}
@@ -181,6 +181,7 @@ const PetSetting = ({ navigation }) => {
                                 style={{}}
                                 zIndex={5000}
                             />
+                            <Text style={[styles.required, { paddingLeft: 22 }]}>{"*"}</Text>
                         </View>
                         <View style={[styles.action, {
                             borderTopColor: '#f2f2f2',
@@ -395,6 +396,11 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
         marginRight: 'auto',
         paddingLeft: 20,
+    },
+    required: {
+        color: color.RED,
+        paddingRight: 20,
+        fontSize: 16
     }
 })
 
