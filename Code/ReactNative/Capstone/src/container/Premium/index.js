@@ -3,7 +3,8 @@ import {
     View, Text,
     StyleSheet,
     ImageBackground,
-    TouchableOpacity
+    TouchableOpacity,
+    ScrollView,
 } from 'react-native'
 import moment from 'moment';
 import LottieView from 'lottie-react-native'
@@ -28,7 +29,7 @@ const Premium = ({ navigation }) => {
     )
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <ImageBackground
                 source={require('../../../images/rocket.jpg')}
                 style={styles.background}
@@ -69,7 +70,7 @@ const Premium = ({ navigation }) => {
                     : null
                 }
             </ImageBackground>
-        </View>
+        </ScrollView>
     )
 }
 

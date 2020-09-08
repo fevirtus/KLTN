@@ -101,70 +101,71 @@ const ProfilePetChat = ({ navigation, route }) => {
 
     return (
         <Container>
-            <View style={styles.container}>
-                <View>
-                    <ScrollView
-                        pagingEnabled
-                        horizontal
-                        onScroll={change}
-                        showsHorizontalScrollIndicator={false}
-                    >
+            <ScrollView>
+                <View style={styles.container}>
+                    <View>
+                        <ScrollView
+                            pagingEnabled
+                            horizontal
+                            onScroll={change}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            {
+                                images.map((image, index) => (
+                                    <ImageBackground source={{ uri: image }} style={styles.imageProfile} key={index}>
+                                    </ImageBackground>
+                                ))
+                            }
+                        </ScrollView>
+                    </View>
+                    <View style={styles.pagination}>
                         {
-                            images.map((image, index) => (
-                                <ImageBackground source={{ uri: image }} style={styles.imageProfile} key={index}>
-                                </ImageBackground>
-                            ))
-                        }
-                    </ScrollView>
-                </View>
-                <View style={styles.pagination}>
-                    {
-                        images.length === 1
-                            ? null
-                            : images.map((i, k) => (
-                                <View key={k} style={k == active ? [styles.carouselActiveIndicators, { width: WIDTH / images.length }] : [styles.carouselIndicators, { width: WIDTH / images.length }]} />
-                            ))
-                    }
-                </View>
-                <View style={styles.information}>
-                    <View style={styles.headerProfile}>
-                        <Text style={styles.nameProfile}>{info.name}</Text>
-                        {
-                            info.gender === 1
-                                ? <Ionicons name="md-male-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
-                                : info.gender === 0 ? <Ionicons name="md-female-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
-                                    : null
+                            images.length === 1
+                                ? null
+                                : images.map((i, k) => (
+                                    <View key={k} style={k == active ? [styles.carouselActiveIndicators, { width: WIDTH / images.length }] : [styles.carouselIndicators, { width: WIDTH / images.length }]} />
+                                ))
                         }
                     </View>
-                    {
-                        _.isEmpty(info.breed_name)
-                            ? null
-                            : <View style={styles.details}>
-                                <MaterialIcons name="pets" size={22} color={color.PINK} />
-                                <Text style={styles.text}>{info.breed_name}</Text>
-                            </View>
-                    }
-                    {
-                        _.isEmpty(info.age)
-                            ? null
-                            : <View style={styles.details}>
-                                <MaterialCommunityIcons name="clock-time-nine-outline" size={22} color={color.PINK} />
-                                <Text style={styles.text}>{convertToAge(info.age)}</Text>
-                            </View>
-                    }
-                    {
-                        _.isEmpty(info.introduction)
-                            ? null
-                            : <View style={styles.about}>
-                                <Text style={styles.textAbout}>About</Text>
-                                <Text style={[styles.text, { paddingLeft: 0 }]}>{info.introduction}</Text>
-                            </View>
-                    }
+                    <View style={styles.information}>
+                        <View style={styles.headerProfile}>
+                            <Text style={styles.nameProfile}>{info.name}</Text>
+                            {
+                                info.gender === 1
+                                    ? <Ionicons name="md-male-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
+                                    : info.gender === 0 ? <Ionicons name="md-female-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
+                                        : null
+                            }
+                        </View>
+                        {
+                            _.isEmpty(info.breed_name)
+                                ? null
+                                : <View style={styles.details}>
+                                    <MaterialIcons name="pets" size={22} color={color.PINK} />
+                                    <Text style={styles.text}>{info.breed_name}</Text>
+                                </View>
+                        }
+                        {
+                            _.isEmpty(info.age)
+                                ? null
+                                : <View style={styles.details}>
+                                    <MaterialCommunityIcons name="clock-time-nine-outline" size={22} color={color.PINK} />
+                                    <Text style={styles.text}>{convertToAge(info.age)}</Text>
+                                </View>
+                        }
+                        {
+                            _.isEmpty(info.introduction)
+                                ? null
+                                : <View style={styles.about}>
+                                    <Text style={styles.textAbout}>About</Text>
+                                    <Text style={[styles.text, { paddingLeft: 0 }]}>{info.introduction}</Text>
+                                </View>
+                        }
+                        <TouchableOpacity style={styles.unmatch} onPress={() => setModalOpen(true)}>
+                            <Text style={styles.txtUnmatch}>UNMATCH {info.name}</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <TouchableOpacity style={styles.unmatch} onPress={() => setModalOpen(true)}>
-                    <Text style={styles.txtUnmatch}>UNMATCH {info.name}</Text>
-                </TouchableOpacity>
-                {/* Modal */}
                 <Modal visible={modalOpen} animationType='fade' transparent={true}>
                     <View style={styles.modal}>
                         <View style={styles.modalContent}>
@@ -186,7 +187,7 @@ const ProfilePetChat = ({ navigation, route }) => {
                         </View>
                     </View>
                 </Modal>
-            </View>
+            </ScrollView>
         </Container>
     )
 }
@@ -269,7 +270,8 @@ const styles = StyleSheet.create({
         borderTopColor: '#dddddd',
         borderBottomWidth: 1,
         borderBottomColor: '#dddddd',
-        paddingVertical: 14
+        paddingVertical: 14,
+        marginTop: 15,
     },
     txtUnmatch: {
         color: color.LIGHT_GRAY,

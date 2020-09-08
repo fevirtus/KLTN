@@ -70,7 +70,7 @@ const DeleteAcc = ({ navigation }) => {
         <Container>
             <View style={styles.iconWrapper}>
                 <AntDesign name="pausecircle" size={32} color={color.PINK} />
-                <Text style={styles.txtPause}>PAUSE MY ACCOUNT</Text>
+                <Text style={styles.txtPause}>DELETE MY ACCOUNT</Text>
                 <Text style={styles.txtDescription}>If you'd like to keep your account but not be shown to others
                 you can pause your account instead. You can turn off in settings.
                 </Text>

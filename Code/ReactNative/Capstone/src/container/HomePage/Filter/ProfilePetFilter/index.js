@@ -148,106 +148,108 @@ const ProfilePetFilter = ({ navigation, route }) => {
 
     return (
         <Container>
-            <Modal visible={modalOpen} animationType='fade' transparent={true}>
-                <View style={styles.modalContent}>
-                    <LinearGradient colors={[color.GREEN, color.WHITE, color.WHITE]} style={styles.modal}>
-                        <Text style={styles.textPre}>Upgrade To Premium</Text>
-                        <TouchableOpacity style={styles.btnReturnAds}>
+            <ScrollView>
+                <Modal visible={modalOpen} animationType='fade' transparent={true}>
+                    <View style={styles.modalContent}>
+                        <LinearGradient colors={[color.GREEN, color.WHITE, color.WHITE]} style={styles.modal}>
+                            <Text style={styles.textPre}>Upgrade To Premium</Text>
+                            <TouchableOpacity style={styles.btnReturnAds}>
+                                <AntDesign
+                                    name="heart"
+                                    size={30}
+                                    color={color.GREEN}
+                                />
+                            </TouchableOpacity>
+                            <Text style={styles.textPre2}>You can match other pets on this site</Text>
+                            <View style={styles.price}>
+                                <Text style={styles.textPrice}>29k / month</Text>
+                                <Text style={styles.textPrice}>69k / 3 months</Text>
+                                <Text style={styles.textPrice}>240k / year</Text>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setModalOpen(false)
+                                    navigation.navigate('PremiumStackScreen', { screen: 'Premium' })
+                                }}
+                            >
+                                <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
+                                    <Text style={styles.panelButtonTitle}>Upgrade To Premium</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                            <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Not now, thanks</Text>
+                        </LinearGradient>
+                    </View>
+                </Modal>
+                <View style={styles.container}>
+                    <View>
+                        <ScrollView
+                            pagingEnabled
+                            horizontal
+                            onScroll={change}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            {
+                                images.map((image, index) => (
+                                    <ImageBackground source={{ uri: image }} style={styles.imageProfile} key={index}>
+                                    </ImageBackground>
+                                ))
+                            }
+                        </ScrollView>
+                        <TouchableOpacity style={styles.iconContainer}>
                             <AntDesign
                                 name="heart"
-                                size={30}
-                                color={color.GREEN}
+                                size={26}
+                                color={isMatch ? color.RED : color.GREEN}
+                                onPress={match}
                             />
                         </TouchableOpacity>
-                        <Text style={styles.textPre2}>You can match other pets on this site</Text>
-                        <View style={styles.price}>
-                            <Text style={styles.textPrice}>29k / month</Text>
-                            <Text style={styles.textPrice}>69k / 3 months</Text>
-                            <Text style={styles.textPrice}>240k / year</Text>
-                        </View>
-                        <TouchableOpacity
-                            onPress={() => {
-                                setModalOpen(false)
-                                navigation.navigate('PremiumStackScreen', { screen: 'Premium' })
-                            }}
-                        >
-                            <LinearGradient colors={['#ffe4e4', '#ffa5b0', '#fe91ca']} style={styles.commandButton}>
-                                <Text style={styles.panelButtonTitle}>Upgrade To Premium</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                        <Text style={styles.textPre4} onPress={() => setModalOpen(false)}>Not now, thanks</Text>
-                    </LinearGradient>
-                </View>
-            </Modal>
-            <View style={styles.container}>
-                <View>
-                    <ScrollView
-                        pagingEnabled
-                        horizontal
-                        onScroll={change}
-                        showsHorizontalScrollIndicator={false}
-                    >
+                    </View>
+                    <View style={styles.pagination}>
                         {
-                            images.map((image, index) => (
-                                <ImageBackground source={{ uri: image }} style={styles.imageProfile} key={index}>
-                                </ImageBackground>
-                            ))
-                        }
-                    </ScrollView>
-                    <TouchableOpacity style={styles.iconContainer}>
-                        <AntDesign
-                            name="heart"
-                            size={26}
-                            color={isMatch ? color.RED : color.GREEN}
-                            onPress={match}
-                        />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.pagination}>
-                    {
-                        images.length === 1
-                            ? null
-                            : images.map((i, k) => (
-                                <View key={k} style={k == active ? [styles.carouselActiveIndicators, { width: WIDTH / images.length }] : [styles.carouselIndicators, { width: WIDTH / images.length }]} />
-                            ))
-                    }
-                </View>
-                <View style={styles.information}>
-                    <View style={styles.headerProfile}>
-                        <Text style={styles.nameProfile}>{info.name}</Text>
-                        {
-                            info.gender === 1
-                                ? <Ionicons name="md-male-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
-                                : info.gender === 0 ? <Ionicons name="md-female-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
-                                    : null
+                            images.length === 1
+                                ? null
+                                : images.map((i, k) => (
+                                    <View key={k} style={k == active ? [styles.carouselActiveIndicators, { width: WIDTH / images.length }] : [styles.carouselIndicators, { width: WIDTH / images.length }]} />
+                                ))
                         }
                     </View>
-                    {
-                        _.isEmpty(info.breed_name)
-                            ? null
-                            : <View style={styles.details}>
-                                <MaterialIcons name="pets" size={22} color={color.PINK} />
-                                <Text style={styles.text}>{info.breed_name}</Text>
-                            </View>
-                    }
-                    {
-                        _.isEmpty(info.age)
-                            ? null
-                            : <View style={styles.details}>
-                                <MaterialCommunityIcons name="clock-time-nine-outline" size={22} color={color.PINK} />
-                                <Text style={styles.text}>{convertToAge(info.age)}</Text>
-                            </View>
-                    }
-                    {
-                        _.isEmpty(info.introduction)
-                            ? null
-                            : <View style={styles.about}>
-                                <Text style={styles.textAbout}>About</Text>
-                                <Text style={[styles.text, { paddingLeft: 0 }]}>{info.introduction}</Text>
-                            </View>
-                    }
+                    <View style={styles.information}>
+                        <View style={styles.headerProfile}>
+                            <Text style={styles.nameProfile}>{info.name}</Text>
+                            {
+                                info.gender === 1
+                                    ? <Ionicons name="md-male-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
+                                    : info.gender === 0 ? <Ionicons name="md-female-sharp" size={28} color={color.PINK} style={styles.sexProfile} />
+                                        : null
+                            }
+                        </View>
+                        {
+                            _.isEmpty(info.breed_name)
+                                ? null
+                                : <View style={styles.details}>
+                                    <MaterialIcons name="pets" size={22} color={color.PINK} />
+                                    <Text style={styles.text}>{info.breed_name}</Text>
+                                </View>
+                        }
+                        {
+                            _.isEmpty(info.age)
+                                ? null
+                                : <View style={styles.details}>
+                                    <MaterialCommunityIcons name="clock-time-nine-outline" size={22} color={color.PINK} />
+                                    <Text style={styles.text}>{convertToAge(info.age)}</Text>
+                                </View>
+                        }
+                        {
+                            _.isEmpty(info.introduction)
+                                ? null
+                                : <View style={styles.about}>
+                                    <Text style={styles.textAbout}>About</Text>
+                                    <Text style={[styles.text, { paddingLeft: 0 }]}>{info.introduction}</Text>
+                                </View>
+                        }
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
         </Container>
     )
 }
