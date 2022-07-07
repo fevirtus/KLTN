@@ -28,7 +28,7 @@
         "lodash": "^4.17.17",
         "lottie-react-native": "^3.5.0",
         "mime": "^2.4.6",
-        "moment": "^2.27.0",
+        "moment": "^2.29.4",
         "native-base": "^2.13.13",
         "react": "16.11.0",
         "react-native": "0.62.2",
